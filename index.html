@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assets Documentation</title>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: #0d6efd;
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    header p {
+      margin-top: 8px;
+      font-size: 16px;
+      color: #e0e7ff;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    section:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+
+    section h2 {
+      font-size: 20px;
+      color: #0d6efd;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    ul li {
+      font-size: 14px;
+      padding: 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    ul li:last-child {
+      border-bottom: none;
+    }
+    ul li i {
+      color: #0d6efd;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .note {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 15px 20px;
+      background: #eaf2ff;
+      border-left: 5px solid #0d6efd;
+      border-radius: 8px;
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .note i {
+      font-size: 18px;
+      color: #0d6efd;
+    }
+    code {
+      background: #f1f3f5;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #666;
+      margin-top: 40px;
+      border-top: 1px solid #e0e0e0;
+    }
+    footer i {
+      color: #0d6efd;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 24px;
+      }
+      section h2 {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="bi bi-folder"></i> Assets ফোল্ডার ডকুমেন্টেশন</h1>
+    <p>GitHub CDN রেপোজিটরির জন্য ব্যবহার নির্দেশিকা</p>
+  </header>
+
+  <main>
+    <!-- Images -->
+    <section>
+      <h2><i class="bi bi-image"></i> Images</h2>
+      <ul>
+        <li><i class="bi bi-card-image"></i> hero/ → ব্যানার ও হিরো ইমেজ</li>
+        <li><i class="bi bi-badge-tm"></i> logos/ → লোগো (svg, png)</li>
+        <li><i class="bi bi-collection"></i> thumbs/ → থাম্বনেইল</li>
+        <li><i class="bi bi-star"></i> icons/ → ছোট আইকন</li>
+        <li><i class="bi bi-link-45deg"></i> og/ → সোশ্যাল শেয়ার ইমেজ</li>
+      </ul>
+    </section>
+
+    <!-- Sprites -->
+    <section>
+      <h2><i class="bi bi-layers"></i> Sprites</h2>
+      <ul>
+        <li><i class="bi bi-box"></i> SVG sprite.svg</li>
+      </ul>
+    </section>
+
+    <!-- Fonts -->
+    <section>
+      <h2><i class="bi bi-type"></i> Fonts</h2>
+      <ul>
+        <li><i class="bi bi-filetype-woff2"></i> Custom fonts (.woff2)</li>
+      </ul>
+    </section>
+
+    <!-- Video -->
+    <section>
+      <h2><i class="bi bi-play-circle"></i> Video</h2>
+      <ul>
+        <li><i class="bi bi-film"></i> promos/ → প্রোমো ভিডিও</li>
+        <li><i class="bi bi-repeat"></i> loops/ → লুপ ব্যাকগ্রাউন্ড</li>
+      </ul>
+    </section>
+
+    <!-- Audio -->
+    <section>
+      <h2><i class="bi bi-music-note"></i> Audio</h2>
+      <ul>
+        <li><i class="bi bi-bell"></i> notification.mp3 → নোটিফিকেশন সাউন্ড</li>
+      </ul>
+    </section>
+
+    <!-- JSON -->
+    <section>
+      <h2><i class="bi bi-code-slash"></i> JSON</h2>
+      <ul>
+        <li><i class="bi bi-filetype-json"></i> Demo data file</li>
+        <li><i class="bi bi-window"></i> manifest.webmanifest</li>
+      </ul>
+    </section>
+
+    <!-- SVG -->
+    <section>
+      <h2><i class="bi bi-diagram-3"></i> SVG</h2>
+      <ul>
+        <li><i class="bi bi-filetype-svg"></i> Standalone SVG ফাইল</li>
+      </ul>
+    </section>
+
+    <!-- Docs -->
+    <section>
+      <h2><i class="bi bi-file-earmark-text"></i> Docs</h2>
+      <ul>
+        <li><i class="bi bi-file-text"></i> assets-readme.md</li>
+      </ul>
+    </section>
+
+    <!-- Thumbnails -->
+    <section>
+      <h2><i class="bi bi-file-image"></i> Thumbnails</h2>
+      <ul>
+        <li><i class="bi bi-image"></i> thumb-small.webp</li>
+        <li><i class="bi bi-image"></i> thumb-large.webp</li>
+      </ul>
+    </section>
+  </main>
+
+  <div class="note">
+    <i class="bi bi-info-circle"></i>
+    <p>
+      সব ফাইলকে <code>assets/</code> ফোল্ডারের মধ্যে রাখুন। <br>
+      GitHub Pages এ পাবলিক ইউআরএল হবে: <br>
+      <code>https://username.github.io/repo-name/assets/images/hero/mubarok-hero.v1.0.0.webp</code>
+    </p>
+  </div>
+
+  <footer>
+    <i class="bi bi-c-circle"></i> 2025 - Assets Documentation by Mubarok
+  </footer>
+</body>
+</html>
