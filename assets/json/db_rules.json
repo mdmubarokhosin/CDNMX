@@ -1,0 +1,24 @@
+{
+  "rules": {
+    "themes": {
+      "$themeName": {
+        "websites": {
+          "$websiteId": {
+            // যে কেউ লাইসেন্সের তথ্য পড়তে পারবে।
+            ".read": true,
+
+            // শুধুমাত্র নতুন ডেটা তৈরি করার জন্য লেখার অনুমতি দেওয়া হলো।
+            // এর মানে হলো, প্রথমবার ওয়েবসাইট রেজিস্টার হবে, কিন্তু কেউ রেজিস্টার হওয়া ডেটা পরিবর্তন করতে পারবে না।
+            ".write": "!data.exists()",
+
+            // ডেটা সঠিক ফরম্যাটে আছে কিনা তা যাচাই করা হচ্ছে।
+            ".validate": "newData.hasChildren(['url', 'isActive', 'registeredAt', 'jsUrl', 'cssUrl']) &&
+                          newData.child('url').isString() &&
+                          newData.child('isActive').isBoolean() &&
+                          newData.child('isActive').val() === true"
+          }
+        }
+      }
+    }
+  }
+}
