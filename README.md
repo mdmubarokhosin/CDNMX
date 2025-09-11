@@ -1,11 +1,4 @@
-চমৎকার! ✅
-এবার আপনার **GitHub username → `mdmubarokhosin`** আর **repository নাম → `CDNMX`** মিলে গিয়ে চূড়ান্ত লিংক হবে এইরকম:
-
-```
-https://mdmubarokhosin.github.io/CDNMX/
-```
-
-## 📦 WallComeome To CDNMX Repository
+## 📦 WallCome To CDNMX Repository
 ---
 
 ````markdown
