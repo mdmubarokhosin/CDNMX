@@ -1,0 +1,13 @@
+{
+  "firebaseConfig": {
+    "apiKey": "AIzaSyBmk4jaCPfvLTcZEIN3PXQmB-b1Gh-qUVw",
+    "authDomain": "blogger-template-licences.firebaseapp.com",
+    "databaseURL": "https://blogger-template-licences-default-rtdb.firebaseio.com",
+    "projectId": "blogger-template-licences",
+    "storageBucket": "blogger-template-licences.appspot.com",
+    "messagingSenderId": "142438715328",
+    "appId": "1:142438715328:web:2d678afac7fcb110e80225"
+  },
+  "defaultJsUrl": "https://cdnix.pages.dev/assets/script.js",
+  "defaultCssUrl": "https://cdnix.pages.dev/assets/styles.css"
+}
