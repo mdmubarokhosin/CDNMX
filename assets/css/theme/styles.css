@@ -1,4 +1,4 @@
-@import url('https://fonts.maateen.me/solaiman-lipi/font.css');
+@import url('https://cdnmx.pages.dev/assets/fonts/noto_serif_bengali/font.css');
 
 body, article, h1, h2, h3, h4, h5, h6, 
 a, span, p, table, tr, td, input, 
@@ -6,5 +6,5 @@ div, button, label, select,
 .mubarok-topbar, .mubarok-main-menu, .mubarok-breadcrumb, 
 .mubarok-copyrights-area, 
 form span.required {
-    font-family: 'SolaimanLipi', Arial, sans-serif !important;
+    font-family: 'Noto Serif Bengali', Arial, sans-serif !important;
 }
