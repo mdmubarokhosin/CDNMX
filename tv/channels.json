@@ -2,241 +2,241 @@
   {
     "name": "ANANDO TV BANGLA",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQn2PbGFvZGUdHkx1bhbqgFApUkQnS3aBCJRw&s",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/anandatv.stream/playlist.m3u8"
   },
   {
     "name": "ASIAN TV",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6ln4rwXBygeF9uP10EegsLUbJYCUwdRyVffG8JBKnyHrKbfk4NSL0QgGN&s=10",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/asian-test-sample-ok-d.stream/playlist.m3u8"
   },
   {
     "name": "ATN BANGLA",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrScGuSxAkZ6XrPxFPKx5feE0E17v0bHmNktgMgi-ybovdmwFWs5pL1FU&s=10",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnbd-8-org.stream/playlist.m3u8"
   },
   {
     "name": "ATN BANGLA UK",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-XHBiDZ6csLBytqkYPoJmfUVVZPlxk4QvjIGBBpbk12SiMLJK1tkn6j0z&s=10",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnbanglauk-off.stream/playlist.m3u8"
   },
   {
     "name": "ATN MUSIC",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4JPD5hztRxjfYiR5c1wNlZAY6sZiaZAkkZ6Ka9arndt2pZXDtHg_VuJI&s=10",
-    "group": "MUSIC",
+    "group": "সঙ্গীত",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnmusic.stream/playlist.m3u8"
   },
   {
     "name": "ATN ISLAMIC",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4JPD5hztRxjfYiR5c1wNlZAY6sZiaZAkkZ6Ka9arndt2pZXDtHg_VuJI&s=10",
-    "group": "ISLAMIC",
+    "group": "ইসলামিক",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnislamictv.stream/playlist.m3u8"
   },
   {
     "name": "ATN NEWS",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYJeP3EUwJLq8sjuc_7Nn52Gk_OJxxAMA2uc1yJxR57LHCtcfs-ku51gzj&s=10",
-    "group": "NEWS",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnws-sg.stream/playlist.m3u8"
+    "group": "খবর",
+    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnws-sg.stream/playlist.m3u8"
   },
   {
     "name": "BANGLA VISION HD",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1hPBiCRZEwKM3BMdFnj83x-ltSSDsY3kYpfV6Vzv5fUhC1M_Z10BsovA&s=10",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/banglav000.stream/playlist.m3u8"
   },
   {
     "name": "BTV WORLD",
     "logo": "https://feji.us/edda3w",
-    "group": "LIVE TV",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/btvbd-office-sg.stream/playlist.m3u8"
+    "group": "বিনোদন",
+    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/btvbd-office-sg.stream/playlist.m3u8"
   },
   {
     "name": "CHANNEL I",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCxCzI8gIAq2VY13LOY_ZUKTY3UBH2kcYk0OdDMv5pf8pyaNf6ssHuKWo&s=10",
-    "group": "LIVE TV",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/channeli-8-org.stream/playlist.m3u8"
+    "group": "বিনোদন",
+    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/channeli-8-org.stream/playlist.m3u8"
   },
   {
     "name": "DBC NEWS",
     "logo": "https://yt3.googleusercontent.com/ytc/AIdro_mcjICfjqYwOn4eljNmtsZLBpOmW0t0JlzJUhXSslAkBVo=s900-c-k-c0x00ffffff-no-rj",
-    "group": "NEWS",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/dbcnews.stream/playlist.m3u8"
+    "group": "খবর",
+    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/dbcnews.stream/playlist.m3u8"
   },
   {
     "name": "DEEN TV",
     "logo": "https://www.jagobd.com/wp-content/uploads/2021/05/Deentv.png",
-    "group": "ISLAMIC",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/deentv.stream/playlist.m3u8"
+    "group": "ইসলামিক",
+    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/deentv.stream/playlist.m3u8"
   },
   {
     "name": "DESH TV",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4CfF8DO73YRrwEy8BaKuc769Th5lZI9d5NVCVHoxEPWnGiqHtl35S2PC8&s=10",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/deshtv.stream/playlist.m3u8"
   },
   {
     "name": "EKATTOR TV",
     "logo": "https://upload.wikimedia.org/wikipedia/en/thumb/5/57/Ekattor_TV_logo.svg/1200px-Ekattor_TV_logo.svg.png",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/ekattor.stream/playlist.m3u8"
   },
   {
     "name": "T SPORTS HD",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdOH-HsIdfvzwiwSoKZYEkAQxnv2kFpRkFSw&s",
-    "group": "SPORTS",
+    "group": "খেলাধুলা",
     "streamUrl": "http://bapatv.live:8080/tsports2/index.m3u8"
   },
   {
     "name": "EKHON TV",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQh8982qM-EskoAcbJM3MZO9-Hz7CeTTtUTQULWuWbQKMIQkiv4zT6dMzTA&s=10",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/globaltv.stream/playlist.m3u8"
   },
   {
     "name": "EKUSHEY TV",
     "logo": "https://i.ibb.co.com/G9d0D22/images.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://ekusheyserver.com/hls-live/livepkgr/_definst_/liveevent/livestream1.m3u8"
   },
   {
     "name": "GAAN BANGLA",
     "logo": "https://yt3.googleusercontent.com/ytc/AIdro_kO8uM2Iwy-Ydtu6i3Gsku6Q2dskadTbtOUIEZ7BvGdNWQ=s900-c-k-c0x00ffffff-no-rj",
-    "group": "MUSIC",
+    "group": "সঙ্গীত",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/gaanbangla"
   },
   {
     "name": "INDEPENDENT TV",
     "logo": "https://i.ibb.co.com/c8mycfQ/Independent-Television-Logo-svg.png",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/independent-8-org.stream/playlist.m3u8"
   },
   {
     "name": "RTV",
     "logo": "https://raw.githubusercontent.com/subirkumarpaul/Logo/main/RTV.png",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://streamingengine.rtvplus.tv/rtvpluslive/rtvpluslive.stream/chunklist_w81829040.m3u8"
   },
   {
     "name": "JAMUNA TV",
     "logo": "https://i.ibb.co.com/hR57wkL/Jamuna-Tv1664825738.jpg",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/jamuna-test-sample-ok.stream/playlist.m3u8"
   },
   {
     "name": "MASSRANGA TV",
     "logo": "https://i.ibb.co.com/nQLFk5P/images-11.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://mtv.sunplex.live/MAASRANGA-TV/tracks-v1a1/mono.m3u8"
   },
   {
     "name": "MOVIE BANGLA",
     "logo": "https://i.ibb.co.com/4ZbTdbx/images-1.jpg",
-    "group": "MOVIES",
+    "group": "ছায়াছবি",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/moviebanglalink2.stream/playlist.m3u8"
   },
   {
     "name": "SOMOY TV",
     "logo": "https://i.ibb.co.com/yQ2H0v3/Picsart-24-10-21-18-58-53-027.jpg",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/somoyt000011226615544544.stream/playlist.m3u8"
   },
   {
     "name": "GTV",
     "logo": "https://pb.ihub.live/api/files/8x3xueuva58ilpm/h9ah09az4sc6km3/gtvbangladesh_logo_xyv4WQLRUA.png",
-    "group": "SPORTS",
+    "group": "খেলাধুলা",
     "streamUrl": "https://hotflixbd.online/gtv/tracks-v1a1/mono.m3u8"
   },
   {
     "name": "NTV",
     "logo": "https://i.ibb.co.com/FVFSFtx/images.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/ntvuk00332211.stream/playlist.m3u8"
   },
   {
     "name": "PEACE TV BANGLA",
     "logo": "https://feji.us/cdx8g1",
-    "group": "ISLAMIC",
+    "group": "ইসলামিক",
     "streamUrl": "https://dzkyvlfyge.erbvr.com/PeaceTvBangla/tracks-v3a1/mono.m3u8"
   },
   {
     "name": "DEEPTO TV",
     "logo": "https://i.ibb.co.com/m07trZ0/download.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://byphdgllyk.gpcdn.net/hls/deeptotv/index.m3u8"
   },
   {
     "name": "NEWS 24",
     "logo": "https://static.wikia.nocookie.net/etv-gspn-bangla/images/a/a9/News24_HD_logo_2021.png/revision/latest/scale-to-width-down/985?cb=20231125045717",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/news24local.stream/playlist.m3u8"
   },
   {
     "name": "MOHONA TV",
     "logo": "https://i.ibb.co.com/pJVbjVN/images-3.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "http://tv.cloudcdn.me:80/live.ts?channelId=103&uid=16068&deviceMac=00:1A:79:ED:10:29"
   },
   {
     "name": "MY TV",
     "logo": "https://i.ibb.co.com/bNBq22B/images-2.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://mytvbangla.com/0.m3u8"
   },
   {
     "name": "ME TV",
     "logo": "https://i.ibb.co.com/BjWTMLy/images-1.png",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://iptvbd.live/metv1080/1080.m3u8"
   },
   {
     "name": "RAJDHANI TV",
     "logo": "https://i.ibb.co.com/rH7wmCD/images-3.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://cdn.ncare.live/live-orgin/rajdhanitv.stream/chunks.m3u8"
   },
   {
     "name": "BTV",
     "logo": "https://i.ibb.co.com/23cGKTn/images-2.png",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/btvbd-office-sg.stream/playlist.m3u8"
   },
   {
     "name": "CHANNEL 24",
     "logo": "https://s.id/VabNy",
-    "group": "NEWS",
+    "group": "খবর",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/channel24-sg-e8e.stream/playlist.m3u8"
   },
   {
     "name": "CHANNEL 9",
     "logo": "https://i.ibb.co.com/6RLjMkt/images.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/channel9hd.stream/playlist.m3u8"
   },
   {
     "name": "BOISHAKHI TV",
     "logo": "https://i.ibb.co.com/cJ011hc/images-1-2.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://boishakhi.sonarbanglatv.com/boishakhi/boishakhitv/index.m3u8"
   },
   {
     "name": "BANGLA VISION",
     "logo": "https://i.ibb.co.com/LP5800z/images-1-1.jpg",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/banglav000.stream/playlist.m3u8"
   },
   {
     "name": "BIJOY TV",
     "logo": "https://i.ibb.co.com/LQr3WBM/BIJOY-TV-Logo-BD.png",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/bijoy00.stream/playlist.m3u8"
   },
   {
     "name": "SA TV",
     "logo": "https://i.ibb.co.com/5YZ8Mph/images-2.webp",
-    "group": "LIVE TV",
+    "group": "বিনোদন",
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/satvoff5666.stream/playlist.m3u8"
   }
 ]
