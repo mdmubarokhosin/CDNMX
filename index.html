@@ -1,206 +1,264 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" x-data="{ isDarkMode: localStorage.getItem('isDarkMode') === 'true' }" x-init="$watch('isDarkMode', val => localStorage.setItem('isDarkMode', val))" :class="{ 'dark': isDarkMode }">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>প্রকল্পের অ্যাসেট ডকুমেন্টেশন</title>
-  
-  <!-- Tailwind CSS (for utility classes like gradients) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Bootstrap Icons CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-
-  <!-- Google Fonts for Bengali -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: "Hind Siliguri", "Segoe UI", Arial, sans-serif;
-      background-color: #f8fafc;
-      color: #334155;
-    }
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Asset Hub - The Ultimate Documentation</title>
     
-    /* Custom Styles for a Polished Look */
-    .card {
-      background: #ffffff;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      border-top: 4px solid;
-    }
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-    }
-    .card-header {
-      font-size: 22px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-    .card ul { list-style: none; padding: 0; margin: 0; }
-    .card li {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      font-size: 15px;
-      color: #475569;
-      border-bottom: 1px solid #f1f5f9;
-    }
-    .card li:last-child { border-bottom: none; }
-    .card li i { font-size: 18px; flex-shrink: 0; }
-    .card code {
-      background-color: #f1f5f9;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 14px;
-      color: #1e293b;
-      font-weight: 500;
-    }
-    .description {
-        color: #64748b;
-        font-size: 14px;
-        margin-left: 28px; /* Aligns with text after icon */
-        margin-top: -6px;
-        margin-bottom: 6px;
-    }
-    .hero-icon { font-size: 48px; }
-  </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <style>
+        /* --- Importing and Applying Noto Serif Bengali Font --- */
+        @import url('https://cdnmx.pages.dev/assets/fonts/noto_serif_bengali/font.css');
+
+        body, article, h1, h2, h3, h4, h5, h6, 
+        a, span, p, table, tr, td, input, 
+        div, button, label, select, 
+        .mubarok-topbar, .mubarok-main-menu, .mubarok-breadcrumb, 
+        .mubarok-copyrights-area, 
+        form span.required {
+            font-family: 'Noto Serif Bengali', Arial, sans-serif !important;
+        }
+        /* --- End of Font Styles --- */
+
+        .glass-header { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .asset-card { transition: transform 0.3s ease, box-shadow 0.3s ease; opacity: 0; animation: fadeInUp 0.5s ease-out forwards; }
+        .sidebar-item { transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease; }
+        .sidebar-item:hover { transform: translateX(4px); }
+        [x-cloak] { display: none !important; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body>
+<body 
+    class="bg-slate-50 dark:bg-slate-900"
+    x-data="assetManager()" 
+    x-init="init()"
+>
+    <!-- Main container -->
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="hidden lg:block w-72 bg-white dark:bg-slate-800/50 border-r border-slate-200 dark:border-slate-700 p-6 flex-shrink-0">
+            <div class="flex items-center gap-3 mb-8">
+                <div class="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md">
+                    <i class="bi bi-collection-play-fill text-2xl text-white"></i>
+                </div>
+                <h1 class="text-xl font-bold text-slate-800 dark:text-white">Asset Hub</h1>
+            </div>
+            <p class="text-xs text-slate-400 mb-4 uppercase font-semibold">ক্যাটাগরি</p>
+            <nav class="space-y-2">
+                <a href="#" @click.prevent="setActiveCategory('all')" :class="{'bg-blue-600 text-white shadow-lg': activeCategory === 'all', 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700': activeCategory !== 'all'}" class="sidebar-item flex items-center justify-between w-full px-4 py-2 rounded-lg">
+                    <span><i class="bi bi-grid-fill mr-3"></i> সকল অ্যাসেট</span>
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-full" :class="activeCategory === 'all' ? 'bg-white/20' : 'bg-slate-200 dark:bg-slate-700'" x-text="assets.length"></span>
+                </a>
+                <template x-for="category in categories" :key="category.id">
+                    <a href="#" @click.prevent="setActiveCategory(category.id)" :class="{'bg-blue-600 text-white shadow-lg': activeCategory === category.id, 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700': activeCategory !== category.id}" class="sidebar-item flex items-center justify-between w-full px-4 py-2 rounded-lg">
+                        <span><i :class="category.icon" class="mr-3"></i> <span x-text="category.name"></span></span>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded-full" :class="activeCategory === category.id ? 'bg-white/20' : 'bg-slate-200 dark:bg-slate-700'" x-text="getCategoryCount(category.id)"></span>
+                    </a>
+                </template>
+            </nav>
+        </aside>
 
-  <!-- Header / Hero Section -->
-  <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-center py-16 px-4 shadow-xl">
-    <div class="max-w-4xl mx-auto">
-      <i class="bi bi-collection-play-fill hero-icon mb-4"></i>
-      <h1 class="text-4xl md:text-5xl font-bold">অ্যাসেট ডকুমেন্টেশন</h1>
-      <p class="mt-4 text-lg text-indigo-200">আমাদের CDN (<code class="text-white bg-indigo-500">cdnmx.pages.dev</code>) এর সকল অ্যাসেটের গঠন এবং ব্যবহারবিধি।</p>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="sticky top-0 z-40 glass-header bg-slate-50/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-700 p-4">
+                <div class="flex items-center justify-between">
+                    <!-- Mobile Menu Button -->
+                    <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 rounded-md text-slate-500">
+                        <i class="bi bi-list text-2xl"></i>
+                    </button>
+                    <!-- Search Bar -->
+                    <div class="relative w-full max-w-lg ml-4 lg:ml-0">
+                        <i class="bi bi-search absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" x-model="searchTerm" placeholder="যেকোনো অ্যাসেট খুঁজুন..." class="w-full pl-12 pr-4 py-2.5 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all">
+                    </div>
+                    <!-- Dark Mode Toggle -->
+                    <button @click="isDarkMode = !isDarkMode" class="ml-4 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle dark mode">
+                        <i class="bi text-xl" :class="isDarkMode ? 'bi-sun-fill text-yellow-400' : 'bi-moon-stars-fill text-indigo-500'"></i>
+                    </button>
+                </div>
+                 <!-- Mobile Menu Dropdown -->
+                <div x-show="isMobileMenuOpen" @click.away="isMobileMenuOpen = false" class="lg:hidden mt-4 bg-white dark:bg-slate-800 rounded-lg shadow-xl p-4" x-cloak>
+                    <nav class="space-y-2">
+                        <a href="#" @click.prevent="setActiveCategory('all'); isMobileMenuOpen = false" :class="{'bg-blue-600 text-white': activeCategory === 'all'}" class="sidebar-item flex items-center justify-between w-full px-4 py-2 rounded-lg"><span><i class="bi bi-grid-fill mr-3"></i> সকল অ্যাসেট</span></a>
+                        <template x-for="category in categories" :key="category.id">
+                            <a href="#" @click.prevent="setActiveCategory(category.id); isMobileMenuOpen = false" :class="{'bg-blue-600 text-white': activeCategory === category.id}" class="sidebar-item flex items-center justify-between w-full px-4 py-2 rounded-lg"><span><i :class="category.icon" class="mr-3"></i> <span x-text="category.name"></span></span></a>
+                        </template>
+                    </nav>
+                </div>
+            </header>
+
+            <!-- Asset Grid -->
+            <main class="flex-1 overflow-y-auto p-6 md:p-8">
+                <!-- Welcome Banner -->
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-xl shadow-2xl mb-8 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
+                    <div class="absolute -left-16 -bottom-16 w-56 h-56 border-4 border-white/10 rounded-full"></div>
+                    <h2 class="text-3xl font-bold mb-2">Asset Hub-এ স্বাগতম!</h2>
+                    <p class="max-w-2xl">এটি আপনার প্রকল্পের সকল ডিজিটাল অ্যাসেটের কেন্দ্রীয় সংগ্রহস্থল। এখান থেকে সহজেই যেকোনো ফাইল খুঁজুন, প্রিভিউ দেখুন এবং ব্যবহারের জন্য কোড সংগ্রহ করুন।</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+                    <template x-for="(asset, index) in filteredAssets" :key="asset.id">
+                        <div class="asset-card bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden flex flex-col" :style="`animation-delay: ${index * 50}ms`">
+                            <div class="h-40 flex items-center justify-center bg-slate-100 dark:bg-slate-700/50 p-4 overflow-hidden relative group">
+                                <template x-if="asset.type === 'image' || asset.type === 'svg'">
+                                    <img :src="asset.previewUrl" :alt="asset.name" class="max-h-full max-w-full object-contain">
+                                </template>
+                                <template x-if="asset.type === 'audio'">
+                                    <div class="text-center">
+                                        <i class="bi bi-music-note-beamed text-5xl text-cyan-500"></i>
+                                        <button @click="$refs['audio' + asset.id].play()" class="mt-4 px-4 py-2 bg-cyan-500 text-white rounded-full text-sm hover:bg-cyan-600 transition-colors"><i class="bi bi-play-fill"></i> চালান</button>
+                                        <audio :src="asset.path" :ref="'audio' + asset.id" class="hidden"></audio>
+                                    </div>
+                                </template>
+                                <template x-if="!['image', 'audio', 'svg'].includes(asset.type)">
+                                    <i :class="getIconForType(asset.type)" class="text-6xl text-slate-400"></i>
+                                </template>
+                            </div>
+                            <div class="p-4 flex-1 flex flex-col">
+                                <h3 class="font-bold text-md text-slate-800 dark:text-white truncate" x-text="asset.name"></h3>
+                                <div class="text-xs text-slate-400 mt-1 flex items-center gap-4">
+                                    <span><i class="bi bi-calendar-check mr-1.5"></i> <span x-text="asset.date"></span></span>
+                                    <span><i class="bi bi-person-fill mr-1.5"></i> <span x-text="asset.uploader"></span></span>
+                                </div>
+                                <div class="flex items-center gap-2 mt-3">
+                                    <span class="text-xs px-2 py-1 rounded-full font-semibold" :class="assetTypeInfo(asset.type).badgeColor" x-text="assetTypeInfo(asset.type).name"></span>
+                                    <span class="text-xs text-slate-400 font-semibold" x-text="asset.size"></span>
+                                </div>
+                                <div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2">
+                                     <button @click="copyToClipboard(asset.path, 'Path')" class="flex-1 text-sm px-3 py-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors"><i class="bi bi-clipboard-plus-fill mr-2"></i> পাথ</button>
+                                     <button @click="openCodeModal(asset)" class="flex-1 text-sm px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"><i class="bi bi-code-slash mr-2"></i> কোড</button>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                 <div x-show="filteredAssets.length === 0" class="text-center py-16 text-slate-500" x-cloak>
+                    <i class="bi bi-search-heart text-5xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">কোনো অ্যাসেট পাওয়া যায়নি</h3>
+                    <p>আপনার সার্চ বা ফিল্টারের সাথে মিলে এমন কোনো অ্যাসেট নেই।</p>
+                </div>
+            </main>
+        </div>
     </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto p-4 md:p-8">
-
-    <!-- Core Principles Section -->
-    <section class="mb-12 bg-white p-8 rounded-xl shadow-md">
-        <h2 class="text-2xl font-bold text-center text-slate-800 mb-6">মূলনীতি</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div class="flex flex-col items-center">
-                <i class="bi bi-speedometer2 text-3xl text-blue-500 mb-2"></i>
-                <h3 class="font-semibold text-lg">পারফরম্যান্স</h3>
-                <p class="text-slate-600 text-sm">সকল অ্যাসেট অপ্টিমাইজ করা এবং CDN থেকে দ্রুত পরিবেশন করার জন্য প্রস্তুত।</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <i class="bi bi-boxes text-3xl text-blue-500 mb-2"></i>
-                <h3 class="font-semibold text-lg">ধারাবাহিকতা</h3>
-                <p class="text-slate-600 text-sm">একটি সুসংগঠিত ফোল্ডার কাঠামো যা প্রকল্পকে পরিষ্কার এবং পরিমাপযোগ্য রাখে।</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <i class="bi bi-shield-check text-3xl text-blue-500 mb-2"></i>
-                <h3 class="font-semibold text-lg">নির্ভরযোগ্যতা</h3>
-                <p class="text-slate-600 text-sm">ভার্শনিং ব্যবহার করে ক্যাশিং সমস্যা এড়িয়ে অ্যাসেট আপডেটের নিশ্চয়তা।</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How to Use Section -->
-    <section class="mb-12">
-        <div class="card border-green-500">
-            <h2 class="card-header text-green-600"><i class="bi bi-link-45deg"></i> কিভাবে ব্যবহার করবেন</h2>
-            <p class="text-slate-600 mb-4">যেকোনো অ্যাসেট ব্যবহার করতে নিচের বেস URL-এর সাথে ফাইলের পাথ যোগ করুন:</p>
-            <p class="mb-2"><strong>বেস URL:</strong> <code>https://cdnmx.pages.dev/</code></p>
-            <h4 class="font-semibold mt-4 mb-2">উদাহরণ:</h4>
-            <ul class="text-sm">
-                <li><strong>ইমেজ:</strong> <code>https://cdnmx.pages.dev/assets/images/hero/banner.webp</code></li>
-                <li><strong>ফন্ট:</strong> <code>https://cdnmx.pages.dev/assets/fonts/custom-font.woff2</code></li>
-                <li><strong>ভিডিও:</strong> <code>https://cdnmx.pages.dev/assets/video/promos/intro.mp4</code></li>
-            </ul>
-        </div>
-    </section>
     
-    <!-- Asset Folder Structure -->
-    <h2 class="text-3xl font-bold text-center text-slate-800 mb-8">ফোল্ডার স্ট্রাকচার</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        
-        <div class="card border-amber-400">
-            <h2 class="card-header text-amber-500"><i class="bi bi-image-alt"></i> Images</h2>
-            <ul>
-                <li><i class="bi bi-folder text-amber-500"></i> <code>hero/</code><p class="description">হিরো সেকশনের হাই-রেজোলিউশন ছবি।</p></li>
-                <li><i class="bi bi-folder text-amber-500"></i> <code>logos/</code><p class="description">SVG এবং PNG ফরম্যাটে ব্র্যান্ড লোগো।</p></li>
-                <li><i class="bi bi-folder text-amber-500"></i> <code>thumbs/</code><p class="description">ছোট আকারের থাম্বনেইল ইমেজ।</p></li>
-                <li><i class="bi bi-folder text-amber-500"></i> <code>icons/</code><p class="description">UI-এর জন্য ব্যবহৃত ছোট আইকন।</p></li>
-                <li><i class="bi bi-folder text-amber-500"></i> <code>og/</code><p class="description">সোশ্যাল মিডিয়ায় শেয়ারের জন্য ছবি।</p></li>
-            </ul>
-        </div>
-
-        <div class="card border-rose-400">
-            <h2 class="card-header text-rose-500"><i class="bi bi-play-btn-fill"></i> Video</h2>
-            <ul>
-                <li><i class="bi bi-folder-fill text-rose-500"></i> <code>promos/</code><p class="description">প্রোমোশনাল বা প্রচারমূলক ভিডিও।</p></li>
-                <li><i class="bi bi-folder-fill text-rose-500"></i> <code>loops/</code><p class="description">ব্যাকগ্রাউন্ডে চলার মতো ছোট লুপ ভিডিও।</p></li>
-            </ul>
-        </div>
-        
-        <div class="card border-cyan-400">
-            <h2 class="card-header text-cyan-500"><i class="bi bi-music-note-beamed"></i> Audio</h2>
-            <ul>
-                <li><i class="bi bi-file-earmark-music text-cyan-500"></i> <code>notification.mp3</code><p class="description">ছোট ও অপ্টিমাইজ করা নোটিফিকেশন সাউন্ড।</p></li>
-            </ul>
-        </div>
-
-        <div class="card border-teal-400">
-            <h2 class="card-header text-teal-500"><i class="bi bi-file-earmark-image"></i> Thumbnails</h2>
-            <ul>
-                 <li><i class="bi bi-filetype-webp text-teal-500"></i> <code>thumb-small.webp</code><p class="description">ছোট স্ক্রিনের জন্য দ্রুত লোডিং থাম্বনেইল।</p></li>
-                 <li><i class="bi bi-filetype-webp text-teal-500"></i> <code>thumb-large.webp</code><p class="description">বড় স্ক্রিনের জন্য হাই-কোয়ালিটি থাম্বনেইল।</p></li>
-            </ul>
-        </div>
-
-        <div class="card border-indigo-400">
-            <h2 class="card-header text-indigo-500"><i class="bi bi-filetype-json"></i> JSON</h2>
-            <ul>
-                <li><i class="bi bi-file-code text-indigo-500"></i> <code>Demo data file</code><p class="description">প্রকল্পের ডেমো বা প্রাথমিক ডেটা।</p></li>
-                <li><i class="bi bi-file-code text-indigo-500"></i> <code>manifest.webmanifest</code><p class="description">PWA (Progressive Web App) ম্যানিফেস্ট।</p></li>
-            </ul>
-        </div>
-        
-        <div class="card border-violet-400">
-            <h2 class="card-header text-violet-500"><i class="bi bi-type"></i> অন্যান্য ফাইল</h2>
-            <ul>
-                <li><i class="bi bi-grid-1x2-fill text-violet-500"></i> <code>Sprites/SVG sprite.svg</code><p class="description">আইকনগুলোকে একটি ফাইলে একত্রিত করা SVG স্প্রাইট।</p></li>
-                <li><i class="bi bi-file-earmark-font text-violet-500"></i> <code>Fonts/custom-font.woff2</code><p class="description">প্রকল্পের জন্য ব্যবহৃত কাস্টম ওয়েব ফন্ট।</p></li>
-                <li><i class="bi bi-filetype-svg text-violet-500"></i> <code>SVG/standalone.svg</code><p class="description">স্বতন্ত্রভাবে ব্যবহারযোগ্য SVG ফাইল।</p></li>
-                <li><i class="bi bi-filetype-md text-violet-500"></i> <code>Docs/assets-readme.md</code><p class="description">অ্যাসেট সম্পর্কিত বিস্তারিত মার্কডাউন ডকুমেন্টেশন।</p></li>
-            </ul>
+    <!-- Code Snippet Modal -->
+    <div x-show="isModalOpen" @keydown.escape.window="isModalOpen = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" x-cloak>
+        <div @click.away="isModalOpen = false" class="w-full max-w-2xl bg-white dark:bg-slate-800 rounded-xl shadow-2xl flex flex-col" x-show="isModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
+            <div class="flex items-center justify-between p-4 border-b dark:border-slate-700">
+                <h2 class="text-lg font-bold">কোড স্নিপেট</h2>
+                <button @click="isModalOpen = false" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">&times;</button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4">
+                    <p class="text-sm text-slate-500">ফাইল: <code class="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded" x-text="currentAsset.path"></code></p>
+                </div>
+                <!-- Tabs -->
+                <div class="border-b border-slate-200 dark:border-slate-700">
+                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                        <template x-for="tab in currentAssetCode.tabs" :key="tab.id">
+                            <button @click="activeTab = tab.id" :class="activeTab === tab.id ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:hover:text-slate-300'" class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" x-text="tab.name"></button>
+                        </template>
+                    </nav>
+                </div>
+                <div class="mt-4">
+                    <template x-for="tab in currentAssetCode.tabs" :key="tab.id">
+                        <div x-show="activeTab === tab.id">
+                            <div class="relative">
+                                <pre><code class="block w-full text-sm p-4 rounded-lg bg-slate-900 text-slate-200 overflow-x-auto" x-text="tab.code"></code></pre>
+                                <button @click="copyToClipboard(tab.code, 'Code')" class="absolute top-2 right-2 p-2 rounded-md bg-slate-700 text-white hover:bg-slate-600 text-xs"><i class="bi bi-clipboard-fill"></i> কপি</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
         </div>
     </div>
     
-    <!-- Best Practices -->
-    <section class="mt-12">
-        <div class="card border-sky-500">
-            <h2 class="card-header text-sky-600"><i class="bi bi-lightbulb-fill"></i> সেরা অনুশীলন (Best Practices)</h2>
-            <ul class="space-y-3">
-                <li class="items-start"><i class="bi bi-check-circle-fill text-sky-500"></i><div><strong>ফাইলের নামকরণ:</strong> ফাইলের নাম ছোট হাতের অক্ষরে এবং অর্থপূর্ণ রাখুন। শব্দ আলাদা করতে হাইফেন (-) ব্যবহার করুন। যেমন: <code>main-logo-dark.svg</code></div></li>
-                <li class="items-start"><i class="bi bi-check-circle-fill text-sky-500"></i><div><strong>অপ্টিমাইজেশন:</strong> আপলোড করার আগে ছবি (TinyPNG ব্যবহার করে), ভিডিও, এবং SVG অপ্টিমাইজ করুন। WebP ফরম্যাট ব্যবহার করা উত্তম।</div></li>
-                <li class="items-start"><i class="bi bi-check-circle-fill text-sky-500"></i><div><strong>ভার্শনিং:</strong> গুরুত্বপূর্ণ ফাইল আপডেট করার সময় ফাইলের নামে ভার্সন নম্বর যোগ করুন (যেমন: <code>style.v2.css</code>), যাতে ব্যবহারকারীরা পুরোনো ক্যাশড ফাইল না পায়।</div></li>
-            </ul>
-        </div>
-    </section>
+    <!-- Copy Notification Toast -->
+    <div x-show="showCopyNotification" 
+         x-transition:enter="ease-out duration-300" 
+         x-transition:enter-start="translate-y-full opacity-0" 
+         x-transition:enter-end="translate-y-0 opacity-100" 
+         x-transition:leave="ease-in duration-300" 
+         x-transition:leave-start="translate-y-0 opacity-100" 
+         x-transition:leave-end="translate-y-full opacity-0"
+         class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3" x-cloak>
+        <i class="bi bi-check-circle-fill"></i>
+        <span class="font-semibold" x-text="copyNotificationMessage"></span>
+    </div>
 
-  </main>
-
-  <!-- Footer -->
-  <footer class="text-center p-8 mt-8 border-t border-slate-200">
-    <p class="text-slate-600">একটি সুসংগঠিত ভবিষ্যতের জন্য ডকুমেন্টেশন।</p>
-    <a href="#" class="text-blue-500 hover:text-blue-700 mt-2 inline-block text-2xl"><i class="bi bi-github"></i></a>
-  </footer>
-
+    <script>
+        function assetManager() {
+            const BASE_URL = 'https://cdnmx.pages.dev/';
+            const assetsData = [
+                { id: 1, name: 'hero-banner.webp', category: 'images', type: 'image', size: '120 KB', path: 'assets/images/hero/hero-banner.webp', previewUrl: 'https://picsum.photos/400/200?random=1', uploader: 'Mubarok', date: '25-Sep-2025' },
+                { id: 2, name: 'main-logo-dark.svg', category: 'images', type: 'svg', size: '5 KB', path: 'assets/images/logos/main-logo-dark.svg', previewUrl: 'https://picsum.photos/400/200?random=2', uploader: 'Mubarok', date: '24-Sep-2025' },
+                { id: 3, name: 'promo-video-final.mp4', category: 'video', type: 'video', size: '2.5 MB', path: 'assets/video/promos/promo-video-final.mp4', uploader: 'Mubarok', date: '23-Sep-2025' },
+                { id: 4, name: 'notification.mp3', category: 'audio', type: 'audio', size: '15 KB', path: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3', uploader: 'Mubarok', date: '22-Sep-2025' },
+                { id: 5, name: 'noto_serif_bengali.woff2', category: 'fonts', type: 'font', size: '22 KB', path: 'assets/fonts/noto_serif_bengali/noto_serif_bengali.woff2', uploader: 'Mubarok', date: '21-Sep-2025' },
+                { id: 6, name: 'user-data.json', category: 'json', type: 'json', size: '8 KB', path: 'assets/json/user-data.json', uploader: 'Mubarok', date: '20-Sep-2025' },
+                { id: 7, name: 'icon-sprite.svg', category: 'sprites', type: 'sprite', size: '30 KB', path: 'assets/sprites/icon-sprite.svg', uploader: 'Mubarok', date: '19-Sep-2025' },
+                { id: 8, name: 'article-thumbnail.png', category: 'images', type: 'image', size: '45 KB', path: 'assets/images/thumbs/article-thumbnail.png', previewUrl: 'https://picsum.photos/400/200?random=8', uploader: 'Mubarok', date: '18-Sep-2025' },
+                { id: 9, name: 'readme.md', category: 'docs', type: 'doc', size: '2 KB', path: 'assets/docs/readme.md', uploader: 'Mubarok', date: '17-Sep-2025' },
+                { id: 10, name: 'terms-of-service.pdf', category: 'docs', type: 'pdf', size: '256 KB', path: 'assets/docs/terms-of-service.pdf', uploader: 'Mubarok', date: '16-Sep-2025' },
+            ];
+            
+            return {
+                isMobileMenuOpen: false, searchTerm: '', activeCategory: 'all', isModalOpen: false, activeTab: 'html', currentAsset: {}, currentAssetCode: { tabs: [] }, assets: assetsData,
+                showCopyNotification: false, copyNotificationMessage: '',
+                categories: [
+                    { id: 'images', name: 'ইমেজ', icon: 'bi bi-image-alt' }, { id: 'video', name: 'ভিডিও', icon: 'bi bi-play-btn-fill' }, { id: 'audio', name: 'অডিও', icon: 'bi bi-music-note-beamed' },
+                    { id: 'fonts', name: 'ফন্ট', icon: 'bi bi-type' }, { id: 'json', name: 'JSON', icon: 'bi bi-filetype-json' }, { id: 'sprites', name: 'স্প্রাইট', icon: 'bi bi-grid-1x2-fill' },
+                    { id: 'docs', name: 'ডক্স', icon: 'bi bi-file-earmark-text-fill' }
+                ],
+                init() { /* Initial setup */ },
+                get filteredAssets() {
+                    return this.assets.filter(asset => 
+                        (this.activeCategory === 'all' || asset.category === this.activeCategory) &&
+                        (this.searchTerm === '' || asset.name.toLowerCase().includes(this.searchTerm.toLowerCase()) || asset.type.toLowerCase().includes(this.searchTerm.toLowerCase()))
+                    );
+                },
+                setActiveCategory(category) { this.activeCategory = category; },
+                getCategoryCount(category) { return this.assets.filter(a => a.category === category).length; },
+                assetTypeInfo(type) {
+                    const types = {
+                        image: { name: 'Image', badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300' }, video: { name: 'Video', badgeColor: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300' },
+                        audio: { name: 'Audio', badgeColor: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300' }, font: { name: 'Font', badgeColor: 'bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-300' },
+                        svg: { name: 'SVG', badgeColor: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' }, json: { name: 'JSON', badgeColor: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' },
+                        sprite: { name: 'Sprite', badgeColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' }, doc: { name: 'Doc', badgeColor: 'bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-300' },
+                        pdf: { name: 'PDF', badgeColor: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' },
+                    }; return types[type] || { name: 'File', badgeColor: 'bg-slate-100 text-slate-800' };
+                },
+                getIconForType(type) {
+                    const icons = { font: 'bi bi-file-earmark-font', json: 'bi bi-file-code', video: 'bi bi-film', sprite: 'bi bi-grid-1x2', doc: 'bi bi-file-text', pdf: 'bi bi-file-earmark-pdf-fill' };
+                    return icons[type] || 'bi bi-file-earmark';
+                },
+                copyToClipboard(text, type = 'Code') {
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.copyNotificationMessage = `${type} copied!`;
+                        this.showCopyNotification = true;
+                        setTimeout(() => this.showCopyNotification = false, 3000);
+                    });
+                },
+                openCodeModal(asset) {
+                    this.currentAsset = asset; const fullPath = BASE_URL + asset.path; let tabs = [];
+                    if (asset.type === 'image' || asset.type === 'svg') {
+                        tabs.push({ id: 'html', name: 'HTML', code: `<img src="${fullPath}" alt="${asset.name}">` });
+                        tabs.push({ id: 'css', name: 'CSS', code: `.element {\n  background-image: url('${fullPath}');\n}` });
+                        tabs.push({ id: 'markdown', name: 'Markdown', code: `![${asset.name}](${fullPath})` });
+                    } else if (asset.type === 'audio') { tabs.push({ id: 'html', name: 'HTML', code: `<audio controls src="${fullPath}"></audio>` });
+                    } else if (asset.type === 'video') { tabs.push({ id: 'html', name: 'HTML', code: `<video controls src="${fullPath}"></video>` });
+                    } else if (asset.type === 'font') { tabs.push({ id: 'css', name: 'CSS (@font-face)', code: `@font-face {\n  font-family: 'CustomFont';\n  src: url('${fullPath}') format('woff2');\n}` });
+                    } else { tabs.push({ id: 'path', name: 'Path', code: fullPath }); }
+                    this.currentAssetCode.tabs = tabs; this.activeTab = tabs[0].id; this.isModalOpen = true;
+                }
+            };
+        }
+    </script>
 </body>
 </html>
