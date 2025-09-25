@@ -3,254 +3,203 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Assets ফোল্ডার ডকুমেন্টেশন</title>
+  <title>প্রকল্পের অ্যাসেট ডকুমেন্টেশন</title>
+  
+  <!-- Tailwind CSS (for utility classes like gradients) -->
+  <script src="https://cdn.tailwindcss.com"></script>
   
   <!-- Bootstrap Icons CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
-  <!-- Google Fonts (Optional, for better Bengali rendering) -->
+  <!-- Google Fonts for Bengali -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
       font-family: "Hind Siliguri", "Segoe UI", Arial, sans-serif;
-      background: #f4f6f9;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background: #0d6efd;
-      color: #fff;
-      padding: 40px 20px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    header h1 {
-      margin: 0;
-      font-size: 32px;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-    }
-    header p {
-      margin-top: 8px;
-      font-size: 16px;
-      color: #e0e7ff;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 30px auto;
-      padding: 0 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    section {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    section:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-    }
-
-    section h2 {
-      font-size: 20px;
-      font-weight: 600;
-      color: #0d6efd;
-      margin-top: 0;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    ul li {
-      font-size: 14px;
-      padding: 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid #f0f0f0;
-      color: #555;
-    }
-    ul li:last-child {
-      border-bottom: none;
-    }
-    ul li i {
-      color: #0d6efd;
-      font-size: 16px;
-      flex-shrink: 0;
+      background-color: #f8fafc;
+      color: #334155;
     }
     
-    .note {
-      max-width: 1200px;
-      margin: 20px auto;
-      padding: 15px 20px;
-      background: #eaf2ff;
-      border-left: 5px solid #0d6efd;
-      border-radius: 8px;
-      font-size: 14px;
-      line-height: 1.6;
+    /* Custom Styles for a Polished Look */
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-top: 4px solid;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+    .card-header {
+      font-size: 22px;
+      font-weight: 600;
       display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .card ul { list-style: none; padding: 0; margin: 0; }
+    .card li {
+      display: flex;
+      align-items: center;
       gap: 10px;
-      align-items: flex-start;
+      padding: 10px 0;
+      font-size: 15px;
+      color: #475569;
+      border-bottom: 1px solid #f1f5f9;
     }
-    .note i {
-      font-size: 18px;
-      color: #0d6efd;
-      margin-top: 3px;
-    }
-    code {
-      background: #e0e7ff;
-      padding: 2px 6px;
-      border-radius: 4px;
+    .card li:last-child { border-bottom: none; }
+    .card li i { font-size: 18px; flex-shrink: 0; }
+    .card code {
+      background-color: #f1f5f9;
+      padding: 3px 8px;
+      border-radius: 6px;
       font-family: monospace;
-      font-size: 13px;
-      color: #0d6efd;
+      font-size: 14px;
+      color: #1e293b;
       font-weight: 500;
     }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 14px;
-      color: #666;
-      margin-top: 40px;
-      border-top: 1px solid #e0e0e0;
+    .description {
+        color: #64748b;
+        font-size: 14px;
+        margin-left: 28px; /* Aligns with text after icon */
+        margin-top: -6px;
+        margin-bottom: 6px;
     }
-    footer i {
-      color: #dc3545; /* Heart icon color */
-    }
-
-    /* Responsive tweaks */
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 24px;
-      }
-      section h2 {
-        font-size: 18px;
-      }
-    }
+    .hero-icon { font-size: 48px; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1><i class="bi bi-collection-fill"></i> Assets ফোল্ডার ডকুমেন্টেশন</h1>
-    <p>প্রকল্পের সকল মিডিয়া এবং স্ট্যাটিক ফাইলের গঠন ও ব্যবহারবিধি</p>
+  <!-- Header / Hero Section -->
+  <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white text-center py-16 px-4 shadow-xl">
+    <div class="max-w-4xl mx-auto">
+      <i class="bi bi-collection-play-fill hero-icon mb-4"></i>
+      <h1 class="text-4xl md:text-5xl font-bold">অ্যাসেট ডকুমেন্টেশন</h1>
+      <p class="mt-4 text-lg text-indigo-200">আমাদের CDN (<code class="text-white bg-indigo-500">cdnmx.pages.dev</code>) এর সকল অ্যাসেটের গঠন এবং ব্যবহারবিধি।</p>
+    </div>
   </header>
 
-  <main>
-    <!-- Images -->
-    <section>
-      <h2><i class="bi bi-image-alt"></i> Images</h2>
-      <ul>
-        <li><i class="bi bi-folder"></i> <code>hero/</code> → ব্যানার, হিরো ইমেজ</li>
-        <li><i class="bi bi-folder"></i> <code>logos/</code> → লোগো (svg, png)</li>
-        <li><i class="bi bi-folder"></i> <code>thumbs/</code> → থাম্বনেইল</li>
-        <li><i class="bi bi-folder"></i> <code>icons/</code> → ছোট আইকন</li>
-        <li><i class="bi bi-folder"></i> <code>og/</code> → সোশ্যাল শেয়ার ইমেজ</li>
-      </ul>
+  <main class="max-w-7xl mx-auto p-4 md:p-8">
+
+    <!-- Core Principles Section -->
+    <section class="mb-12 bg-white p-8 rounded-xl shadow-md">
+        <h2 class="text-2xl font-bold text-center text-slate-800 mb-6">মূলনীতি</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="flex flex-col items-center">
+                <i class="bi bi-speedometer2 text-3xl text-blue-500 mb-2"></i>
+                <h3 class="font-semibold text-lg">পারফরম্যান্স</h3>
+                <p class="text-slate-600 text-sm">সকল অ্যাসেট অপ্টিমাইজ করা এবং CDN থেকে দ্রুত পরিবেশন করার জন্য প্রস্তুত।</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="bi bi-boxes text-3xl text-blue-500 mb-2"></i>
+                <h3 class="font-semibold text-lg">ধারাবাহিকতা</h3>
+                <p class="text-slate-600 text-sm">একটি সুসংগঠিত ফোল্ডার কাঠামো যা প্রকল্পকে পরিষ্কার এবং পরিমাপযোগ্য রাখে।</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <i class="bi bi-shield-check text-3xl text-blue-500 mb-2"></i>
+                <h3 class="font-semibold text-lg">নির্ভরযোগ্যতা</h3>
+                <p class="text-slate-600 text-sm">ভার্শনিং ব্যবহার করে ক্যাশিং সমস্যা এড়িয়ে অ্যাসেট আপডেটের নিশ্চয়তা।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How to Use Section -->
+    <section class="mb-12">
+        <div class="card border-green-500">
+            <h2 class="card-header text-green-600"><i class="bi bi-link-45deg"></i> কিভাবে ব্যবহার করবেন</h2>
+            <p class="text-slate-600 mb-4">যেকোনো অ্যাসেট ব্যবহার করতে নিচের বেস URL-এর সাথে ফাইলের পাথ যোগ করুন:</p>
+            <p class="mb-2"><strong>বেস URL:</strong> <code>https://cdnmx.pages.dev/</code></p>
+            <h4 class="font-semibold mt-4 mb-2">উদাহরণ:</h4>
+            <ul class="text-sm">
+                <li><strong>ইমেজ:</strong> <code>https://cdnmx.pages.dev/assets/images/hero/banner.webp</code></li>
+                <li><strong>ফন্ট:</strong> <code>https://cdnmx.pages.dev/assets/fonts/custom-font.woff2</code></li>
+                <li><strong>ভিডিও:</strong> <code>https://cdnmx.pages.dev/assets/video/promos/intro.mp4</code></li>
+            </ul>
+        </div>
     </section>
     
-    <!-- Thumbnails -->
-    <section>
-      <h2><i class="bi bi-file-earmark-image"></i> Thumbnails</h2>
-      <ul>
-        <li><i class="bi bi-filetype-webp"></i> <code>thumb-small.webp</code></li>
-        <li><i class="bi bi-filetype-webp"></i> <code>thumb-large.webp</code></li>
-      </ul>
-    </section>
+    <!-- Asset Folder Structure -->
+    <h2 class="text-3xl font-bold text-center text-slate-800 mb-8">ফোল্ডার স্ট্রাকচার</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <div class="card border-amber-400">
+            <h2 class="card-header text-amber-500"><i class="bi bi-image-alt"></i> Images</h2>
+            <ul>
+                <li><i class="bi bi-folder text-amber-500"></i> <code>hero/</code><p class="description">হিরো সেকশনের হাই-রেজোলিউশন ছবি।</p></li>
+                <li><i class="bi bi-folder text-amber-500"></i> <code>logos/</code><p class="description">SVG এবং PNG ফরম্যাটে ব্র্যান্ড লোগো।</p></li>
+                <li><i class="bi bi-folder text-amber-500"></i> <code>thumbs/</code><p class="description">ছোট আকারের থাম্বনেইল ইমেজ।</p></li>
+                <li><i class="bi bi-folder text-amber-500"></i> <code>icons/</code><p class="description">UI-এর জন্য ব্যবহৃত ছোট আইকন।</p></li>
+                <li><i class="bi bi-folder text-amber-500"></i> <code>og/</code><p class="description">সোশ্যাল মিডিয়ায় শেয়ারের জন্য ছবি।</p></li>
+            </ul>
+        </div>
 
-    <!-- Video -->
-    <section>
-      <h2><i class="bi bi-play-btn-fill"></i> Video</h2>
-      <ul>
-        <li><i class="bi bi-folder-fill"></i> <code>promos/</code> → প্রোমো ভিডিও</li>
-        <li><i class="bi bi-folder-fill"></i> <code>loops/</code> → লুপ ব্যাকগ্রাউন্ড</li>
-      </ul>
-    </section>
+        <div class="card border-rose-400">
+            <h2 class="card-header text-rose-500"><i class="bi bi-play-btn-fill"></i> Video</h2>
+            <ul>
+                <li><i class="bi bi-folder-fill text-rose-500"></i> <code>promos/</code><p class="description">প্রোমোশনাল বা প্রচারমূলক ভিডিও।</p></li>
+                <li><i class="bi bi-folder-fill text-rose-500"></i> <code>loops/</code><p class="description">ব্যাকগ্রাউন্ডে চলার মতো ছোট লুপ ভিডিও।</p></li>
+            </ul>
+        </div>
+        
+        <div class="card border-cyan-400">
+            <h2 class="card-header text-cyan-500"><i class="bi bi-music-note-beamed"></i> Audio</h2>
+            <ul>
+                <li><i class="bi bi-file-earmark-music text-cyan-500"></i> <code>notification.mp3</code><p class="description">ছোট ও অপ্টিমাইজ করা নোটিফিকেশন সাউন্ড।</p></li>
+            </ul>
+        </div>
 
-    <!-- Audio -->
-    <section>
-      <h2><i class="bi bi-music-note-beamed"></i> Audio</h2>
-      <ul>
-        <li><i class="bi bi-file-earmark-music"></i> <code>notification.mp3</code> → নোটিফিকেশন সাউন্ড</li>
-      </ul>
-    </section>
+        <div class="card border-teal-400">
+            <h2 class="card-header text-teal-500"><i class="bi bi-file-earmark-image"></i> Thumbnails</h2>
+            <ul>
+                 <li><i class="bi bi-filetype-webp text-teal-500"></i> <code>thumb-small.webp</code><p class="description">ছোট স্ক্রিনের জন্য দ্রুত লোডিং থাম্বনেইল।</p></li>
+                 <li><i class="bi bi-filetype-webp text-teal-500"></i> <code>thumb-large.webp</code><p class="description">বড় স্ক্রিনের জন্য হাই-কোয়ালিটি থাম্বনেইল।</p></li>
+            </ul>
+        </div>
 
-    <!-- JSON -->
-    <section>
-      <h2><i class="bi bi-filetype-json"></i> JSON</h2>
-      <ul>
-        <li><i class="bi bi-file-code"></i> <code>Demo data file</code></li>
-        <li><i class="bi bi-file-code"></i> <code>manifest.webmanifest</code></li>
-      </ul>
-    </section>
-
-    <!-- Sprites -->
-    <section>
-      <h2><i class="bi bi-grid-1x2-fill"></i> Sprites</h2>
-      <ul>
-        <li><i class="bi bi-filetype-svg"></i> <code>SVG sprite.svg</code></li>
-      </ul>
-    </section>
-
-    <!-- Fonts -->
-    <section>
-      <h2><i class="bi bi-type"></i> Fonts</h2>
-      <ul>
-        <li><i class="bi bi-file-earmark-font"></i> <code>Custom fonts (.woff2)</code></li>
-      </ul>
-    </section>
-
-    <!-- Standalone SVG -->
-    <section>
-      <h2><i class="bi bi-filetype-svg"></i> SVG</h2>
-      <ul>
-        <li><i class="bi bi-file-image"></i> <code>Standalone SVG ফাইল</code></li>
-      </ul>
-    </section>
+        <div class="card border-indigo-400">
+            <h2 class="card-header text-indigo-500"><i class="bi bi-filetype-json"></i> JSON</h2>
+            <ul>
+                <li><i class="bi bi-file-code text-indigo-500"></i> <code>Demo data file</code><p class="description">প্রকল্পের ডেমো বা প্রাথমিক ডেটা।</p></li>
+                <li><i class="bi bi-file-code text-indigo-500"></i> <code>manifest.webmanifest</code><p class="description">PWA (Progressive Web App) ম্যানিফেস্ট।</p></li>
+            </ul>
+        </div>
+        
+        <div class="card border-violet-400">
+            <h2 class="card-header text-violet-500"><i class="bi bi-type"></i> অন্যান্য ফাইল</h2>
+            <ul>
+                <li><i class="bi bi-grid-1x2-fill text-violet-500"></i> <code>Sprites/SVG sprite.svg</code><p class="description">আইকনগুলোকে একটি ফাইলে একত্রিত করা SVG স্প্রাইট।</p></li>
+                <li><i class="bi bi-file-earmark-font text-violet-500"></i> <code>Fonts/custom-font.woff2</code><p class="description">প্রকল্পের জন্য ব্যবহৃত কাস্টম ওয়েব ফন্ট।</p></li>
+                <li><i class="bi bi-filetype-svg text-violet-500"></i> <code>SVG/standalone.svg</code><p class="description">স্বতন্ত্রভাবে ব্যবহারযোগ্য SVG ফাইল।</p></li>
+                <li><i class="bi bi-filetype-md text-violet-500"></i> <code>Docs/assets-readme.md</code><p class="description">অ্যাসেট সম্পর্কিত বিস্তারিত মার্কডাউন ডকুমেন্টেশন।</p></li>
+            </ul>
+        </div>
+    </div>
     
-    <!-- Docs -->
-    <section>
-      <h2><i class="bi bi-file-earmark-text-fill"></i> Docs</h2>
-      <ul>
-        <li><i class="bi bi-filetype-md"></i> <code>assets-readme.md</code></li>
-      </ul>
+    <!-- Best Practices -->
+    <section class="mt-12">
+        <div class="card border-sky-500">
+            <h2 class="card-header text-sky-600"><i class="bi bi-lightbulb-fill"></i> সেরা অনুশীলন (Best Practices)</h2>
+            <ul class="space-y-3">
+                <li class="items-start"><i class="bi bi-check-circle-fill text-sky-500"></i><div><strong>ফাইলের নামকরণ:</strong> ফাইলের নাম ছোট হাতের অক্ষরে এবং অর্থপূর্ণ রাখুন। শব্দ আলাদা করতে হাইফেন (-) ব্যবহার করুন। যেমন: <code>main-logo-dark.svg</code></div></li>
+                <li class="items-start"><i class="bi bi-check-circle-fill text-sky-500"></i><div><strong>অপ্টিমাইজেশন:</strong> আপলোড করার আগে ছবি (TinyPNG ব্যবহার করে), ভিডিও, এবং SVG অপ্টিমাইজ করুন। WebP ফরম্যাট ব্যবহার করা উত্তম।</div></li>
+                <li class="items-start"><i class="bi bi-check-circle-fill text-sky-500"></i><div><strong>ভার্শনিং:</strong> গুরুত্বপূর্ণ ফাইল আপডেট করার সময় ফাইলের নামে ভার্সন নম্বর যোগ করুন (যেমন: <code>style.v2.css</code>), যাতে ব্যবহারকারীরা পুরোনো ক্যাশড ফাইল না পায়।</div></li>
+            </ul>
+        </div>
     </section>
+
   </main>
 
-  <div class="note">
-    <i class="bi bi-info-circle-fill"></i>
-    <div>
-      <strong>গুরুত্বপূর্ণ নির্দেশিকা:</strong> <br>
-      সব ফাইল অবশ্যই <code>assets/</code> ফোল্ডারের মধ্যে রাখুন। <br>
-      CDN-এর পাবলিক ইউআরএল হবে: 
-      <code>https://cdnmx.pages.dev/assets/...</code>
-    </div>
-  </div>
-
-  <footer>
-    Made with <i class="bi bi-heart-fill"></i> for clear documentation.
+  <!-- Footer -->
+  <footer class="text-center p-8 mt-8 border-t border-slate-200">
+    <p class="text-slate-600">একটি সুসংগঠিত ভবিষ্যতের জন্য ডকুমেন্টেশন।</p>
+    <a href="#" class="text-blue-500 hover:text-blue-700 mt-2 inline-block text-2xl"><i class="bi bi-github"></i></a>
   </footer>
 
 </body>
