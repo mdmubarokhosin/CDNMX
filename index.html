@@ -3,13 +3,19 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Assets Documentation</title>
-  <!-- Bootstrap Icons -->
+  <title>Assets ফোল্ডার ডকুমেন্টেশন</title>
+  
+  <!-- Bootstrap Icons CDN -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Google Fonts (Optional, for better Bengali rendering) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     body {
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Hind Siliguri", "Segoe UI", Arial, sans-serif;
       background: #f4f6f9;
       margin: 0;
       padding: 0;
@@ -25,10 +31,11 @@
     header h1 {
       margin: 0;
       font-size: 32px;
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
     }
     header p {
       margin-top: 8px;
@@ -59,11 +66,15 @@
 
     section h2 {
       font-size: 20px;
+      font-weight: 600;
       color: #0d6efd;
+      margin-top: 0;
       margin-bottom: 16px;
       display: flex;
       align-items: center;
       gap: 8px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
     }
 
     ul {
@@ -73,11 +84,12 @@
     }
     ul li {
       font-size: 14px;
-      padding: 6px 0;
+      padding: 8px 0;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       border-bottom: 1px solid #f0f0f0;
+      color: #555;
     }
     ul li:last-child {
       border-bottom: none;
@@ -87,7 +99,7 @@
       font-size: 16px;
       flex-shrink: 0;
     }
-
+    
     .note {
       max-width: 1200px;
       margin: 20px auto;
@@ -96,7 +108,7 @@
       border-left: 5px solid #0d6efd;
       border-radius: 8px;
       font-size: 14px;
-      line-height: 1.5;
+      line-height: 1.6;
       display: flex;
       gap: 10px;
       align-items: flex-start;
@@ -104,13 +116,16 @@
     .note i {
       font-size: 18px;
       color: #0d6efd;
+      margin-top: 3px;
     }
     code {
-      background: #f1f3f5;
-      padding: 2px 5px;
+      background: #e0e7ff;
+      padding: 2px 6px;
       border-radius: 4px;
       font-family: monospace;
       font-size: 13px;
+      color: #0d6efd;
+      font-weight: 500;
     }
 
     footer {
@@ -122,7 +137,7 @@
       border-top: 1px solid #e0e0e0;
     }
     footer i {
-      color: #0d6efd;
+      color: #dc3545; /* Heart icon color */
     }
 
     /* Responsive tweaks */
@@ -137,29 +152,65 @@
   </style>
 </head>
 <body>
+
   <header>
-    <h1><i class="bi bi-folder"></i> Assets ফোল্ডার ডকুমেন্টেশন</h1>
-    <p>GitHub CDN রেপোজিটরির জন্য ব্যবহার নির্দেশিকা</p>
+    <h1><i class="bi bi-collection-fill"></i> Assets ফোল্ডার ডকুমেন্টেশন</h1>
+    <p>প্রকল্পের সকল মিডিয়া এবং স্ট্যাটিক ফাইলের গঠন ও ব্যবহারবিধি</p>
   </header>
 
   <main>
     <!-- Images -->
     <section>
-      <h2><i class="bi bi-image"></i> Images</h2>
+      <h2><i class="bi bi-image-alt"></i> Images</h2>
       <ul>
-        <li><i class="bi bi-card-image"></i> hero/ → ব্যানার ও হিরো ইমেজ</li>
-        <li><i class="bi bi-badge-tm"></i> logos/ → লোগো (svg, png)</li>
-        <li><i class="bi bi-collection"></i> thumbs/ → থাম্বনেইল</li>
-        <li><i class="bi bi-star"></i> icons/ → ছোট আইকন</li>
-        <li><i class="bi bi-link-45deg"></i> og/ → সোশ্যাল শেয়ার ইমেজ</li>
+        <li><i class="bi bi-folder"></i> <code>hero/</code> → ব্যানার, হিরো ইমেজ</li>
+        <li><i class="bi bi-folder"></i> <code>logos/</code> → লোগো (svg, png)</li>
+        <li><i class="bi bi-folder"></i> <code>thumbs/</code> → থাম্বনেইল</li>
+        <li><i class="bi bi-folder"></i> <code>icons/</code> → ছোট আইকন</li>
+        <li><i class="bi bi-folder"></i> <code>og/</code> → সোশ্যাল শেয়ার ইমেজ</li>
+      </ul>
+    </section>
+    
+    <!-- Thumbnails -->
+    <section>
+      <h2><i class="bi bi-file-earmark-image"></i> Thumbnails</h2>
+      <ul>
+        <li><i class="bi bi-filetype-webp"></i> <code>thumb-small.webp</code></li>
+        <li><i class="bi bi-filetype-webp"></i> <code>thumb-large.webp</code></li>
+      </ul>
+    </section>
+
+    <!-- Video -->
+    <section>
+      <h2><i class="bi bi-play-btn-fill"></i> Video</h2>
+      <ul>
+        <li><i class="bi bi-folder-fill"></i> <code>promos/</code> → প্রোমো ভিডিও</li>
+        <li><i class="bi bi-folder-fill"></i> <code>loops/</code> → লুপ ব্যাকগ্রাউন্ড</li>
+      </ul>
+    </section>
+
+    <!-- Audio -->
+    <section>
+      <h2><i class="bi bi-music-note-beamed"></i> Audio</h2>
+      <ul>
+        <li><i class="bi bi-file-earmark-music"></i> <code>notification.mp3</code> → নোটিফিকেশন সাউন্ড</li>
+      </ul>
+    </section>
+
+    <!-- JSON -->
+    <section>
+      <h2><i class="bi bi-filetype-json"></i> JSON</h2>
+      <ul>
+        <li><i class="bi bi-file-code"></i> <code>Demo data file</code></li>
+        <li><i class="bi bi-file-code"></i> <code>manifest.webmanifest</code></li>
       </ul>
     </section>
 
     <!-- Sprites -->
     <section>
-      <h2><i class="bi bi-layers"></i> Sprites</h2>
+      <h2><i class="bi bi-grid-1x2-fill"></i> Sprites</h2>
       <ul>
-        <li><i class="bi bi-box"></i> SVG sprite.svg</li>
+        <li><i class="bi bi-filetype-svg"></i> <code>SVG sprite.svg</code></li>
       </ul>
     </section>
 
@@ -167,73 +218,40 @@
     <section>
       <h2><i class="bi bi-type"></i> Fonts</h2>
       <ul>
-        <li><i class="bi bi-filetype-woff2"></i> Custom fonts (.woff2)</li>
+        <li><i class="bi bi-file-earmark-font"></i> <code>Custom fonts (.woff2)</code></li>
       </ul>
     </section>
 
-    <!-- Video -->
+    <!-- Standalone SVG -->
     <section>
-      <h2><i class="bi bi-play-circle"></i> Video</h2>
+      <h2><i class="bi bi-filetype-svg"></i> SVG</h2>
       <ul>
-        <li><i class="bi bi-film"></i> promos/ → প্রোমো ভিডিও</li>
-        <li><i class="bi bi-repeat"></i> loops/ → লুপ ব্যাকগ্রাউন্ড</li>
+        <li><i class="bi bi-file-image"></i> <code>Standalone SVG ফাইল</code></li>
       </ul>
     </section>
-
-    <!-- Audio -->
-    <section>
-      <h2><i class="bi bi-music-note"></i> Audio</h2>
-      <ul>
-        <li><i class="bi bi-bell"></i> notification.mp3 → নোটিফিকেশন সাউন্ড</li>
-      </ul>
-    </section>
-
-    <!-- JSON -->
-    <section>
-      <h2><i class="bi bi-code-slash"></i> JSON</h2>
-      <ul>
-        <li><i class="bi bi-filetype-json"></i> Demo data file</li>
-        <li><i class="bi bi-window"></i> manifest.webmanifest</li>
-      </ul>
-    </section>
-
-    <!-- SVG -->
-    <section>
-      <h2><i class="bi bi-diagram-3"></i> SVG</h2>
-      <ul>
-        <li><i class="bi bi-filetype-svg"></i> Standalone SVG ফাইল</li>
-      </ul>
-    </section>
-
+    
     <!-- Docs -->
     <section>
-      <h2><i class="bi bi-file-earmark-text"></i> Docs</h2>
+      <h2><i class="bi bi-file-earmark-text-fill"></i> Docs</h2>
       <ul>
-        <li><i class="bi bi-file-text"></i> assets-readme.md</li>
-      </ul>
-    </section>
-
-    <!-- Thumbnails -->
-    <section>
-      <h2><i class="bi bi-file-image"></i> Thumbnails</h2>
-      <ul>
-        <li><i class="bi bi-image"></i> thumb-small.webp</li>
-        <li><i class="bi bi-image"></i> thumb-large.webp</li>
+        <li><i class="bi bi-filetype-md"></i> <code>assets-readme.md</code></li>
       </ul>
     </section>
   </main>
 
   <div class="note">
-    <i class="bi bi-info-circle"></i>
-    <p>
-      সব ফাইলকে <code>assets/</code> ফোল্ডারের মধ্যে রাখুন। <br>
-      GitHub Pages এ পাবলিক ইউআরএল হবে: <br>
-      <code>https://username.github.io/repo-name/assets/images/hero/mubarok-hero.v1.0.0.webp</code>
-    </p>
+    <i class="bi bi-info-circle-fill"></i>
+    <div>
+      <strong>গুরুত্বপূর্ণ নির্দেশিকা:</strong> <br>
+      সব ফাইল অবশ্যই <code>assets/</code> ফোল্ডারের মধ্যে রাখুন। <br>
+      CDN-এর পাবলিক ইউআরএল হবে: 
+      <code>https://cdnmx.pages.dev/assets/...</code>
+    </div>
   </div>
 
   <footer>
-    <i class="bi bi-c-circle"></i> 2025 - Assets Documentation by Mubarok
+    Made with <i class="bi bi-heart-fill"></i> for clear documentation.
   </footer>
+
 </body>
 </html>
