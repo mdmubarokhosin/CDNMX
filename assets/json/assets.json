@@ -7,96 +7,326 @@
     "size": "3 KB",
     "path": "assets/images/svg/account.svg",
     "uploader": "Mubarok",
-    "date": "25-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 2,
     "name": "agreement.svg",
     "category": "images",
     "type": "svg",
-    "size": "5 KB",
+    "size": "4 KB",
     "path": "assets/images/svg/agreement.svg",
     "uploader": "Mubarok",
-    "date": "24-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 3,
-    "name": "promo-video.mp4",
-    "category": "video",
-    "type": "video",
-    "size": "2.5 MB",
-    "path": "assets/video/promos/promo-video.mp4",
+    "name": "annotation.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "2 KB",
+    "path": "assets/images/svg/annotation.svg",
     "uploader": "Mubarok",
-    "date": "23-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 4,
-    "name": "notification.mp3",
-    "category": "audio",
-    "type": "audio",
-    "size": "15 KB",
-    "path": "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
+    "name": "app_data.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/app_data.svg",
     "uploader": "Mubarok",
-    "date": "22-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 5,
-    "name": "noto-serif-bengali.woff2",
-    "category": "fonts",
-    "type": "font",
-    "size": "22 KB",
-    "path": "assets/fonts/noto-serif-bengali.woff2",
+    "name": "buy.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/buy.svg",
     "uploader": "Mubarok",
-    "date": "21-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 6,
-    "name": "user-data.json",
-    "category": "json",
-    "type": "json",
-    "size": "8 KB",
-    "path": "assets/json/user-data.json",
+    "name": "cart.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/cart.svg",
     "uploader": "Mubarok",
-    "date": "20-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 7,
-    "name": "icon-sprite.svg",
-    "category": "sprites",
-    "type": "sprite",
-    "size": "30 KB",
-    "path": "assets/sprites/icon-sprite.svg",
+    "name": "chat.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "2 KB",
+    "path": "assets/images/svg/chat.svg",
     "uploader": "Mubarok",
-    "date": "19-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 8,
-    "name": "article-thumbnail.png",
+    "name": "contact.svg",
     "category": "images",
-    "type": "image",
-    "size": "45 KB",
-    "path": "assets/images/thumbs/article-thumbnail.png",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/contact.svg",
     "uploader": "Mubarok",
-    "date": "18-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 9,
-    "name": "readme.md",
-    "category": "docs",
-    "type": "doc",
-    "size": "2 KB",
-    "path": "assets/docs/readme.md",
+    "name": "contacts.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/contacts.svg",
     "uploader": "Mubarok",
-    "date": "17-Sep-2025"
+    "date": "26-Sep-2025"
   },
   {
     "id": 10,
-    "name": "terms-of-service.pdf",
-    "category": "docs",
-    "type": "pdf",
-    "size": "256 KB",
-    "path": "assets/docs/terms-of-service.pdf",
+    "name": "contract.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/contract.svg",
     "uploader": "Mubarok",
-    "date": "16-Sep-2025"
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 11,
+    "name": "contributor.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "6 KB",
+    "path": "assets/images/svg/contributor.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 12,
+    "name": "cookie.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/cookie.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 13,
+    "name": "data.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/data.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 14,
+    "name": "disclaimer.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/disclaimer.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 15,
+    "name": "download.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "2 KB",
+    "path": "assets/images/svg/download.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 16,
+    "name": "entries.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/entries.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 17,
+    "name": "fill.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "1 KB",
+    "path": "assets/images/svg/fill.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 18,
+    "name": "generator.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/generator.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 19,
+    "name": "import.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/import.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 20,
+    "name": "live-chat.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/live-chat.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 21,
+    "name": "login.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/login.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 22,
+    "name": "noted.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "2 KB",
+    "path": "assets/images/svg/noted.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 23,
+    "name": "og_image.png",
+    "category": "images",
+    "type": "image",
+    "size": "55 KB",
+    "path": "assets/images/svg/og_image.png",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 24,
+    "name": "partner.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/partner.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 25,
+    "name": "personal_file.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/personal_file.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 26,
+    "name": "post.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/post.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 27,
+    "name": "privacy.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/privacy.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 28,
+    "name": "server.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/server.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 29,
+    "name": "request.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/request.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 30,
+    "name": "t-building.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/t-building.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 31,
+    "name": "t-shopping.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/t-shopping.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 32,
+    "name": "t-speed.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "4 KB",
+    "path": "assets/images/svg/t-speed.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
+  },
+  {
+    "id": 33,
+    "name": "terms.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/terms.svg",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
   }
 ]
