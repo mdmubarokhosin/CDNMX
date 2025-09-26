@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "account.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "3 KB",
+    "path": "assets/images/svg/account.svg",
+    "uploader": "Mubarok",
+    "date": "25-Sep-2025"
+  },
+  {
+    "id": 2,
+    "name": "agreement.svg",
+    "category": "images",
+    "type": "svg",
+    "size": "5 KB",
+    "path": "assets/images/svg/agreement.svg",
+    "uploader": "Mubarok",
+    "date": "24-Sep-2025"
+  },
+  {
+    "id": 3,
+    "name": "promo-video.mp4",
+    "category": "video",
+    "type": "video",
+    "size": "2.5 MB",
+    "path": "assets/video/promos/promo-video.mp4",
+    "uploader": "Mubarok",
+    "date": "23-Sep-2025"
+  },
+  {
+    "id": 4,
+    "name": "notification.mp3",
+    "category": "audio",
+    "type": "audio",
+    "size": "15 KB",
+    "path": "https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3",
+    "uploader": "Mubarok",
+    "date": "22-Sep-2025"
+  },
+  {
+    "id": 5,
+    "name": "noto-serif-bengali.woff2",
+    "category": "fonts",
+    "type": "font",
+    "size": "22 KB",
+    "path": "assets/fonts/noto-serif-bengali.woff2",
+    "uploader": "Mubarok",
+    "date": "21-Sep-2025"
+  },
+  {
+    "id": 6,
+    "name": "user-data.json",
+    "category": "json",
+    "type": "json",
+    "size": "8 KB",
+    "path": "assets/json/user-data.json",
+    "uploader": "Mubarok",
+    "date": "20-Sep-2025"
+  },
+  {
+    "id": 7,
+    "name": "icon-sprite.svg",
+    "category": "sprites",
+    "type": "sprite",
+    "size": "30 KB",
+    "path": "assets/sprites/icon-sprite.svg",
+    "uploader": "Mubarok",
+    "date": "19-Sep-2025"
+  },
+  {
+    "id": 8,
+    "name": "article-thumbnail.png",
+    "category": "images",
+    "type": "image",
+    "size": "45 KB",
+    "path": "assets/images/thumbs/article-thumbnail.png",
+    "uploader": "Mubarok",
+    "date": "18-Sep-2025"
+  },
+  {
+    "id": 9,
+    "name": "readme.md",
+    "category": "docs",
+    "type": "doc",
+    "size": "2 KB",
+    "path": "assets/docs/readme.md",
+    "uploader": "Mubarok",
+    "date": "17-Sep-2025"
+  },
+  {
+    "id": 10,
+    "name": "terms-of-service.pdf",
+    "category": "docs",
+    "type": "pdf",
+    "size": "256 KB",
+    "path": "assets/docs/terms-of-service.pdf",
+    "uploader": "Mubarok",
+    "date": "16-Sep-2025"
+  }
+]
