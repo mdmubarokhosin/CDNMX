@@ -10,7 +10,7 @@
     <title>Asset Hub - Live Dynamic Dashboard</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     
     <style>
@@ -22,12 +22,12 @@
         .sidebar-item:hover { transform: translateX(4px); }
         [x-cloak] { display: none !important; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        /* Skeleton Loader Animation */
         .skeleton-card { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-slate-900">
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200">
+
     <!-- Main container -->
     <div class="relative min-h-screen lg:flex">
         <!-- Mobile Sidebar (Off-canvas) -->
@@ -37,9 +37,9 @@
                     <div class="flex items-center justify-between mb-8">
                         <div class="flex items-center gap-3">
                             <div class="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md"><i class="bi bi-collection-play-fill text-2xl text-white"></i></div>
-                            <h1 class="text-xl font-bold text-slate-800 dark:text-white">Asset Hub</h1>
+                            <h1 class="text-xl font-bold">Asset Hub</h1>
                         </div>
-                        <button @click="isMobileMenuOpen = false" class="p-2"><i class="bi bi-x-lg"></i></button>
+                        <button @click="isMobileMenuOpen = false" class="p-2" aria-label="Close menu"><i class="bi bi-x-lg"></i></button>
                     </div>
                     <p class="text-xs text-slate-400 mb-4 uppercase font-semibold">ক্যাটাগরি</p>
                     <nav class="space-y-2">
@@ -56,7 +56,7 @@
         <aside class="hidden lg:block w-72 bg-white dark:bg-slate-800/50 border-r border-slate-200 dark:border-slate-700 p-6 flex-shrink-0">
             <div class="flex items-center gap-3 mb-8">
                 <div class="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg shadow-md"><i class="bi bi-collection-play-fill text-2xl text-white"></i></div>
-                <h1 class="text-xl font-bold text-slate-800 dark:text-white">Asset Hub</h1>
+                <h1 class="text-xl font-bold">Asset Hub</h1>
             </div>
             <p class="text-xs text-slate-400 mb-4 uppercase font-semibold">ক্যাটাগরি</p>
             <nav class="space-y-2">
@@ -64,7 +64,7 @@
                     <span><i class="bi bi-grid-fill mr-3"></i> সকল অ্যাসেট</span><span class="text-xs font-bold px-2 py-0.5 rounded-full" :class="activeCategory === 'all' ? 'bg-white/20' : 'bg-slate-200 dark:bg-slate-700'" x-text="assets.length"></span>
                 </a>
                 <template x-for="category in categories" :key="category.id">
-                    <a href="#" @click.prevent="setActiveCategory(category.id)" :class="{'bg-blue-600 text-white shadow-lg': activeCategory === category.id, 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700': activeCategory !== category.id}" class="sidebar-item flex items-center justify-between w-full px-4 py-2 rounded-lg">
+                    <a href="#" @click.prevent="setActiveCategory(category.id)" :class="{'bg-blue-600 text-white shadow-lg': activeCategory === category.id, 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700': activeCategory !== 'category.id'}" class="sidebar-item flex items-center justify-between w-full px-4 py-2 rounded-lg">
                         <span><i :class="category.icon" class="mr-3"></i> <span x-text="category.name"></span></span><span class="text-xs font-bold px-2 py-0.5 rounded-full" :class="activeCategory === category.id ? 'bg-white/20' : 'bg-slate-200 dark:bg-slate-700'" x-text="getCategoryCount(category.id)"></span>
                     </a>
                 </template>
@@ -75,59 +75,136 @@
         <div class="flex-1 flex flex-col overflow-hidden">
             <header class="sticky top-0 z-30 glass-header bg-slate-50/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-700 p-4">
                 <div class="flex items-center justify-between">
-                    <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 rounded-md text-slate-500"><i class="bi bi-list text-2xl"></i></button>
+                    <button @click="isMobileMenuOpen = !isMobileMenuOpen" class="lg:hidden p-2 rounded-md text-slate-500" aria-label="Open menu"><i class="bi bi-list text-2xl"></i></button>
                     <div class="relative w-full max-w-lg ml-4 lg:ml-0">
                         <i class="bi bi-search absolute top-1/2 left-4 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" x-model="searchTerm" placeholder="যেকোনো অ্যাসেট খুঁজুন..." class="w-full pl-12 pr-4 py-2.5 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all">
+                        <input type="text" x-model.debounce.300ms="searchTerm" placeholder="যেকোনো অ্যাসেট খুঁজুন..." class="w-full pl-12 pr-4 py-2.5 rounded-lg border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/50 transition-all">
                     </div>
                     <div class="hidden sm:flex items-center">
-                        <div x-data="{ open: false }" class="relative ml-4"><button @click="open = !open" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"><i class="bi bi-sort-down text-xl text-slate-500"></i></button><div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl py-2 z-50" x-cloak><a href="#" @click.prevent="setSort('name')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">নাম অনুযায়ী</a><a href="#" @click.prevent="setSort('date')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">তারিখ অনুযায়ী</a><a href="#" @click.prevent="setSort('size')" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">আকার অনুযায়ী</a></div></div>
-                        <div class="ml-2 flex items-center bg-slate-200 dark:bg-slate-700 rounded-full p-1"><button @click="viewMode = 'grid'" :class="{'bg-white dark:bg-slate-900 text-blue-500': viewMode === 'grid', 'text-slate-500': viewMode !== 'grid'}" class="p-1.5 rounded-full transition-colors"><i class="bi bi-grid-fill"></i></button><button @click="viewMode = 'list'" :class="{'bg-white dark:bg-slate-900 text-blue-500': viewMode === 'list', 'text-slate-500': viewMode !== 'list'}" class="p-1.5 rounded-full transition-colors"><i class="bi bi-list-task"></i></button></div>
+                        <div x-data="{ open: false }" class="relative ml-4"><button @click="open = !open" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Sort options"><i class="bi bi-sort-down text-xl text-slate-500"></i></button><div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-800 rounded-lg shadow-xl py-2 z-50" x-cloak><a href="#" @click.prevent="setSort('name'); open = false" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">নাম অনুযায়ী</a><a href="#" @click.prevent="setSort('date'); open = false" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">তারিখ অনুযায়ী</a><a href="#" @click.prevent="setSort('size'); open = false" class="block px-4 py-2 text-sm text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700">আকার অনুযায়ী</a></div></div>
+                        <div class="ml-2 flex items-center bg-slate-200 dark:bg-slate-700 rounded-full p-1"><button @click="viewMode = 'grid'" :class="{'bg-white dark:bg-slate-900 text-blue-500': viewMode === 'grid', 'text-slate-500': viewMode !== 'grid'}" class="p-1.5 rounded-full transition-colors" aria-label="Grid view"><i class="bi bi-grid-fill"></i></button><button @click="viewMode = 'list'" :class="{'bg-white dark:bg-slate-900 text-blue-500': viewMode === 'list', 'text-slate-500': viewMode !== 'list'}" class="p-1.5 rounded-full transition-colors" aria-label="List view"><i class="bi bi-list-task"></i></button></div>
                         <button @click="isDarkMode = !isDarkMode" class="ml-4 p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" aria-label="Toggle dark mode"><i class="bi text-xl" :class="isDarkMode ? 'bi-sun-fill text-yellow-400' : 'bi-moon-stars-fill text-indigo-500'"></i></button>
                     </div>
                 </div>
             </header>
 
             <main class="flex-1 overflow-y-auto p-6 md:p-8">
+                <!-- Skeleton loader -->
                 <div x-show="isLoading" x-cloak>
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         <template x-for="i in 10"><div class="skeleton-card bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden"><div class="h-40 bg-slate-200 dark:bg-slate-700"></div><div class="p-4 space-y-3"><div class="h-4 bg-slate-200 dark:bg-slate-700 rounded w-3/4"></div><div class="h-3 bg-slate-200 dark:bg-slate-700 rounded w-1/2"></div><div class="h-8 bg-slate-200 dark:bg-slate-700 rounded mt-4"></div></div></div></template>
                     </div>
                 </div>
+                
+                <!-- Error Message Display -->
+                <div x-show="loadingError" class="text-center py-16 text-red-500" x-cloak>
+                    <i class="bi bi-exclamation-triangle-fill text-5xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">দুঃখিত, অ্যাসেট লোড করা যায়নি।</h3>
+                    <p>অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।</p>
+                </div>
 
-                <div x-show="!isLoading">
+                <!-- Main content display -->
+                <div x-show="!isLoading && !loadingError">
+                    
+                    <!-- ========== নতুন ওয়েলকাম সেকশন শুরু ========== -->
+                    <div class="mb-8 p-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg text-center text-white">
+                        <h2 class="text-3xl lg:text-4xl font-bold mb-4">CDN MX-এ স্বাগতম!</h2>
+                        <p class="text-lg text-blue-100 max-w-3xl mx-auto leading-relaxed">
+                            এটি আপনার প্রকল্পের সকল ডিজিটাল অ্যাসেটের কেন্দ্রীয় সংগ্রহস্থল। এখান থেকে সহজেই যেকোনো ফাইল খুঁজুন, প্রিভিউ দেখুন এবং ব্যবহারের জন্য কোড সংগ্রহ করুন।
+                        </p>
+                    </div>
+                    <!-- ========== নতুন ওয়েলকাম সেকশন শেষ ========== -->
+
+                    <!-- Grid View -->
                     <div x-show="viewMode === 'grid'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                         <template x-for="(asset, index) in sortedAndFilteredAssets" :key="asset.id">
                             <div class="asset-card bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden flex flex-col" :style="`animation-delay: ${index * 30}ms`">
                                 <div class="h-40 flex items-center justify-center bg-slate-100 dark:bg-slate-700/50 p-4 overflow-hidden"><template x-if="asset.type === 'image' || asset.type === 'svg'"><img :src="BASE_URL + asset.path" :alt="asset.name" class="max-h-full max-w-full object-contain"></template><template x-if="!['image', 'svg'].includes(asset.type)"><i :class="getIconForType(asset.type)" class="text-6xl text-slate-400"></i></template></div>
-                                <div class="p-4 flex-1 flex flex-col"><h3 class="font-bold text-md text-slate-800 dark:text-white truncate" x-text="asset.name"></h3><div class="text-xs text-slate-400 mt-1"><span><span x-text="assetTypeInfo(asset.type).name"></span> &bull; <span x-text="asset.size"></span> &bull; <span x-text="asset.date"></span></span></div><div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2"><button @click="copyToClipboard(asset.path, 'Path')" class="flex-1 text-sm px-3 py-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600"><i class="bi bi-clipboard-plus-fill mr-2"></i> পাথ</button><button @click="openCodeModal(asset)" class="flex-1 text-sm px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"><i class="bi bi-code-slash mr-2"></i> কোড</button></div></div>
+                                <div class="p-4 flex-1 flex flex-col"><h3 class="font-bold text-md truncate" x-text="asset.name"></h3><div class="text-xs text-slate-400 mt-1"><span><span x-text="assetTypeInfo(asset.type).name"></span> &bull; <span x-text="asset.size"></span> &bull; <span x-text="asset.date"></span></span></div><div class="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2"><button @click="copyToClipboard(BASE_URL + asset.path, 'Path')" class="flex-1 text-sm px-3 py-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600"><i class="bi bi-clipboard-plus-fill mr-2"></i> পাথ</button><button @click="openCodeModal(asset)" class="flex-1 text-sm px-3 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"><i class="bi bi-code-slash mr-2"></i> কোড</button></div></div>
                             </div>
                         </template>
                     </div>
+                    <!-- List View -->
                     <div x-show="viewMode === 'list'" class="space-y-3">
                         <template x-for="(asset, index) in sortedAndFilteredAssets" :key="asset.id">
                             <div class="asset-list-item bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-lg p-3 sm:p-4 flex items-center justify-between" :style="`animation-delay: ${index * 20}ms`">
-                                <div class="flex items-center gap-4 flex-1 overflow-hidden"><div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg"><i :class="getIconForType(asset.type)" class="text-2xl text-slate-500"></i></div><div class="flex-1 overflow-hidden"><p class="font-bold text-slate-800 dark:text-white truncate" x-text="asset.name"></p><p class="text-xs text-slate-400 hidden sm:block"><span x-text="asset.size"></span> &bull; <span x-text="asset.date"></span></p></div></div>
-                                <div class="flex items-center gap-2"><button @click="copyToClipboard(asset.path, 'Path')" class="p-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600"><i class="bi bi-clipboard-plus-fill"></i></button><button @click="openCodeModal(asset)" class="p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"><i class="bi bi-code-slash"></i></button></div>
+                                <div class="flex items-center gap-4 flex-1 overflow-hidden"><div class="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-slate-100 dark:bg-slate-700 rounded-lg"><i :class="getIconForType(asset.type)" class="text-2xl text-slate-500"></i></div><div class="flex-1 overflow-hidden"><p class="font-bold truncate" x-text="asset.name"></p><p class="text-xs text-slate-400 hidden sm:block"><span x-text="asset.size"></span> &bull; <span x-text="asset.date"></span></p></div></div>
+                                <div class="flex items-center gap-2"><button @click="copyToClipboard(BASE_URL + asset.path, 'Path')" class="p-2 rounded-md bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600" aria-label="Copy path"><i class="bi bi-clipboard-plus-fill"></i></button><button @click="openCodeModal(asset)" class="p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600" aria-label="Show code"><i class="bi bi-code-slash"></i></button></div>
                             </div>
                         </template>
                     </div>
-                    <div x-show="sortedAndFilteredAssets.length === 0" class="text-center py-16 text-slate-500" x-cloak><i class="bi bi-search-heart text-5xl mb-4"></i><h3 class="text-xl font-semibold">কোনো অ্যাসেট পাওয়া যায়নি</h3></div>
+                    <!-- No Results Message -->
+                    <div x-show="!isLoading && sortedAndFilteredAssets.length === 0" class="text-center py-16 text-slate-500" x-cloak><i class="bi bi-search-heart text-5xl mb-4"></i><h3 class="text-xl font-semibold">কোনো অ্যাসেট পাওয়া যায়নি</h3><p class="mt-1">অনুগ্রহ করে অন্য কোনো শব্দ দিয়ে খুঁজুন।</p></div>
                 </div>
             </main>
         </div>
     </div>
     
-    <!-- Code Snippet Modal and Toast Notification (unchanged) -->
+    <!-- Toast Notification -->
+    <div x-show="showCopyNotification" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-y-2" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform translate-y-2" class="fixed bottom-5 right-5 bg-slate-800 dark:bg-slate-200 text-white dark:text-black px-5 py-3 rounded-lg shadow-lg" x-cloak>
+        <p x-text="copyNotificationMessage"></p>
+    </div>
     
+    <!-- Code Snippet Modal -->
+    <div 
+        x-show="isModalOpen" 
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 p-4" 
+        @keydown.escape.window="isModalOpen = false"
+        x-cloak
+    >
+        <div 
+            x-show="isModalOpen" 
+            x-transition:enter="transition ease-out duration-300" 
+            x-transition:enter-start="opacity-0 transform scale-90" 
+            x-transition:enter-end="opacity-100 transform scale-100" 
+            x-transition:leave="transition ease-in duration-200" 
+            x-transition:leave-start="opacity-100 transform scale-100" 
+            x-transition:leave-end="opacity-0 transform scale-90" 
+            class="relative w-full max-w-2xl bg-white dark:bg-slate-800 rounded-xl shadow-2xl flex flex-col"
+            @click.away="isModalOpen = false"
+        >
+            <!-- Modal Header -->
+            <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
+                <div class="flex items-center gap-3">
+                    <i :class="getIconForType(currentAsset.type)" class="text-xl text-blue-500"></i>
+                    <h3 class="text-lg font-bold" x-text="currentAsset.name"></h3>
+                </div>
+                <button @click="isModalOpen = false" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700" aria-label="Close modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <!-- Modal Content -->
+            <div class="p-5 flex-1">
+                <div class="mb-4 border-b border-slate-200 dark:border-slate-700">
+                    <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+                        <template x-for="tab in currentAssetCode.tabs" :key="tab.id">
+                            <button @click="activeTab = tab.id" :class="activeTab === tab.id ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:hover:text-slate-300'" class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" x-text="tab.name"></button>
+                        </template>
+                    </nav>
+                </div>
+                <div class="relative bg-slate-100 dark:bg-slate-900 rounded-lg p-4">
+                    <template x-for="tab in currentAssetCode.tabs" :key="tab.id">
+                        <div x-show="activeTab === tab.id">
+                            <pre class="text-sm text-slate-800 dark:text-slate-200 overflow-x-auto"><code x-text="tab.code"></code></pre>
+                        </div>
+                    </template>
+                    <button @click="copyToClipboard(currentAssetCode.tabs.find(t => t.id === activeTab)?.code || '', 'Code')" class="absolute top-3 right-3 p-2 text-sm bg-white/50 dark:bg-black/50 backdrop-blur-sm rounded-md hover:bg-slate-200 dark:hover:bg-slate-700" aria-label="Copy code">
+                        <i class="bi bi-clipboard-fill"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alpine.js Logic (unchanged) -->
     <script>
         function appState() {
             const ASSETS_JSON_URL = 'https://cdnmx.pages.dev/assets/json/assets.json';
             const BASE_URL = 'https://cdnmx.pages.dev/';
             
             return {
-                // State properties
                 isLoading: true,
+                loadingError: false,
                 isDarkMode: false,
                 isMobileMenuOpen: false, 
                 viewMode: 'grid',
@@ -143,83 +220,84 @@
                 copyNotificationMessage: '', 
                 BASE_URL: BASE_URL,
                 categories: [
-                    { id: 'images', name: 'ইমেজ', icon: 'bi bi-image-alt' }, { id: 'video', name: 'ভিডিও', icon: 'bi bi-play-btn-fill' }, { id: 'audio', name: 'অডিও', icon: 'bi bi-music-note-beamed' },
-                    { id: 'fonts', name: 'ফন্ট', icon: 'bi bi-type' }, { id: 'json', name: 'JSON', icon: 'bi bi-filetype-json' }, { id: 'sprites', name: 'স্প্রাইট', icon: 'bi bi-grid-1x2-fill' },
+                    { id: 'images', name: 'ইমেজ', icon: 'bi bi-image-alt' }, { id: 'video', name: 'ভিডিও', icon: 'bi bi-play-btn-fill' },
+                    { id: 'audio', name: 'অডিও', icon: 'bi bi-music-note-beamed' }, { id: 'fonts', name: 'ফন্ট', icon: 'bi bi-type' },
+                    { id: 'json', name: 'JSON', icon: 'bi bi-filetype-json' }, { id: 'sprites', name: 'স্প্রাইট', icon: 'bi bi-grid-1x2-fill' },
                     { id: 'docs', name: 'ডক্স', icon: 'bi bi-file-earmark-text-fill' }
                 ],
                 
-                // Initialization method
                 init() {
                     this.isDarkMode = localStorage.getItem('isDarkMode') === 'true';
                     this.$watch('isDarkMode', val => localStorage.setItem('isDarkMode', val));
                     
                     fetch(ASSETS_JSON_URL)
-                        .then(response => response.ok ? response.json() : Promise.reject('Failed to load'))
+                        .then(response => {
+                            if (!response.ok) throw new Error('Network response was not ok');
+                            return response.json();
+                        })
                         .then(data => { this.assets = data; })
-                        .catch(error => console.error('Error fetching assets:', error))
+                        .catch(error => {
+                            console.error('Error fetching assets:', error);
+                            this.loadingError = true;
+                        })
                         .finally(() => { setTimeout(() => { this.isLoading = false; }, 500); });
                 },
 
-                // Computed property for sorted and filtered assets
                 get sortedAndFilteredAssets() {
-                    let filtered = this.assets.filter(asset => 
-                        (this.activeCategory === 'all' || asset.category === this.activeCategory) &&
-                        (this.searchTerm === '' || asset.name.toLowerCase().includes(this.searchTerm.toLowerCase()) || asset.type.toLowerCase().includes(this.searchTerm.toLowerCase()))
-                    );
-
+                    let filtered = this.assets;
+                    if (this.activeCategory !== 'all') {
+                        filtered = filtered.filter(asset => asset.category === this.activeCategory);
+                    }
+                    if (this.searchTerm.trim() !== '') {
+                        const lowerCaseSearch = this.searchTerm.toLowerCase();
+                        filtered = filtered.filter(asset => 
+                            asset.name.toLowerCase().includes(lowerCaseSearch) || 
+                            asset.type.toLowerCase().includes(lowerCaseSearch)
+                        );
+                    }
                     return filtered.sort((a, b) => {
                         if (this.sortBy === 'name') return a.name.localeCompare(b.name, 'bn');
-                        if (this.sortBy === 'date') return new Date(b.date.split('-').reverse().join('-')) - new Date(a.date.split('-').reverse().join('-'));
+                        if (this.sortBy === 'date') {
+                            const dateA = new Date(a.date.replace(/-/g, ' '));
+                            const dateB = new Date(b.date.replace(/-/g, ' '));
+                            return dateB - dateA;
+                        }
                         if (this.sortBy === 'size') {
-                            const sizeA = parseFloat(a.size) * (a.size.includes('MB') ? 1024 : 1);
-                            const sizeB = parseFloat(b.size) * (b.size.includes('MB') ? 1024 : 1);
-                            return sizeB - sizeA;
+                            const sizeToKb = (sizeStr) => {
+                                const [size, unit] = sizeStr.toLowerCase().split(' ');
+                                return (unit === 'mb') ? parseFloat(size) * 1024 : parseFloat(size);
+                            };
+                            return sizeToKb(b.size) - sizeToKb(a.size);
                         }
                         return 0;
                     });
                 },
                 
-                // Action methods
                 setSort(criteria) { this.sortBy = criteria; },
                 setActiveCategory(category) { this.activeCategory = category; },
                 getCategoryCount(category) { return this.assets.filter(a => a.category === category).length; },
                 
                 assetTypeInfo(type) {
-                    const types = {
-                        image: { name: 'Image', badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300' },
-                        video: { name: 'Video', badgeColor: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300' },
-                        audio: { name: 'Audio', badgeColor: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300' },
-                        font: { name: 'Font', badgeColor: 'bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-300' },
-                        svg: { name: 'SVG', badgeColor: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' },
-                        json: { name: 'JSON', badgeColor: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' },
-                        sprite: { name: 'Sprite', badgeColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' },
-                        doc: { name: 'Doc', badgeColor: 'bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-300' },
-                        pdf: { name: 'PDF', badgeColor: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' },
-                    }; 
-                    return types[type] || { name: 'File', badgeColor: 'bg-slate-100 text-slate-800' };
+                    const types = { image: { name: 'Image' }, svg: { name: 'SVG' }, video: { name: 'Video' }, audio: { name: 'Audio' }, font: { name: 'Font' }, json: { name: 'JSON' }, sprite: { name: 'Sprite' }, doc: { name: 'Doc' }, pdf: { name: 'PDF' } }; 
+                    return types[type] || { name: 'File' };
                 },
-
                 getIconForType(type) {
-                    const icons = {
-                        image: 'bi bi-image-alt', svg: 'bi bi-filetype-svg', video: 'bi bi-film', audio: 'bi bi-music-note-beamed',
-                        font: 'bi bi-file-earmark-font', json: 'bi bi-file-code', sprite: 'bi bi-grid-1x2', doc: 'bi bi-file-text', pdf: 'bi bi-file-earmark-pdf-fill'
-                    };
+                    const icons = { image: 'bi bi-image-alt', svg: 'bi bi-filetype-svg', video: 'bi bi-film', audio: 'bi bi-music-note-beamed', font: 'bi bi-file-earmark-font', json: 'bi bi-file-code', sprite: 'bi bi-grid-1x2', doc: 'bi bi-file-text', pdf: 'bi bi-file-earmark-pdf-fill' };
                     return icons[type] || 'bi bi-file-earmark';
                 },
-
                 copyToClipboard(text, type = 'Code') {
+                    if (!text) return;
                     navigator.clipboard.writeText(text).then(() => {
-                        this.copyNotificationMessage = `${type} copied!`;
+                        this.copyNotificationMessage = `${type} কপি করা হয়েছে!`;
                         this.showCopyNotification = true;
                         setTimeout(() => { this.showCopyNotification = false; }, 3000);
                     });
                 },
-
                 openCodeModal(asset) {
                     this.currentAsset = asset;
                     const fullPath = this.BASE_URL + asset.path;
                     let tabs = [];
-                    if (asset.type === 'image' || asset.type === 'svg') {
+                    if (['image', 'svg'].includes(asset.type)) {
                         tabs.push({ id: 'html', name: 'HTML', code: `<img src="${fullPath}" alt="${asset.name}">` });
                         tabs.push({ id: 'css', name: 'CSS', code: `.element {\n  background-image: url('${fullPath}');\n}` });
                         tabs.push({ id: 'markdown', name: 'Markdown', code: `![${asset.name}](${fullPath})` });
@@ -230,13 +308,6 @@
                     this.currentAssetCode.tabs = tabs;
                     this.activeTab = tabs.length > 0 ? tabs[0].id : '';
                     this.isModalOpen = true;
-                },
-                
-                sharePage() {
-                    const shareData = { title: 'Asset Hub', text: 'Check out this Asset Hub!', url: window.location.href };
-                    if (navigator.share) {
-                        navigator.share(shareData).catch(console.error);
-                    } else { this.copyToClipboard(window.location.href, 'Page Link'); }
                 }
             };
         }
