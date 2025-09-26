@@ -328,5 +328,15 @@
     "path": "assets/images/svg/terms.svg",
     "uploader": "Mubarok",
     "date": "26-Sep-2025"
+  },
+  {
+    "id": 34,
+    "name": "styles.css",
+    "category": "docs",
+    "type": "css",
+    "size": "5 KB",
+    "path": "assets/css/theme/styles.css",
+    "uploader": "Mubarok",
+    "date": "26-Sep-2025"
   }
 ]
