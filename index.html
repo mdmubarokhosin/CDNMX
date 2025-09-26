@@ -51,7 +51,7 @@
                 </template>
             </nav>
             <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
-                <button @click="alert('নতুন অ্যাসেট যোগ করতে, অনুগ্রহ করে assets.json ফাইলটি এডিট করুন।')" class="w-full bg-indigo-500 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/30">
+                <button @click="alert('নতুন অ্যাসেট যোগ করতে, অনুগ্রহ করে index.html ফাইলের ভেতরের assetsData অ্যারে এডিট করুন।')" class="w-full bg-indigo-500 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/30">
                     <i class="bi bi-plus-circle-fill"></i> নতুন অ্যাসেট যোগ
                 </button>
             </div>
@@ -88,20 +88,22 @@
 
             <!-- Asset Grid and other contents... -->
             <main class="flex-1 overflow-y-auto p-6 md:p-8">
+                <!-- Welcome Banner -->
                 <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-xl shadow-2xl mb-8 relative overflow-hidden">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
+                    <div class="absolute -left-16 -bottom-16 w-56 h-56 border-4 border-white/10 rounded-full"></div>
                     <h2 class="text-3xl font-bold mb-2">Asset Hub-এ স্বাগতম!</h2>
-                    <p class="max-w-2xl">এটি আপনার প্রকল্পের সকল ডিজিটাল অ্যাসেটের কেন্দ্রীয় সংগ্রহস্থল।</p>
+                    <p class="max-w-2xl">এটি আপনার প্রকল্পের সকল ডিজিটাল অ্যাসেটের কেন্দ্রীয় সংগ্রহস্থল। এখান থেকে সহজেই যেকোনো ফাইল খুঁজুন, প্রিভিউ দেখুন এবং ব্যবহারের জন্য কোড সংগ্রহ করুন।</p>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
                     <template x-for="(asset, index) in filteredAssets" :key="asset.id">
                         <div class="asset-card bg-white dark:bg-slate-800 rounded-xl shadow-lg hover:shadow-2xl hover:-translate-y-1.5 overflow-hidden flex flex-col" :style="`animation-delay: ${index * 50}ms`">
-                             <div class="h-40 flex items-center justify-center bg-slate-100 dark:bg-slate-700/50 p-4 overflow-hidden relative group">
+                            <div class="h-40 flex items-center justify-center bg-slate-100 dark:bg-slate-700/50 p-4 overflow-hidden relative group">
                                 <template x-if="asset.type === 'image' || asset.type === 'svg'">
                                     <img :src="BASE_URL + asset.path" :alt="asset.name" class="max-h-full max-w-full object-contain">
                                 </template>
-                                <template x-if="asset.type === 'audio'"><div class="text-center"><i class="bi bi-music-note-beamed text-5xl text-cyan-500"></i><button @click="$refs['audio' + asset.id].play()" class="mt-4 px-4 py-2 bg-cyan-500 text-white rounded-full text-sm hover:bg-cyan-600 transition-colors"><i class="bi bi-play-fill"></i> চালান</button><audio :src="asset.path" :ref="'audio' + asset.id" class="hidden"></audio></div></template>
-                                <template x-if="!['image', 'audio', 'svg'].includes(asset.type)"><i :class="getIconForType(asset.type)" class="text-6xl text-slate-400"></i></template>
+                                <!-- Other asset types... -->
                             </div>
                             <div class="p-4 flex-1 flex flex-col">
                                 <h3 class="font-bold text-md text-slate-800 dark:text-white truncate" x-text="asset.name"></h3>
@@ -121,24 +123,83 @@
                         </div>
                     </template>
                 </div>
-                 <div x-show="filteredAssets.length === 0" class="text-center py-16 text-slate-500" x-cloak><i class="bi bi-search-heart text-5xl mb-4"></i><h3 class="text-xl font-semibold">কোনো অ্যাসেট পাওয়া যায়নি</h3></div>
+                 <div x-show="filteredAssets.length === 0" class="text-center py-16 text-slate-500" x-cloak>
+                    <i class="bi bi-search-heart text-5xl mb-4"></i>
+                    <h3 class="text-xl font-semibold">কোনো অ্যাসেট পাওয়া যায়নি</h3>
+                    <p>আপনার সার্চ বা ফিল্টারের সাথে মিলে এমন কোনো অ্যাসেট নেই।</p>
+                </div>
             </main>
         </div>
     </div>
     
     <!-- Code Snippet Modal and Toast Notification -->
-    <div x-show="isModalOpen" @keydown.escape.window="isModalOpen = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" x-cloak>...</div>
-    <div x-show="showCopyNotification" class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3" x-cloak>...</div>
+    <div x-show="isModalOpen" @keydown.escape.window="isModalOpen = false" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" x-cloak>
+        <div @click.away="isModalOpen = false" class="w-full max-w-2xl bg-white dark:bg-slate-800 rounded-xl shadow-2xl flex flex-col" x-show="isModalOpen" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
+             <div class="flex items-center justify-between p-4 border-b dark:border-slate-700">
+                <h2 class="text-lg font-bold">কোড স্নিপেট</h2>
+                <button @click="isModalOpen = false" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">&times;</button>
+            </div>
+            <div class="p-6">
+                <div class="mb-4"><p class="text-sm text-slate-500">ফাইল: <code class="bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded" x-text="currentAsset.path"></code></p></div>
+                <div class="border-b border-slate-200 dark:border-slate-700">
+                    <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                        <template x-for="tab in currentAssetCode.tabs" :key="tab.id">
+                            <button @click="activeTab = tab.id" :class="activeTab === tab.id ? 'border-blue-500 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 dark:hover:text-slate-300'" class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm" x-text="tab.name"></button>
+                        </template>
+                    </nav>
+                </div>
+                <div class="mt-4">
+                    <template x-for="tab in currentAssetCode.tabs" :key="tab.id">
+                        <div x-show="activeTab === tab.id">
+                            <div class="relative">
+                                <pre><code class="block w-full text-sm p-4 rounded-lg bg-slate-900 text-slate-200 overflow-x-auto" x-text="tab.code"></code></pre>
+                                <button @click="copyToClipboard(tab.code, 'Code')" class="absolute top-2 right-2 p-2 rounded-md bg-slate-700 text-white hover:bg-slate-600 text-xs"><i class="bi bi-clipboard-fill"></i> কপি</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div x-show="showCopyNotification" 
+         x-transition:enter="ease-out duration-300" x-transition:enter-start="translate-y-full opacity-0" x-transition:enter-end="translate-y-0 opacity-100" 
+         x-transition:leave="ease-in duration-300" x-transition:leave-start="translate-y-0 opacity-100" x-transition:leave-end="translate-y-full opacity-0"
+         class="fixed bottom-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-xl flex items-center gap-3" x-cloak>
+        <i class="bi bi-check-circle-fill"></i>
+        <span class="font-semibold" x-text="copyNotificationMessage"></span>
+    </div>
 
     <script>
         function appState() {
             const BASE_URL = 'https://cdnmx.pages.dev/';
+            const assetsData = [
+                { id: 1, name: 'account.svg', category: 'images', type: 'svg', size: '3 KB', path: 'assets/images/svg/account.svg', uploader: 'Mubarok', date: '25-Sep-2025' },
+                { id: 2, name: 'agreement.svg', category: 'images', type: 'svg', size: '5 KB', path: 'assets/images/svg/agreement.svg', uploader: 'Mubarok', date: '24-Sep-2025' },
+                { id: 3, name: 'promo-video.mp4', category: 'video', type: 'video', size: '2.5 MB', path: 'assets/video/promos/promo-video.mp4', uploader: 'Mubarok', date: '23-Sep-2025' },
+                { id: 4, name: 'notification.mp3', category: 'audio', type: 'audio', size: '15 KB', path: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3', uploader: 'Mubarok', date: '22-Sep-2025' },
+                { id: 5, name: 'noto-serif-bengali.woff2', category: 'fonts', type: 'font', size: '22 KB', path: 'assets/fonts/noto-serif-bengali.woff2', uploader: 'Mubarok', date: '21-Sep-2025' },
+                { id: 6, name: 'user-data.json', category: 'json', type: 'json', size: '8 KB', path: 'assets/json/user-data.json', uploader: 'Mubarok', date: '20-Sep-2025' },
+                { id: 7, name: 'icon-sprite.svg', category: 'sprites', type: 'sprite', size: '30 KB', path: 'assets/sprites/icon-sprite.svg', uploader: 'Mubarok', date: '19-Sep-2025' },
+                { id: 8, name: 'article-thumbnail.png', category: 'images', type: 'image', size: '45 KB', path: 'assets/images/thumbs/article-thumbnail.png', uploader: 'Mubarok', date: '18-Sep-2025' },
+                { id: 9, name: 'readme.md', category: 'docs', type: 'doc', size: '2 KB', path: 'assets/docs/readme.md', uploader: 'Mubarok', date: '17-Sep-2025' },
+                { id: 10, name: 'terms-of-service.pdf', category: 'docs', type: 'pdf', size: '256 KB', path: 'assets/docs/terms-of-service.pdf', uploader: 'Mubarok', date: '16-Sep-2025' },
+            ];
             
             return {
-                isDarkMode: false, isMobileMenuOpen: false, searchTerm: '', activeCategory: 'all', 
-                isModalOpen: false, activeTab: 'html', currentAsset: {}, currentAssetCode: { tabs: [] }, 
-                assets: [], // Initially empty, will be loaded from JSON
-                showCopyNotification: false, copyNotificationMessage: '', BASE_URL: BASE_URL,
+                // Alpine.js state and methods
+                isDarkMode: false,
+                isMobileMenuOpen: false, 
+                searchTerm: '', 
+                activeCategory: 'all', 
+                isModalOpen: false, 
+                activeTab: 'html', 
+                currentAsset: {}, 
+                currentAssetCode: { tabs: [] }, 
+                assets: assetsData,
+                showCopyNotification: false, 
+                copyNotificationMessage: '', 
+                BASE_URL: BASE_URL,
                 categories: [
                     { id: 'images', name: 'ইমেজ', icon: 'bi bi-image-alt' }, { id: 'video', name: 'ভিডিও', icon: 'bi bi-play-btn-fill' }, { id: 'audio', name: 'অডিও', icon: 'bi bi-music-note-beamed' },
                     { id: 'fonts', name: 'ফন্ট', icon: 'bi bi-type' }, { id: 'json', name: 'JSON', icon: 'bi bi-filetype-json' }, { id: 'sprites', name: 'স্প্রাইট', icon: 'bi bi-grid-1x2-fill' },
@@ -146,25 +207,23 @@
                 ],
                 
                 init() {
-                    // Load dark mode preference
+                    // Load dark mode preference from localStorage
                     this.isDarkMode = localStorage.getItem('isDarkMode') === 'true';
+                    // Watch for changes and save to localStorage
                     this.$watch('isDarkMode', val => localStorage.setItem('isDarkMode', val));
-                    
-                    // Load asset data from JSON file
-                    fetch('./assets.json')
-                        .then(response => response.json())
-                        .then(data => {
-                            this.assets = data;
-                            console.log('Assets loaded successfully from assets.json!');
-                        })
-                        .catch(error => console.error('Error loading assets.json:', error));
                 },
                 
                 sharePage() {
-                    const shareData = { title: 'Asset Hub', text: 'Check out this Asset Hub!', url: window.location.href };
+                    const shareData = {
+                        title: 'Asset Hub Documentation',
+                        text: 'Check out this awesome Asset Hub for our project!',
+                        url: window.location.href
+                    };
                     if (navigator.share) {
                         navigator.share(shareData).catch(console.error);
-                    } else { this.copyToClipboard(window.location.href, 'Page Link'); }
+                    } else {
+                        this.copyToClipboard(window.location.href, 'Page Link');
+                    }
                 },
 
                 get filteredAssets() {
@@ -177,14 +236,10 @@
                 getCategoryCount(category) { return this.assets.filter(a => a.category === category).length; },
                 assetTypeInfo(type) {
                     const types = {
-                        image: { name: 'Image', badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300' },
-                        video: { name: 'Video', badgeColor: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300' },
-                        audio: { name: 'Audio', badgeColor: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300' },
-                        font: { name: 'Font', badgeColor: 'bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-300' },
-                        svg: { name: 'SVG', badgeColor: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' },
-                        json: { name: 'JSON', badgeColor: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' },
-                        sprite: { name: 'Sprite', badgeColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' },
-                        doc: { name: 'Doc', badgeColor: 'bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-300' },
+                        image: { name: 'Image', badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300' }, video: { name: 'Video', badgeColor: 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300' },
+                        audio: { name: 'Audio', badgeColor: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/50 dark:text-cyan-300' }, font: { name: 'Font', badgeColor: 'bg-violet-100 text-violet-800 dark:bg-violet-900/50 dark:text-violet-300' },
+                        svg: { name: 'SVG', badgeColor: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' }, json: { name: 'JSON', badgeColor: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' },
+                        sprite: { name: 'Sprite', badgeColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' }, doc: { name: 'Doc', badgeColor: 'bg-sky-100 text-sky-800 dark:bg-sky-900/50 dark:text-sky-300' },
                         pdf: { name: 'PDF', badgeColor: 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300' },
                     }; return types[type] || { name: 'File', badgeColor: 'bg-slate-100 text-slate-800' };
                 },
@@ -196,7 +251,7 @@
                     navigator.clipboard.writeText(text).then(() => {
                         this.copyNotificationMessage = `${type} copied!`;
                         this.showCopyNotification = true;
-                        setTimeout(() => this.showCopyNotification = false, 3000);
+                        setTimeout(() => { this.showCopyNotification = false; }, 3000);
                     });
                 },
                 openCodeModal(asset) {
@@ -209,7 +264,7 @@
                     } else if (asset.type === 'video') { tabs.push({ id: 'html', name: 'HTML', code: `<video controls src="${fullPath}"></video>` });
                     } else if (asset.type === 'font') { tabs.push({ id: 'css', name: 'CSS (@font-face)', code: `@font-face {\n  font-family: 'CustomFont';\n  src: url('${fullPath}') format('woff2');\n}` });
                     } else { tabs.push({ id: 'path', name: 'Path', code: fullPath }); }
-                    this.currentAssetCode.tabs = tabs; this.activeTab = tabs[0].id; this.isModalOpen = true;
+                    this.currentAssetCode.tabs = tabs; this.activeTab = tabs.length > 0 ? tabs[0].id : ''; this.isModalOpen = true;
                 }
             };
         }
