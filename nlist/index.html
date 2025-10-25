@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number List - By Md Mubarok</title>
+    <title>NumberList - Firebase Edition</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -203,7 +203,7 @@
     let currentDate = today;
     let currentShift = 'day';
     let isFirebaseConnected = false;
-    let currentSearchMode = 'current'; // *** NEW: 'current' or 'all'
+    let currentSearchMode = 'current';
 
     // DOM elements
     const datePicker = document.getElementById('date-picker');
@@ -214,9 +214,9 @@
     const searchInput = document.getElementById('search-input');
     const numbersList = document.getElementById('numbers-list');
     const connectionStatus = document.getElementById('connection-status');
-    const searchCurrentRadio = document.getElementById('search-current'); // *** NEW
-    const searchAllRadio = document.getElementById('search-all'); // *** NEW
-    const listTitle = document.getElementById('list-title'); // *** NEW
+    const searchCurrentRadio = document.getElementById('search-current');
+    const searchAllRadio = document.getElementById('search-all');
+    const listTitle = document.getElementById('list-title');
 
     // Initialize the app
     function initApp() {
@@ -273,15 +273,14 @@
         
         searchInput.addEventListener('input', filterNumbers);
         
-        // *** NEW: Search scope listeners
         searchCurrentRadio.addEventListener('change', setSearchMode);
         searchAllRadio.addEventListener('change', setSearchMode);
     }
 
-    // *** NEW: Set search mode
+    // Set search mode
     function setSearchMode(e) {
         currentSearchMode = e.target.value;
-        filterNumbers(); // Re-run search
+        filterNumbers(); 
     }
 
     // Sanitize input
@@ -342,7 +341,7 @@
         filterNumbers(); 
     }
 
-    // *** UPDATED: Render the numbers list based on mode
+    // *** UPDATED: Render the numbers list with Serial Numbers
     function renderNumbersList(items, mode = 'current') {
         numbersList.innerHTML = '';
         
@@ -358,17 +357,24 @@
             return;
         }
         
-        items.forEach((item) => {
+        items.forEach((item, index) => { // <-- Added 'index'
             const li = document.createElement('li');
             li.className = 'flex justify-between items-center p-3 border border-gray-200 rounded-lg shadow-sm';
             
             const numberDiv = document.createElement('div');
-            // Changed to flex-col to stack number and context
             numberDiv.className = 'flex flex-col flex-1 min-w-0'; 
             
             const mainInfoDiv = document.createElement('div');
-            mainInfoDiv.className = 'flex items-center gap-3';
+            mainInfoDiv.className = 'flex items-center gap-2'; // <-- Changed to gap-2
             
+            // *** NEW: Serial Number Span ***
+            const serialSpan = document.createElement('span');
+            // w-8 = 2rem. Ensures "01:" and "10:" align. font-mono for consistent width.
+            serialSpan.className = 'font-mono font-bold text-gray-500 w-8 text-right'; 
+            serialSpan.textContent = `${String(index + 1).padStart(2, '0')}:`;
+            mainInfoDiv.appendChild(serialSpan);
+            // *** END NEW ***
+
             const iconSpan = document.createElement('span');
             iconSpan.className = 'text-indigo-500';
             iconSpan.innerHTML = '<i class="bi bi-record-circle-fill"></i>';
@@ -383,21 +389,20 @@
             actionsDiv.className = 'flex gap-1';
 
             if (mode === 'current') {
-                const number = item; // In 'current' mode, item is a string
+                const number = item;
                 numberSpan.textContent = number;
                 
-                // Add Edit/Delete buttons
                 const editBtn = document.createElement('button');
                 editBtn.className = 'text-blue-500 hover:bg-blue-100 p-2 rounded-full transition-colors';
                 editBtn.innerHTML = '<i class="bi bi-pencil-fill"></i>';
                 editBtn.title = 'Edit';
-                editBtn.onclick = () => startEditing(li, number); // *** BUGFIX: Pass li and number
+                editBtn.onclick = () => startEditing(li, number); 
                 
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'text-red-500 hover:bg-red-100 p-2 rounded-full transition-colors';
                 deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
                 deleteBtn.title = 'Delete';
-                deleteBtn.onclick = () => deleteNumber(number); // *** BUGFIX: Pass number
+                deleteBtn.onclick = () => deleteNumber(number); 
                 
                 actionsDiv.appendChild(editBtn);
                 actionsDiv.appendChild(deleteBtn);
@@ -406,16 +411,16 @@
                 li.appendChild(actionsDiv);
                 
             } else { // mode === 'all'
-                const { number, date, shift } = item; // In 'all' mode, item is an object
+                const { number, date, shift } = item;
                 numberSpan.textContent = number;
 
                 // Add context info
                 const contextSpan = document.createElement('span');
-                contextSpan.className = 'text-sm text-gray-500 ml-8 capitalize'; // Aligned with number
+                 // pl-14 = 3.5rem (w-8 + gap-2 + icon approx)
+                contextSpan.className = 'text-sm text-gray-500 pl-14 capitalize';
                 contextSpan.textContent = `${shift} shift on ${date}`;
                 numberDiv.appendChild(contextSpan);
                 
-                // No edit/delete buttons for 'all' search
                 li.appendChild(numberDiv);
             }
             
@@ -423,8 +428,8 @@
         });
     }
 
-    // *** UPDATED: Start editing (Bugfix)
-    function startEditing(li, originalNumber) { // Pass li element and original number string
+    // Start editing
+    function startEditing(li, originalNumber) {
         if (!li) return;
         
         const numberDiv = li.querySelector('div:first-child');
@@ -437,7 +442,7 @@
         
         input.addEventListener('input', function() { this.value = sanitizeInput(this.value); });
         
-        // Clear the original content (icon, number)
+        // Clear the original content (serial, icon, number)
         numberDiv.innerHTML = ''; 
         numberDiv.appendChild(input);
         
@@ -447,21 +452,21 @@
         saveBtn.className = 'text-green-500 hover:bg-green-100 p-2 rounded-full';
         saveBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
         saveBtn.title = 'Save';
-        saveBtn.onclick = () => saveEdit(originalNumber, input.value); // Pass original number
+        saveBtn.onclick = () => saveEdit(originalNumber, input.value);
         
         const cancelBtn = document.createElement('button');
         cancelBtn.className = 'text-red-500 hover:bg-red-100 p-2 rounded-full';
         cancelBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
         cancelBtn.title = 'Cancel';
-        cancelBtn.onclick = () => cancelEdit(originalNumber); // Pass original number
-        
+        cancelBtn.onclick = () => cancelEdit(originalNumber);
+
         actionsDiv.appendChild(saveBtn);
         actionsDiv.appendChild(cancelBtn);
         
         input.focus(); 
     }
 
-    // *** UPDATED: Save edited number (Bugfix)
+    // Save edited number
     function saveEdit(originalNumber, newValue) {
         if (!newValue) {
             alert('Number cannot be empty');
@@ -474,7 +479,6 @@
         dateRef.once('value', (snapshot) => {
             const allNumbers = snapshot.val() || [];
             
-            // Check for duplicates (excluding self)
             if (allNumbers.includes(newValue) && newValue !== originalNumber) {
                 alert('Number already exists in this shift');
                 cancelEdit(originalNumber);
@@ -494,12 +498,12 @@
         });
     }
 
-    // *** UPDATED: Cancel editing (Bugfix)
+    // Cancel editing
     function cancelEdit(originalNumber) {
-        loadDataForCurrentSelection(); // Just re-renders, which is correct
+        loadDataForCurrentSelection(); 
     }
 
-    // *** UPDATED: Delete a number (Bugfix)
+    // Delete a number
     function deleteNumber(numberToDelete) {
         if (confirm(`Are you sure you want to delete "${numberToDelete}"?`)) {
             const dateRef = database.ref(`numberListData/${currentDate}/${currentShift}`);
@@ -520,10 +524,7 @@
         }
     }
     
-    // This helper is no longer needed for bugfixes, but filterNumbers uses the logic.
-    // function getFilteredNumbers() { ... }
-
-    // *** UPDATED: Filter numbers based on search mode
+    // Filter numbers
     function filterNumbers() {
         const searchTerm = searchInput.value.toLowerCase();
         
@@ -540,7 +541,6 @@
             listTitle.textContent = 'All History Results';
             
             if (!searchTerm) {
-                // If search term is empty, show empty state for 'all' search
                 renderNumbersList([], 'all'); 
                 return;
             }
@@ -560,7 +560,6 @@
                     });
                 }
             }
-            // Sort results by date (most recent first)
             allResults.sort((a, b) => b.date.localeCompare(a.date));
             renderNumbersList(allResults, 'all');
         }
