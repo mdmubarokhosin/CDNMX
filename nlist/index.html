@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>নম্বর তালিকা</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
     <style>
         body {
             background-color: white; 
@@ -22,7 +28,7 @@
         input[type="radio"].hidden-radio { display: none; }
         .shift-radio-label {
             cursor: pointer; padding: 0.5rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.5rem;
-            transition: all 0.2s ease-in-out; /* <-- এই ট্রানজিশনটি ক্লিকের জন্য কাজ করবে */
+            transition: all 0.2s ease-in-out;
             font-weight: 500; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;
             background-color: #F9FAFB; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
@@ -36,26 +42,51 @@
             box-shadow: 0 0 0 2px #C7D2FE;
         }
 
-        /* *** নতুন পরিবর্তন ১: লিস্ট আইটেম অ্যানিমেশন *** */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        /* *** নতুন পরিবর্তন ২: লিস্ট আইটেম হোভার এবং লোড অ্যানিমেশন *** */
         #numbers-list li:not(.loading):not(.no-numbers) {
             transition: all 0.15s ease-in-out;
-            animation: fadeInUp 0.3s ease-out forwards; /* <-- নতুন অ্যানিমেশন যুক্ত করা হয়েছে */
+            animation: fadeInUp 0.3s ease-out forwards;
         }
         #numbers-list li:not(.loading):not(.no-numbers):hover {
             background-color: #F9FAFB;
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+        }
+
+        /* *** নতুন সংযোজন: Toastify কাস্টম স্টাইল *** */
+        .toastify.toastify-right {
+            right: 15px;
+        }
+        .toastify {
+            padding: 12px 20px;
+            color: #fff;
+            display: inline-block;
+            box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
+            background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);
+            background: linear-gradient(135deg, #73a5ff, #5477f5);
+            position: fixed;
+            opacity: 0;
+            transition: all .4s cubic-bezier(.215, .61, .355, 1);
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            max-width: calc(50% - 20px);
+            z-index: 2147483647;
+        }
+        .toastify.toast-success {
+             background: -webkit-linear-gradient(315deg, #23b76a, #1b8a51);
+             background: linear-gradient(135deg, #23b76a, #1b8a51);
+        }
+        .toastify.toast-error {
+            background: -webkit-linear-gradient(315deg, #ff7b7b, #e02f2f);
+            background: linear-gradient(135deg, #ff7b7b, #e02f2f);
+        }
+        .toastify.toast-warning {
+             background: -webkit-linear-gradient(315deg, #ffc000, #d19e00);
+             background: linear-gradient(135deg, #ffc000, #d19e00);
         }
     </style>
 </head>
@@ -150,6 +181,8 @@
     </div>
 </main>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
 <script>
 // Firebase configuration
 const firebaseConfig = {
@@ -163,15 +196,19 @@ const firebaseConfig = {
     measurementId: "G-1MW4692TCY"
 };
 
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
+// State variables
 let currentData = {};
 let currentDate = ''; 
 let currentShift = 'day';
 let isFirebaseConnected = false;
 let currentSearchMode = 'current';
+let isEditing = false; // *** এডিট সমস্যার সমাধান ***
 
+// DOM elements
 const datePicker = document.getElementById('date-picker');
 const dayRadio = document.querySelector('input[name="shift"][value="day"]');
 const nightRadio = document.querySelector('input[name="shift"][value="night"]');
@@ -184,6 +221,27 @@ const searchCurrentRadio = document.getElementById('search-current');
 const searchAllRadio = document.getElementById('search-all');
 const listTitle = document.getElementById('list-title');
 
+// *** নতুন সংযোজন: Toast নোটিফিকেশন দেখানোর ফাংশন ***
+function showToast(message, type = 'success') {
+    let className = 'toast-success';
+    if (type === 'error') {
+        className = 'toast-error';
+    } else if (type === 'warning') {
+        className = 'toast-warning';
+    }
+
+    Toastify({
+        text: message,
+        duration: 3000,
+        close: true,
+        gravity: "top", // `top` or `bottom`
+        position: "right", // `left`, `center` or `right`
+        stopOnFocus: true, // Prevents dismissing of toast on hover
+        className: className,
+    }).showToast();
+}
+
+// Initialize the app
 function initApp() {
     datePicker.value = ''; 
     updateConnectionStatus('connecting');
@@ -191,6 +249,7 @@ function initApp() {
     loadDataFromFirebase();
 }
 
+// Update connection status display
 function updateConnectionStatus(status = 'connecting') {
     if (status === 'connected') {
         connectionStatus.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>সংযোগ সফল</span>';
@@ -204,6 +263,7 @@ function updateConnectionStatus(status = 'connecting') {
     }
 }
 
+// Set up event listeners
 function setupEventListeners() {
     datePicker.addEventListener('change', function() {
         currentDate = this.value;
@@ -240,11 +300,13 @@ function setupEventListeners() {
     searchAllRadio.addEventListener('change', setSearchMode);
 }
 
+// Set search mode
 function setSearchMode(e) {
     currentSearchMode = e.target.value;
     filterNumbers(); 
 }
 
+// Sanitize input
 function sanitizeInput(input) {
     let sanitized = input.toUpperCase();
     sanitized = sanitized.replace(/\s+/g, '-');
@@ -253,14 +315,15 @@ function sanitizeInput(input) {
     return sanitized;
 }
 
+// Add a number
 function addNumber() {
     if (!currentDate) {
-        alert('অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।');
+        showToast('অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।', 'warning');
         return;
     }
     const number = sanitizeInput(numberInput.value.trim());
     if (!number) {
-        alert('অনুগ্রহ করে একটি সঠিক নম্বর লিখুন');
+        showToast('অনুগ্রহ করে একটি সঠিক নম্বর লিখুন', 'warning');
         return;
     }
     
@@ -269,20 +332,22 @@ function addNumber() {
     dateRef.once('value', (snapshot) => {
         const numbers = snapshot.val() || [];
         if (numbers.includes(number)) {
-            alert('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে');
+            showToast('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে', 'warning');
             return;
         }
         numbers.push(number);
         dateRef.set(numbers)
             .then(() => {
                 numberInput.value = '';
+                showToast('নম্বর সফলভাবে যোগ করা হয়েছে');
             })
             .catch((error) => {
-                alert('নম্বর যোগ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+                showToast('নম্বর যোগ করতে সমস্যা হয়েছে', 'error');
             });
     });
 }
 
+// Load data from Firebase
 function loadDataFromFirebase() {
     numbersList.innerHTML = `<li class="loading flex flex-col items-center justify-center p-10">লোড হচ্ছে...</li>`;
     
@@ -299,11 +364,19 @@ function loadDataFromFirebase() {
     });
 }
 
+// Load data for current selection
 function loadDataForCurrentSelection() {
     filterNumbers(); 
 }
 
+// Render the numbers list
 function renderNumbersList(items, mode = 'current') {
+    
+    // *** এডিট সমস্যার সমাধান: এডিট করার সময় তালিকা রি-রেন্ডার বন্ধ করা ***
+    if (isEditing && mode === 'current') {
+        return; 
+    }
+
     numbersList.innerHTML = '';
     
     if (items.length === 0) {
@@ -351,14 +424,12 @@ function renderNumbersList(items, mode = 'current') {
             numberSpan.textContent = number;
             
             const editBtn = document.createElement('button');
-            // *** নতুন পরিবর্তন ৬: বাটন অ্যানিমেশন ***
             editBtn.className = 'text-blue-500 hover:bg-blue-100 p-2 rounded-full transition-all duration-150 active:scale-90';
             editBtn.innerHTML = '<i class="bi bi-pencil-fill"></i>';
             editBtn.title = 'সম্পাদনা';
             editBtn.onclick = () => startEditing(li, number); 
             
             const deleteBtn = document.createElement('button');
-            // *** নতুন পরিবর্তন ৭: বাটন অ্যানিমেশন ***
             deleteBtn.className = 'text-red-500 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
             deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
             deleteBtn.title = 'মুছে ফেলুন';
@@ -387,9 +458,17 @@ function renderNumbersList(items, mode = 'current') {
     });
 }
 
+// Start editing
 function startEditing(li, originalNumber) {
     if (!li) return;
     
+    // *** এডিট সমস্যার সমাধান: একই সাথে একাধিক এডিট বন্ধ করা ***
+    if (isEditing) {
+        showToast('আপনি ইতিমধ্যে একটি নম্বর সম্পাদনা করছেন।', 'warning');
+        return;
+    }
+    isEditing = true; // এডিট মোড চালু
+
     const numberDiv = li.querySelector('div:first-child');
     const actionsDiv = li.querySelector('div:last-child');
     
@@ -406,14 +485,12 @@ function startEditing(li, originalNumber) {
     actionsDiv.innerHTML = '';
     
     const saveBtn = document.createElement('button');
-    // *** নতুন পরিবর্তন ৮: বাটন অ্যানিমেশন ***
     saveBtn.className = 'text-green-500 hover:bg-green-100 p-2 rounded-full transition-all duration-150 active:scale-90';
     saveBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
     saveBtn.title = 'সংরক্ষণ';
     saveBtn.onclick = () => saveEdit(originalNumber, input.value);
     
     const cancelBtn = document.createElement('button');
-    // *** নতুন পরিবর্তন ৯: বাটন অ্যানিমেশন ***
     cancelBtn.className = 'text-red-500 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
     cancelBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
     cancelBtn.title = 'বাতিল';
@@ -425,9 +502,10 @@ function startEditing(li, originalNumber) {
     input.focus(); 
 }
 
+// Save edited number
 function saveEdit(originalNumber, newValue) {
     if (!newValue) {
-        alert('নম্বর খালি রাখা যাবে না');
+        showToast('নম্বর খালি রাখা যাবে না', 'warning');
         return;
     }
     newValue = sanitizeInput(newValue);
@@ -438,8 +516,7 @@ function saveEdit(originalNumber, newValue) {
         const allNumbers = snapshot.val() || [];
         
         if (allNumbers.includes(newValue) && newValue !== originalNumber) {
-            alert('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে');
-            cancelEdit(originalNumber);
+            showToast('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে', 'warning');
             return;
         }
         
@@ -448,18 +525,34 @@ function saveEdit(originalNumber, newValue) {
         if (originalIndex > -1) {
             allNumbers[originalIndex] = newValue;
             dateRef.set(allNumbers)
-                .catch(err => alert('নম্বর আপডেট করতে সমস্যা হয়েছে।'));
+                .then(() => {
+                    showToast('নম্বর সফলভাবে আপডেট করা হয়েছে');
+                    isEditing = false; // *** এডিট সমস্যার সমাধান: সেভ হলে এডিট মোড বন্ধ ***
+                })
+                .catch(err => {
+                    showToast('নম্বর আপডেট করতে সমস্যা হয়েছে', 'error');
+                    isEditing = false; 
+                });
         } else {
-            alert('ত্রুটি: আসল নম্বরটি খুঁজে পাওয়া যায়নি।');
+            showToast('ত্রুটি: আসল নম্বরটি খুঁজে পাওয়া যায়নি', 'error');
+            isEditing = false; 
         }
     });
 }
 
+// Cancel editing
 function cancelEdit(originalNumber) {
-    loadDataForCurrentSelection(); 
+    isEditing = false; // *** এডিট সমস্যার সমাধান: বাতিল করলে এডিট মোড বন্ধ ***
+    loadDataForCurrentSelection(); // তালিকা ম্যানুয়ালি রি-রেন্ডার করা
 }
 
+// Delete a number
 function deleteNumber(numberToDelete) {
+    if (isEditing) { // এডিট করার সময় ডিলিট করা যাবে না
+        showToast('সম্পাদনা শেষ করে তারপর মুছুন।', 'warning');
+        return;
+    }
+
     if (confirm(`আপনি কি "${numberToDelete}" নম্বরটি মুছে ফেলতে চান?`)) {
         const dateRef = database.ref(`numberListData/${currentDate}/${currentShift}`);
         
@@ -470,14 +563,20 @@ function deleteNumber(numberToDelete) {
             if (originalIndex > -1) {
                 allNumbers.splice(originalIndex, 1);
                 dateRef.set(allNumbers)
-                    .catch(err => alert('নম্বরটি মুছতে সমস্যা হয়েছে।'));
+                    .then(() => {
+                        showToast('নম্বর সফলভাবে মুছে ফেলা হয়েছে');
+                    })
+                    .catch(err => {
+                        showToast('নম্বরটি মুছতে সমস্যা হয়েছে', 'error');
+                    });
             } else {
-                alert('ত্রুটি: নম্বরটি খুঁজে পাওয়া যায়নি।');
+                showToast('ত্রুটি: নম্বরটি খুঁজে পাওয়া যায়নি', 'error');
             }
         });
     }
 }
 
+// Filter numbers
 function filterNumbers() {
     const searchTerm = searchInput.value.toLowerCase();
     
@@ -529,6 +628,7 @@ function filterNumbers() {
     }
 }
 
+// Initialize the app
 initApp();
 </script>
 </body>
