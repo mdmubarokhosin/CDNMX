@@ -3,119 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>নম্বর তালিকা</title>
+    <title>নম্বর তালিকা ব্যবস্থাপনা অ্যাপ</title>
     
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
     
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    
     <style>
-        body {
-            background-color: white; 
+        /* নেভিগেশন CSS ভেরিয়েবলস */
+        :root{
+            --bottom-nav-height:60px; /* উচ্চতা সামান্য বাড়ানো হলো */
+            --ui-bg-base:#f4f7fa; /* হালকা ধূসর ব্যাকগ্রাউন্ড */
+            --ui-bg-component:#ffffff;
+            --ui-border-base:#e2e8f0;
+            --ui-fg-base:#1f2937; /* গাঢ় ধূসর টেক্সট */
+            --ui-fg-muted:#6b7280;
+            --ui-fg-interactive:#4F46E5; /* Indigo-600 */
         }
-        /* ... [আগের CSS কোড অপরিবর্তিত] ... */
+        
+        body {
+            background-color: var(--ui-bg-base);
+            padding-bottom: var(--bottom-nav-height); 
+            color: var(--ui-fg-base);
+        }
+
+        /* --- ফিক্সড নেভিগেশন স্টাইল (উন্নত) --- */
+        #mobile-nav {
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05); /* উপরে সুন্দর শ্যাডো */
+        }
+        #nav-container {
+            height: var(--bottom-nav-height);
+            background-color: var(--ui-bg-component);
+            border-top: none; /* বর্ডার বাদ দেওয়া হলো */
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .nav-link {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            color: var(--ui-fg-muted);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+        }
+        .nav-link:active {
+            transform: scale(0.95);
+        }
+        .nav-link.active {
+            color: var(--ui-fg-interactive);
+            font-weight: 700;
+            /* সক্রিয় লিঙ্কের নিচে একটি হালকা বর্ডার যোগ করা যেতে পারে */
+        }
+        .nav-link i {
+            font-size: 1.4rem; /* আইকন সাইজ সামান্য বাড়ানো হলো */
+            margin-bottom: 2px;
+        }
+        .nav-link span {
+            font-size: .65rem; /* টেক্সট সাইজ সামান্য বাড়ানো হলো */
+        }
+
+        /* --- সংযোগ স্টাইল --- */
         .connected { background-color: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
         .disconnected { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
         .connecting { background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
-        .loading { text-align: center; padding: 20px; color: #6B7280; }
-        .no-numbers { text-align: center; padding: 30px; color: #6B7280; font-style: italic; }
         
+        /* --- শিফট রেডিও বাটন স্টাইল (আরো গাঢ় শ্যাডো) --- */
         input[type="radio"].hidden-radio { display: none; }
         .shift-radio-label {
-            cursor: pointer; padding: 0.5rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.5rem;
+            cursor: pointer; padding: 0.6rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.75rem; /* বেশি গোল */
             transition: all 0.2s ease-in-out;
-            font-weight: 500; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;
-            background-color: #F9FAFB; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 600; /* ফন্ট ওয়েট বাড়ানো হলো */
+            display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;
+            background-color: #F9FAFB; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* শ্যাডো সামান্য বাড়ানো হলো */
         }
         .shift-radio-label:hover { background-color: #F3F4F6; border-color: #9CA3AF; }
         input[type="radio"]:checked + .shift-radio-label {
             background-color: #4F46E5; color: white; border-color: #4338CA;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        input[type="radio"]:focus-visible + .shift-radio-label {
-            outline: 2px solid transparent; outline-offset: 2px;
-            box-shadow: 0 0 0 2px #C7D2FE;
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3); /* নীল রঙের শ্যাডো */
         }
 
+        /* --- লিস্ট আইটেম স্টাইল --- */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
         #numbers-list li:not(.loading):not(.no-numbers) {
             transition: all 0.15s ease-in-out;
             animation: fadeInUp 0.3s ease-out forwards;
+            border-radius: 0.75rem; /* বেশি গোল কোণা */
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* হালকা শ্যাডো */
+            border: none;
         }
         #numbers-list li:not(.loading):not(.no-numbers):hover {
-            background-color: #F9FAFB;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.03);
+            background-color: #F0F4F8; /* হালকা ব্যাকগ্রাউন্ড */
+            transform: translateY(-2px); /* সামান্য উপরে ভেসে ওঠা */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
-        /* *** নতুন সংযোজন: Toastify কাস্টম স্টাইল *** */
-        .toastify.toastify-right {
-            right: 15px;
-        }
-        .toastify {
-            padding: 12px 20px;
-            color: #fff;
-            display: inline-block;
-            box-shadow: 0 3px 6px -1px rgba(0, 0, 0, 0.12), 0 10px 36px -4px rgba(77, 96, 232, 0.3);
-            background: -webkit-linear-gradient(315deg, #73a5ff, #5477f5);
-            background: linear-gradient(135deg, #73a5ff, #5477f5);
-            position: fixed;
-            opacity: 0;
-            transition: all .4s cubic-bezier(.215, .61, .355, 1);
-            border-radius: 8px;
-            cursor: pointer;
-            text-decoration: none;
-            max-width: calc(50% - 20px);
-            z-index: 2147483647;
-        }
-        .toastify.toast-success {
-             background: -webkit-linear-gradient(315deg, #23b76a, #1b8a51);
-             background: linear-gradient(135deg, #23b76a, #1b8a51);
-        }
-        .toastify.toast-error {
-            background: -webkit-linear-gradient(315deg, #ff7b7b, #e02f2f);
-            background: linear-gradient(135deg, #ff7b7b, #e02f2f);
-        }
-        .toastify.toast-warning {
-             background: -webkit-linear-gradient(315deg, #ffc000, #d19e00);
-             background: linear-gradient(135deg, #ffc000, #d19e00);
+        /* *** ডেস্কটপে নেভিগেশন লুকানোর জন্য CSS *** */
+        @media (min-width: 1024px) {
+            #mobile-nav { display: none; }
+            body { padding-bottom: 0; }
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen pt-20"> 
+<body class="bg-gray-50 min-h-screen pt-20">
 
-<header class="fixed top-0 left-0 right-0 bg-gradient-to-r from-indigo-600 to-purple-600 shadow-lg z-50">
-    <h1 class="text-center text-xl md:text-2xl font-bold text-white py-4 flex items-center justify-center gap-2">
-        <i class="bi bi-list-ol"></i>
+<header class="fixed top-0 left-0 right-0 bg-gradient-to-r from-indigo-700 to-indigo-500 shadow-xl z-50">
+    <h1 class="text-center text-xl md:text-2xl font-extrabold text-white py-4 flex items-center justify-center gap-2 tracking-wide">
+        <i class="bi bi-list-ol text-indigo-200"></i>
         <span>নম্বর তালিকা</span>
     </h1>
 </header>
 
 <main class="container mx-auto px-4 py-6 max-w-4xl">
-    <div class="bg-white rounded-xl shadow-xl p-6 mb-6 border-t-4 border-indigo-500">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 mb-6 border-t-8 border-indigo-500 transform transition duration-300 hover:shadow-3xl">
         
-        <div class="text-center mb-6">
-            <div id="connection-status" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm shadow-sm">
+        <div class="text-center mb-8">
+            <div id="connection-status" class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs uppercase tracking-wider shadow-sm">
                 </div>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <div class="flex flex-col">
-                <label for="date-picker" class="font-medium mb-2 text-gray-700">তারিখ নির্বাচন করুন:</label>
-                <input type="date" id="date-picker" class="border border-gray-300 rounded-lg px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
+                <label for="date-picker" class="font-semibold mb-2 text-gray-700">তারিখ নির্বাচন করুন:</label>
+                <input type="date" id="date-picker" class="border border-gray-300 rounded-xl px-4 py-3 w-full focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 shadow-inner transition duration-150">
             </div>
             
             <div class="flex flex-col">
-                <label class="font-medium mb-2 text-gray-700">শিফট নির্বাচন করুন:</label>
-                <div class="flex gap-3">
+                <label class="font-semibold mb-2 text-gray-700">শিফট নির্বাচন করুন:</label>
+                <div class="flex gap-4">
                     <label class="flex-1">
                         <input type="radio" name="shift" value="day" checked class="hidden-radio">
                         <span class="shift-radio-label justify-center active:scale-95">
@@ -133,59 +160,83 @@
         </div>
         
         <div class="mb-6">
-            <label for="number-input" class="font-medium mb-2 text-gray-700 block">নতুন নম্বর যোগ করুন:</label>
-            <div class="flex flex-col sm:flex-row gap-3">
+            <label for="number-input" class="font-semibold mb-2 text-gray-700 block">নতুন নম্বর যোগ করুন:</label>
+            <div class="flex flex-col sm:flex-row gap-4">
                 <div class="relative flex-1">
                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
-                        <i class="bi bi-hash"></i>
+                        <i class="bi bi-hash text-lg"></i>
                     </span>
-                    <input type="text" id="number-input" placeholder="নম্বরটি লিখুন..." class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
+                    <input type="text" id="number-input" placeholder="নম্বরটি লিখুন..." class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 shadow-inner transition duration-150">
                 </div>
-                <button id="add-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-6 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:scale-95 active:bg-indigo-700">
-                    <i class="bi bi-plus-circle-fill"></i> <span>যোগ করুন</span>
+                <button id="add-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 ease-in-out flex items-center justify-center gap-2 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 active:scale-95 active:bg-indigo-800">
+                    <i class="bi bi-plus-circle-fill text-xl"></i> <span>যোগ করুন</span>
                 </button>
             </div>
         </div>
         
         <div class="mb-6">
-            <label for="search-input" class="font-medium mb-2 text-gray-700 block">নম্বর খুঁজুন:</label>
+            <label for="search-input" class="font-semibold mb-2 text-gray-700 block">নম্বর খুঁজুন:</label>
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
-                    <i class="bi bi-search"></i>
+                    <i class="bi bi-search text-lg"></i>
                 </span>
-                <input type="text" id="search-input" placeholder="সংরক্ষিত নম্বর খুঁজুন..." class="w-full border border-gray-300 rounded-lg pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm">
+                <input type="text" id="search-input" placeholder="সংরক্ষিত নম্বর খুঁজুন..." class="w-full border border-gray-300 rounded-xl pl-10 pr-4 py-3 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 shadow-inner transition duration-150">
             </div>
         </div>
         
-        <div class="mb-6">
-            <label class="font-medium mb-2 text-gray-700 block">অনুসন্ধানের ক্ষেত্র:</label>
-            <div class="flex gap-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+        <div class="mb-8">
+            <label class="font-semibold mb-2 text-gray-700 block">অনুসন্ধানের ক্ষেত্র:</label>
+            <div class="flex gap-4 p-4 bg-indigo-50 rounded-xl border border-indigo-200 shadow-inner">
                 <label class="flex items-center cursor-pointer">
-                    <input type="radio" id="search-current" name="search-scope" value="current" checked class="mr-2 h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                    <span class="font-medium text-gray-700">বর্তমান তালিকা</span>
+                    <input type="radio" id="search-current" name="search-scope" value="current" checked class="mr-2 h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                    <span class="font-medium text-indigo-700">বর্তমান তালিকা</span>
                 </label>
                 <label class="flex items-center cursor-pointer">
-                    <input type="radio" id="search-all" name="search-scope" value="all" class="mr-2 h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                    <span class="font-medium text-gray-700">পুরানো তালিকা</span>
+                    <input type="radio" id="search-all" name="search-scope" value="all" class="mr-2 h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
+                    <span class="font-medium text-indigo-700">পুরানো তালিকা</span>
                 </label>
             </div>
         </div>
         
-        <hr class="my-6 border-gray-200">
+        <hr class="my-6 border-indigo-100">
         
         <div>
-            <h3 id="list-title" class="text-xl font-semibold text-gray-800 mb-4">বর্তমান তালিকা</h3>
-            <ul id="numbers-list" class="space-y-3">
+            <h3 id="list-title" class="text-2xl font-extrabold text-gray-800 mb-6 border-b-2 border-indigo-200 pb-2">বর্তমান তালিকা</h3>
+            <ul id="numbers-list" class="space-y-4">
                 </ul>
         </div>
     </div>
 </main>
 
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<div id="mobile-nav" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
+    <nav id="nav-container" class="bg-white">
 
+        <a class="nav-link active" onclick="handleNavigation('list')">
+            <i class="bi bi-list-ol"></i>
+            <span>তালিকা</span>
+        </a>
+
+        <a class="nav-link" onclick="handleNavigation('add')">
+            <i class="bi bi-plus-circle-fill"></i>
+            <span>যোগ করুন</span>
+        </a>
+
+        <a class="nav-link" onclick="handleNavigation('search')">
+            <i class="bi bi-search"></i>
+            <span>খুঁজুন</span>
+        </a>
+
+        <a class="nav-link" onclick="handleNavigation('settings')">
+            <i class="bi bi-gear-fill"></i>
+            <span>সেটিংস</span>
+        </a>
+
+    </nav>
+</div>
 <script>
 // Firebase configuration
 const firebaseConfig = {
+    // *** আপনার Firebase কনফিগারেশন কীগুলি এখানে রয়েছে ***
     apiKey: "AIzaSyBZWv9bPTb8rcDGUMrgocpZpGIEUokjdqk",
     authDomain: "number-lister.firebaseapp.com",
     databaseURL: "https://number-lister-default-rtdb.firebaseio.com",
@@ -196,19 +247,15 @@ const firebaseConfig = {
     measurementId: "G-1MW4692TCY"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// State variables
 let currentData = {};
 let currentDate = ''; 
 let currentShift = 'day';
 let isFirebaseConnected = false;
 let currentSearchMode = 'current';
-let isEditing = false; // *** এডিট সমস্যার সমাধান ***
 
-// DOM elements
 const datePicker = document.getElementById('date-picker');
 const dayRadio = document.querySelector('input[name="shift"][value="day"]');
 const nightRadio = document.querySelector('input[name="shift"][value="night"]');
@@ -221,49 +268,67 @@ const searchCurrentRadio = document.getElementById('search-current');
 const searchAllRadio = document.getElementById('search-all');
 const listTitle = document.getElementById('list-title');
 
-// *** নতুন সংযোজন: Toast নোটিফিকেশন দেখানোর ফাংশন ***
-function showToast(message, type = 'success') {
-    let className = 'toast-success';
-    if (type === 'error') {
-        className = 'toast-error';
-    } else if (type === 'warning') {
-        className = 'toast-warning';
-    }
-
-    Toastify({
-        text: message,
-        duration: 3000,
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-        className: className,
-    }).showToast();
-}
-
-// Initialize the app
 function initApp() {
-    datePicker.value = ''; 
+    // আজকের তারিখ ডিফল্ট হিসাবে সেট করুন
+    const today = new Date().toISOString().split('T')[0];
+    datePicker.value = today;
+    currentDate = today;
+
     updateConnectionStatus('connecting');
     setupEventListeners();
     loadDataFromFirebase();
 }
 
-// Update connection status display
-function updateConnectionStatus(status = 'connecting') {
-    if (status === 'connected') {
-        connectionStatus.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>সংযোগ সফল</span>';
-        connectionStatus.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm shadow-sm connected';
-    } else if (status === 'failed') {
-        connectionStatus.innerHTML = '<i class="bi bi-x-circle-fill"></i> <span>সংযোগ ব্যর্থ</span>';
-        connectionStatus.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm shadow-sm disconnected';
-    } else { 
-        connectionStatus.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> <span>সংযোগ করা হচ্ছে...</span>';
-        connectionStatus.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm shadow-sm connecting';
+// *** নেভিগেশন ফাংশন ***
+function handleNavigation(target) {
+    // সক্রিয় ক্লাস রিসেট করুন
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // ক্লিক করা লিঙ্কটি সক্রিয় করুন
+    const clickedLink = document.querySelector(`[onclick="handleNavigation('${target}')"]`);
+    if (clickedLink) {
+        clickedLink.classList.add('active');
+    }
+
+    if (target === 'list') {
+        // তালিকার শুরুতে স্ক্রল করুন এবং বর্তমান তালিকা দেখান
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        searchCurrentRadio.checked = true;
+        currentSearchMode = 'current';
+        searchInput.value = ''; 
+        filterNumbers();
+        
+    } else if (target === 'add') {
+        // নতুন নম্বর যোগ করার ইনপুট ফিল্ডে ফোকাস করুন
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        numberInput.focus();
+        
+    } else if (target === 'search') {
+        // অনুসন্ধান ইনপুট ফিল্ডে ফোকাস করুন
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        searchInput.focus();
+        
+    } else if (target === 'settings') {
+        alert('সেটিংস অপশনটি এখনো তৈরি করা হয়নি।'); 
     }
 }
 
-// Set up event listeners
+
+function updateConnectionStatus(status = 'connecting') {
+    if (status === 'connected') {
+        connectionStatus.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>সংযোগ সফল</span>';
+        connectionStatus.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs uppercase tracking-wider shadow-sm connected';
+    } else if (status === 'failed') {
+        connectionStatus.innerHTML = '<i class="bi bi-x-circle-fill"></i> <span>সংযোগ ব্যর্থ</span>';
+        connectionStatus.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs uppercase tracking-wider shadow-sm disconnected';
+    } else { 
+        connectionStatus.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> <span>সংযোগ করা হচ্ছে...</span>';
+        connectionStatus.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-xs uppercase tracking-wider shadow-sm connecting';
+    }
+}
+
 function setupEventListeners() {
     datePicker.addEventListener('change', function() {
         currentDate = this.value;
@@ -300,13 +365,11 @@ function setupEventListeners() {
     searchAllRadio.addEventListener('change', setSearchMode);
 }
 
-// Set search mode
 function setSearchMode(e) {
     currentSearchMode = e.target.value;
     filterNumbers(); 
 }
 
-// Sanitize input
 function sanitizeInput(input) {
     let sanitized = input.toUpperCase();
     sanitized = sanitized.replace(/\s+/g, '-');
@@ -315,15 +378,14 @@ function sanitizeInput(input) {
     return sanitized;
 }
 
-// Add a number
 function addNumber() {
     if (!currentDate) {
-        showToast('অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।', 'warning');
+        alert('অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।');
         return;
     }
     const number = sanitizeInput(numberInput.value.trim());
     if (!number) {
-        showToast('অনুগ্রহ করে একটি সঠিক নম্বর লিখুন', 'warning');
+        alert('অনুগ্রহ করে একটি সঠিক নম্বর লিখুন');
         return;
     }
     
@@ -332,24 +394,22 @@ function addNumber() {
     dateRef.once('value', (snapshot) => {
         const numbers = snapshot.val() || [];
         if (numbers.includes(number)) {
-            showToast('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে', 'warning');
+            alert('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে');
             return;
         }
         numbers.push(number);
         dateRef.set(numbers)
             .then(() => {
                 numberInput.value = '';
-                showToast('নম্বর সফলভাবে যোগ করা হয়েছে');
             })
             .catch((error) => {
-                showToast('নম্বর যোগ করতে সমস্যা হয়েছে', 'error');
+                alert('নম্বর যোগ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
             });
     });
 }
 
-// Load data from Firebase
 function loadDataFromFirebase() {
-    numbersList.innerHTML = `<li class="loading flex flex-col items-center justify-center p-10">লোড হচ্ছে...</li>`;
+    numbersList.innerHTML = `<li class="loading flex flex-col items-center justify-center p-10"><i class="bi bi-arrow-repeat animate-spin text-3xl mb-2 text-indigo-500"></i>লোড হচ্ছে...</li>`;
     
     const ref = database.ref('numberListData');
     ref.on('value', (snapshot) => {
@@ -360,23 +420,15 @@ function loadDataFromFirebase() {
     }, (error) => {
         isFirebaseConnected = false;
         updateConnectionStatus('failed');
-        numbersList.innerHTML = `<li class="no-numbers flex flex-col items-center justify-center p-10">ডেটা লোড করা যায়নি।</li>`;
+        numbersList.innerHTML = `<li class="no-numbers flex flex-col items-center justify-center p-10"><i class="bi bi-database-exclamation text-4xl mb-4 text-red-400"></i>ডেটা লোড করা যায়নি।</li>`;
     });
 }
 
-// Load data for current selection
 function loadDataForCurrentSelection() {
     filterNumbers(); 
 }
 
-// Render the numbers list
 function renderNumbersList(items, mode = 'current') {
-    
-    // *** এডিট সমস্যার সমাধান: এডিট করার সময় তালিকা রি-রেন্ডার বন্ধ করা ***
-    if (isEditing && mode === 'current') {
-        return; 
-    }
-
     numbersList.innerHTML = '';
     
     if (items.length === 0) {
@@ -385,15 +437,16 @@ function renderNumbersList(items, mode = 'current') {
             message = searchInput.value ? 'পুরানো তালিকায় কোনো মিল খুঁজে পাওয়া যায়নি।' : 'পুরানো তালিকা থেকে খুঁজতে অনুসন্ধান বাক্সে লিখুন।';
         }
         numbersList.innerHTML = `<li class="no-numbers flex flex-col items-center justify-center p-10">
-                                     <i class="bi bi-emoji-frown-fill text-4xl mb-4 text-gray-400"></i>
-                                     <span>${message}</span>
-                                 </li>`;
+                                            <i class="bi bi-emoji-frown-fill text-4xl mb-4 text-gray-400"></i>
+                                            <span>${message}</span>
+                                          </li>`;
         return;
     }
     
     items.forEach((item, index) => {
         const li = document.createElement('li');
-        li.className = 'flex justify-between items-center p-3 border border-gray-200 rounded-lg shadow-sm';
+        // উন্নত লিস্ট আইটেম ক্লাস
+        li.className = 'flex justify-between items-center p-4 bg-gray-50 border-none rounded-xl shadow-md'; 
         
         const numberDiv = document.createElement('div');
         numberDiv.className = 'flex flex-col flex-1 min-w-0'; 
@@ -402,17 +455,17 @@ function renderNumbersList(items, mode = 'current') {
         mainInfoDiv.className = 'flex items-center gap-2';
         
         const serialSpan = document.createElement('span');
-        serialSpan.className = 'font-mono font-bold text-gray-500 w-8 text-right'; 
+        serialSpan.className = 'font-mono font-bold text-indigo-500 w-8 text-right text-lg'; // ফন্ট সাইজ এবং রঙ পরিবর্তন
         serialSpan.textContent = `${String(index + 1).padStart(2, '0')}:`;
         mainInfoDiv.appendChild(serialSpan);
 
         const iconSpan = document.createElement('span');
-        iconSpan.className = 'text-indigo-500';
+        iconSpan.className = 'text-indigo-600';
         iconSpan.innerHTML = '<i class="bi bi-record-circle-fill"></i>';
         mainInfoDiv.appendChild(iconSpan);
 
         const numberSpan = document.createElement('span');
-        numberSpan.className = 'font-semibold text-gray-800 truncate';
+        numberSpan.className = 'font-extrabold text-gray-800 truncate text-lg'; // ফন্ট ওয়েট বাড়ানো হলো
         mainInfoDiv.appendChild(numberSpan);
         numberDiv.appendChild(mainInfoDiv);
         
@@ -424,13 +477,13 @@ function renderNumbersList(items, mode = 'current') {
             numberSpan.textContent = number;
             
             const editBtn = document.createElement('button');
-            editBtn.className = 'text-blue-500 hover:bg-blue-100 p-2 rounded-full transition-all duration-150 active:scale-90';
+            editBtn.className = 'text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-all duration-150 active:scale-90';
             editBtn.innerHTML = '<i class="bi bi-pencil-fill"></i>';
             editBtn.title = 'সম্পাদনা';
             editBtn.onclick = () => startEditing(li, number); 
             
             const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'text-red-500 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
+            deleteBtn.className = 'text-red-600 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
             deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
             deleteBtn.title = 'মুছে ফেলুন';
             deleteBtn.onclick = () => deleteNumber(number); 
@@ -446,7 +499,7 @@ function renderNumbersList(items, mode = 'current') {
             numberSpan.textContent = number;
 
             const contextSpan = document.createElement('span');
-            contextSpan.className = 'text-sm text-gray-500 pl-14 capitalize';
+            contextSpan.className = 'text-sm text-gray-500 pl-14 capitalize mt-1';
             const shiftText = shift === 'day' ? 'দিনের শিফট' : 'রাতের শিফট';
             contextSpan.textContent = `${shiftText} - ${date}`;
             numberDiv.appendChild(contextSpan);
@@ -458,23 +511,16 @@ function renderNumbersList(items, mode = 'current') {
     });
 }
 
-// Start editing
 function startEditing(li, originalNumber) {
     if (!li) return;
     
-    // *** এডিট সমস্যার সমাধান: একই সাথে একাধিক এডিট বন্ধ করা ***
-    if (isEditing) {
-        showToast('আপনি ইতিমধ্যে একটি নম্বর সম্পাদনা করছেন।', 'warning');
-        return;
-    }
-    isEditing = true; // এডিট মোড চালু
-
     const numberDiv = li.querySelector('div:first-child');
     const actionsDiv = li.querySelector('div:last-child');
     
     const input = document.createElement('input');
     input.type = 'text';
-    input.className = 'border border-gray-300 rounded-lg px-3 py-1 flex-1 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500';
+    // সম্পাদনা ইনপুট ফিল্ডের জন্য উন্নত ক্লাস
+    input.className = 'border-2 border-indigo-400 rounded-lg px-3 py-1 flex-1 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold';
     input.value = originalNumber;
     
     input.addEventListener('input', function() { this.value = sanitizeInput(this.value); });
@@ -485,13 +531,13 @@ function startEditing(li, originalNumber) {
     actionsDiv.innerHTML = '';
     
     const saveBtn = document.createElement('button');
-    saveBtn.className = 'text-green-500 hover:bg-green-100 p-2 rounded-full transition-all duration-150 active:scale-90';
+    saveBtn.className = 'text-green-600 hover:bg-green-100 p-2 rounded-full transition-all duration-150 active:scale-90';
     saveBtn.innerHTML = '<i class="bi bi-check-lg"></i>';
     saveBtn.title = 'সংরক্ষণ';
     saveBtn.onclick = () => saveEdit(originalNumber, input.value);
     
     const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'text-red-500 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
+    cancelBtn.className = 'text-red-600 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
     cancelBtn.innerHTML = '<i class="bi bi-x-lg"></i>';
     cancelBtn.title = 'বাতিল';
     cancelBtn.onclick = () => cancelEdit(originalNumber);
@@ -502,10 +548,9 @@ function startEditing(li, originalNumber) {
     input.focus(); 
 }
 
-// Save edited number
 function saveEdit(originalNumber, newValue) {
     if (!newValue) {
-        showToast('নম্বর খালি রাখা যাবে না', 'warning');
+        alert('নম্বর খালি রাখা যাবে না');
         return;
     }
     newValue = sanitizeInput(newValue);
@@ -516,7 +561,8 @@ function saveEdit(originalNumber, newValue) {
         const allNumbers = snapshot.val() || [];
         
         if (allNumbers.includes(newValue) && newValue !== originalNumber) {
-            showToast('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে', 'warning');
+            alert('এই শিফটে নম্বরটি ইতিমধ্যে যোগ করা আছে');
+            cancelEdit(originalNumber);
             return;
         }
         
@@ -525,34 +571,18 @@ function saveEdit(originalNumber, newValue) {
         if (originalIndex > -1) {
             allNumbers[originalIndex] = newValue;
             dateRef.set(allNumbers)
-                .then(() => {
-                    showToast('নম্বর সফলভাবে আপডেট করা হয়েছে');
-                    isEditing = false; // *** এডিট সমস্যার সমাধান: সেভ হলে এডিট মোড বন্ধ ***
-                })
-                .catch(err => {
-                    showToast('নম্বর আপডেট করতে সমস্যা হয়েছে', 'error');
-                    isEditing = false; 
-                });
+                .catch(err => alert('নম্বর আপডেট করতে সমস্যা হয়েছে।'));
         } else {
-            showToast('ত্রুটি: আসল নম্বরটি খুঁজে পাওয়া যায়নি', 'error');
-            isEditing = false; 
+            alert('ত্রুটি: আসল নম্বরটি খুঁজে পাওয়া যায়নি।');
         }
     });
 }
 
-// Cancel editing
 function cancelEdit(originalNumber) {
-    isEditing = false; // *** এডিট সমস্যার সমাধান: বাতিল করলে এডিট মোড বন্ধ ***
-    loadDataForCurrentSelection(); // তালিকা ম্যানুয়ালি রি-রেন্ডার করা
+    loadDataForCurrentSelection(); 
 }
 
-// Delete a number
 function deleteNumber(numberToDelete) {
-    if (isEditing) { // এডিট করার সময় ডিলিট করা যাবে না
-        showToast('সম্পাদনা শেষ করে তারপর মুছুন।', 'warning');
-        return;
-    }
-
     if (confirm(`আপনি কি "${numberToDelete}" নম্বরটি মুছে ফেলতে চান?`)) {
         const dateRef = database.ref(`numberListData/${currentDate}/${currentShift}`);
         
@@ -563,20 +593,14 @@ function deleteNumber(numberToDelete) {
             if (originalIndex > -1) {
                 allNumbers.splice(originalIndex, 1);
                 dateRef.set(allNumbers)
-                    .then(() => {
-                        showToast('নম্বর সফলভাবে মুছে ফেলা হয়েছে');
-                    })
-                    .catch(err => {
-                        showToast('নম্বরটি মুছতে সমস্যা হয়েছে', 'error');
-                    });
+                    .catch(err => alert('নম্বরটি মুছতে সমস্যা হয়েছে।'));
             } else {
-                showToast('ত্রুটি: নম্বরটি খুঁজে পাওয়া যায়নি', 'error');
+                alert('ত্রুটি: নম্বরটি খুঁজে পাওয়া যায়নি।');
             }
         });
     }
 }
 
-// Filter numbers
 function filterNumbers() {
     const searchTerm = searchInput.value.toLowerCase();
     
@@ -585,9 +609,9 @@ function filterNumbers() {
         if (!currentDate) {
             listTitle.textContent = 'তালিকা দেখার জন্য তারিখ নির্বাচন করুন';
             numbersList.innerHTML = `<li class="no-numbers flex flex-col items-center justify-center p-10">
-                                         <i class="bi bi-calendar-check text-4xl mb-4 text-gray-400"></i>
-                                         <span>অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।</span>
-                                     </li>`;
+                                            <i class="bi bi-calendar-check text-4xl mb-4 text-gray-400"></i>
+                                            <span>অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।</span>
+                                          </li>`;
             return; 
         }
 
@@ -628,7 +652,6 @@ function filterNumbers() {
     }
 }
 
-// Initialize the app
 initApp();
 </script>
 </body>
