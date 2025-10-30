@@ -68,37 +68,45 @@
             font-size: .65rem; 
         }
 
-        /* --- মডেল/পপআপ স্টাইল --- */
+        /* --- মডেল/পপআপ স্টাইল (আরো অ্যাট্রাক্টিভ) --- */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: none; /* ডিফল্ট লুকানো */
+            background-color: rgba(0, 0, 0, 0.7); /* গাঢ় ব্যাকড্রপ */
+            display: none; 
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(4px); /* ব্লার ইফেক্ট যোগ করা হলো */
         }
         .modal-content {
-            background-color: white;
-            padding: 24px;
-            border-radius: 1rem;
+            background-color: #fcfcfc; /* অফ-হোয়াইট ব্যাকগ্রাউন্ড */
+            padding: 30px; /* প্যাডিং বাড়ানো হলো */
+            border-radius: 1.5rem; /* আরও গোল কোণা */
             width: 90%;
-            max-width: 450px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transform: scale(0.95);
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* গভীর শ্যাডো */
+            border: 2px solid #4F46E5; /* অ্যাকসেন্ট বর্ডার */
+            transform: scale(0.8);
             opacity: 0;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-overlay.active .modal-content {
-            transform: scale(1);
+            transform: scale(1); /* স্প্রিং ইফেক্ট সহ অ্যানিমেশন */
             opacity: 1;
         }
         .modal-overlay.active {
             display: flex;
         }
+
+        /* ইনপুট ফিল্ডের ফোকাস ইফেক্ট */
+        .modal-content input:focus {
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.2);
+        }
+        
         /* --- অন্যান্য বিদ্যমান স্টাইলগুলি (শিফট রেডিও, সংযোগ, লিস্ট আইটেম) এখানে রয়েছে --- */
         .connected { background-color: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
         .disconnected { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
@@ -232,33 +240,43 @@
 
 <div id="settings-modal" class="modal-overlay">
     <div class="modal-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-indigo-700"><i class="bi bi-gear-fill mr-2"></i>অ্যাক্সেস সেটিংস</h2>
-            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+        <div class="flex justify-between items-start mb-6 border-b pb-3 border-indigo-100">
+            <h2 class="text-2xl font-extrabold text-indigo-800 flex items-center">
+                <i class="bi bi-shield-lock-fill mr-3 text-3xl text-indigo-500"></i>
+                প্রশাসনিক অ্যাক্সেস
+            </h2>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-full hover:bg-red-50">
                 <i class="bi bi-x-lg text-xl"></i>
             </button>
         </div>
 
         <div id="login-form-container">
-            <p id="modal-status-message" class="text-sm text-red-500 mb-3 font-medium hidden"></p>
+            <p id="modal-status-message" class="text-sm text-red-500 mb-3 font-medium hidden text-center"></p>
+            
             <div class="mb-4">
-                <label for="username-input" class="block text-sm font-semibold text-gray-700 mb-1">ইউজারনেম</label>
-                <input type="text" id="username-input" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="ইউজারনেম দিন">
-            </div>
-            <div class="mb-6">
-                <label for="password-input" class="block text-sm font-semibold text-gray-700 mb-1">পাসওয়ার্ড</label>
-                <input type="password" id="password-input" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="পাসওয়ার্ড দিন">
+                <label for="username-input" class="block text-sm font-semibold text-gray-700 mb-1"><i class="bi bi-person-circle mr-1"></i>ইউজারনেম</label>
+                <input type="text" id="username-input" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition shadow-sm" placeholder="ইউজারনেম দিন">
             </div>
             
-            <button id="login-btn" onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-200 active:scale-[0.98]">
-                <i class="bi bi-lock-fill mr-2"></i>লগইন করুন
+            <div class="mb-6">
+                <label for="password-input" class="block text-sm font-semibold text-gray-700 mb-1"><i class="bi bi-key-fill mr-1"></i>পাসওয়ার্ড</label>
+                <input type="password" id="password-input" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 transition shadow-sm" placeholder="পাসওয়ার্ড দিন">
+            </div>
+            
+            <button id="login-btn" onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-indigo-200 active:scale-95">
+                <i class="bi bi-box-arrow-in-right mr-2"></i>লগইন করুন
             </button>
         </div>
 
         <div id="logout-container" class="hidden text-center">
-            <p class="text-lg text-green-600 font-bold mb-4">আপনি এখন প্রশাসক হিসেবে লগইন করা আছেন।</p>
-            <p id="logged-in-user" class="text-md text-gray-600 mb-6"></p>
-            <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]">
+            <div class="p-4 bg-green-50 rounded-xl border border-green-200 mb-6">
+                <p class="text-lg text-green-700 font-extrabold mb-1 flex items-center justify-center gap-2">
+                    <i class="bi bi-check-circle-fill text-2xl"></i> সফলভাবে লগইন!
+                </p>
+                <p id="logged-in-user" class="text-md text-gray-600 font-semibold"></p>
+            </div>
+
+            <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-8 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95">
                 <i class="bi bi-box-arrow-right mr-2"></i>লগআউট করুন
             </button>
         </div>
@@ -365,7 +383,7 @@ function openModal() {
 
 function closeModal() {
     settingsModal.classList.remove('active');
-    modalStatusMessage.classList.add('hidden'); // মেসেজ লুকিয়ে দিন
+    modalStatusMessage.classList.add('hidden'); 
 }
 
 function updateModalUI() {
@@ -407,7 +425,6 @@ function handleLogin() {
     if (VALID_USERS[user] && VALID_USERS[user] === pass) {
         isLoggedIn = true;
         loggedInUser = user;
-        // লোকাল স্টোরেজে লগইন স্টেট সেভ করতে পারেন
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('loggedInUser', user);
 
@@ -415,17 +432,18 @@ function handleLogin() {
         updateAccessControlUI();
         
         // লগইন মেসেজ
-        modalStatusMessage.textContent = 'লগইন সফল হয়েছে!';
-        modalStatusMessage.className = 'text-sm text-green-600 mb-3 font-bold';
+        modalStatusMessage.textContent = 'লগইন সফল হয়েছে! আপনি এখন প্রশাসক।';
+        modalStatusMessage.className = 'text-sm text-green-600 mb-3 font-bold text-center';
         modalStatusMessage.classList.remove('hidden');
         
-        setTimeout(closeModal, 1500); // 1.5 সেকেন্ড পর পপআপ বন্ধ
+        // 1.5 সেকেন্ড পর পপআপ বন্ধ
+        setTimeout(closeModal, 1500); 
 
     } else {
         isLoggedIn = false;
         loggedInUser = '';
         modalStatusMessage.textContent = 'ইউজারনেম বা পাসওয়ার্ড ভুল।';
-        modalStatusMessage.className = 'text-sm text-red-500 mb-3 font-bold';
+        modalStatusMessage.className = 'text-sm text-red-500 mb-3 font-bold text-center';
         modalStatusMessage.classList.remove('hidden');
     }
 }
@@ -438,6 +456,7 @@ function handleLogout() {
     
     updateModalUI();
     updateAccessControlUI();
+    closeModal(); // মডেল বন্ধ করুন
 }
 
 // ========================================
@@ -491,7 +510,6 @@ function handleNavigation(target) {
     }
 }
 
-// ... (updateConnectionStatus, setupEventListeners, setSearchMode, sanitizeInput ফাংশনগুলো অপরিবর্তিত) ...
 function updateConnectionStatus(status = 'connecting') {
     if (status === 'connected') {
         connectionStatus.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>সংযোগ সফল</span>';
@@ -540,7 +558,6 @@ function setupEventListeners() {
     searchCurrentRadio.addEventListener('change', setSearchMode);
     searchAllRadio.addEventListener('change', setSearchMode);
 
-    // মডেলের ইনপুটগুলিতে এন্টার চাপলে লগইন হবে
     usernameInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') passwordInput.focus();
     });
@@ -707,7 +724,7 @@ function startEditing(li, originalNumber) {
         alert('সম্পাদনা করতে আপনাকে অবশ্যই সেটিংসে লগইন করতে হবে।');
         return;
     }
-    //... (সম্পাদনার বাকি লজিক) ...
+    
     if (!li) return;
     
     const numberDiv = li.querySelector('div:first-child');
@@ -748,7 +765,7 @@ function saveEdit(originalNumber, newValue) {
         alert('সংরক্ষণের জন্য আপনাকে অবশ্যই সেটিংসে লগইন করতে হবে।');
         return;
     }
-    //... (সংরক্ষণের বাকি লজিক) ...
+    
     if (!newValue) {
         alert('নম্বর খালি রাখা যাবে না');
         return;
