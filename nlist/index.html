@@ -14,11 +14,11 @@
     <style>
         /* নেভিগেশন CSS ভেরিয়েবলস */
         :root{
-            --bottom-nav-height:60px; /* উচ্চতা সামান্য বাড়ানো হলো */
-            --ui-bg-base:#f4f7fa; /* হালকা ধূসর ব্যাকগ্রাউন্ড */
+            --bottom-nav-height:60px; 
+            --ui-bg-base:#f4f7fa; 
             --ui-bg-component:#ffffff;
             --ui-border-base:#e2e8f0;
-            --ui-fg-base:#1f2937; /* গাঢ় ধূসর টেক্সট */
+            --ui-fg-base:#1f2937; 
             --ui-fg-muted:#6b7280;
             --ui-fg-interactive:#4F46E5; /* Indigo-600 */
         }
@@ -31,12 +31,11 @@
 
         /* --- ফিক্সড নেভিগেশন স্টাইল (উন্নত) --- */
         #mobile-nav {
-            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05); /* উপরে সুন্দর শ্যাডো */
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05); 
         }
         #nav-container {
             height: var(--bottom-nav-height);
             background-color: var(--ui-bg-component);
-            border-top: none; /* বর্ডার বাদ দেওয়া হলো */
             width: 100%;
             display: flex;
             justify-content: space-around;
@@ -60,53 +59,75 @@
         .nav-link.active {
             color: var(--ui-fg-interactive);
             font-weight: 700;
-            /* সক্রিয় লিঙ্কের নিচে একটি হালকা বর্ডার যোগ করা যেতে পারে */
         }
         .nav-link i {
-            font-size: 1.4rem; /* আইকন সাইজ সামান্য বাড়ানো হলো */
+            font-size: 1.4rem; 
             margin-bottom: 2px;
         }
         .nav-link span {
-            font-size: .65rem; /* টেক্সট সাইজ সামান্য বাড়ানো হলো */
+            font-size: .65rem; 
         }
 
-        /* --- সংযোগ স্টাইল --- */
+        /* --- মডেল/পপআপ স্টাইল --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* ডিফল্ট লুকানো */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        /* --- অন্যান্য বিদ্যমান স্টাইলগুলি (শিফট রেডিও, সংযোগ, লিস্ট আইটেম) এখানে রয়েছে --- */
         .connected { background-color: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; }
         .disconnected { background-color: #FEE2E2; color: #991B1B; border: 1px solid #FCA5A5; }
         .connecting { background-color: #FEF3C7; color: #92400E; border: 1px solid #FDE68A; }
-        
-        /* --- শিফট রেডিও বাটন স্টাইল (আরো গাঢ় শ্যাডো) --- */
+
         input[type="radio"].hidden-radio { display: none; }
         .shift-radio-label {
-            cursor: pointer; padding: 0.6rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.75rem; /* বেশি গোল */
+            cursor: pointer; padding: 0.6rem 1rem; border: 1px solid #D1D5DB; border-radius: 0.75rem; 
             transition: all 0.2s ease-in-out;
-            font-weight: 600; /* ফন্ট ওয়েট বাড়ানো হলো */
+            font-weight: 600; 
             display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;
             background-color: #F9FAFB; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* শ্যাডো সামান্য বাড়ানো হলো */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); 
         }
         .shift-radio-label:hover { background-color: #F3F4F6; border-color: #9CA3AF; }
         input[type="radio"]:checked + .shift-radio-label {
             background-color: #4F46E5; color: white; border-color: #4338CA;
-            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3); /* নীল রঙের শ্যাডো */
+            box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3); 
         }
 
-        /* --- লিস্ট আইটেম স্টাইল --- */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
         #numbers-list li:not(.loading):not(.no-numbers) {
             transition: all 0.15s ease-in-out;
-            animation: fadeInUp 0.3s ease-out forwards;
-            border-radius: 0.75rem; /* বেশি গোল কোণা */
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* হালকা শ্যাডো */
+            border-radius: 0.75rem; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08); 
             border: none;
         }
         #numbers-list li:not(.loading):not(.no-numbers):hover {
-            background-color: #F0F4F8; /* হালকা ব্যাকগ্রাউন্ড */
-            transform: translateY(-2px); /* সামান্য উপরে ভেসে ওঠা */
+            background-color: #F0F4F8; 
+            transform: translateY(-2px); 
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
 
@@ -159,7 +180,7 @@
             </div>
         </div>
         
-        <div class="mb-6">
+        <div class="mb-6" id="add-section">
             <label for="number-input" class="font-semibold mb-2 text-gray-700 block">নতুন নম্বর যোগ করুন:</label>
             <div class="flex flex-col sm:flex-row gap-4">
                 <div class="relative flex-1">
@@ -172,6 +193,7 @@
                     <i class="bi bi-plus-circle-fill text-xl"></i> <span>যোগ করুন</span>
                 </button>
             </div>
+            <p id="auth-message" class="text-sm text-red-500 mt-2 font-medium hidden">যোগ করতে, সেটিংসে গিয়ে লগইন করুন।</p>
         </div>
         
         <div class="mb-6">
@@ -208,6 +230,41 @@
     </div>
 </main>
 
+<div id="settings-modal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-indigo-700"><i class="bi bi-gear-fill mr-2"></i>অ্যাক্সেস সেটিংস</h2>
+            <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i class="bi bi-x-lg text-xl"></i>
+            </button>
+        </div>
+
+        <div id="login-form-container">
+            <p id="modal-status-message" class="text-sm text-red-500 mb-3 font-medium hidden"></p>
+            <div class="mb-4">
+                <label for="username-input" class="block text-sm font-semibold text-gray-700 mb-1">ইউজারনেম</label>
+                <input type="text" id="username-input" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="ইউজারনেম দিন">
+            </div>
+            <div class="mb-6">
+                <label for="password-input" class="block text-sm font-semibold text-gray-700 mb-1">পাসওয়ার্ড</label>
+                <input type="password" id="password-input" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="পাসওয়ার্ড দিন">
+            </div>
+            
+            <button id="login-btn" onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg focus:outline-none focus:ring-4 focus:ring-indigo-200 active:scale-[0.98]">
+                <i class="bi bi-lock-fill mr-2"></i>লগইন করুন
+            </button>
+        </div>
+
+        <div id="logout-container" class="hidden text-center">
+            <p class="text-lg text-green-600 font-bold mb-4">আপনি এখন প্রশাসক হিসেবে লগইন করা আছেন।</p>
+            <p id="logged-in-user" class="text-md text-gray-600 mb-6"></p>
+            <button onclick="handleLogout()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2.5 px-6 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.98]">
+                <i class="bi bi-box-arrow-right mr-2"></i>লগআউট করুন
+            </button>
+        </div>
+
+    </div>
+</div>
 <div id="mobile-nav" class="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
     <nav id="nav-container" class="bg-white">
 
@@ -233,7 +290,23 @@
 
     </nav>
 </div>
+
+
 <script>
+// ========================================
+// ১. ইউজার JSON ডাটা এবং গ্লোবাল স্টেট
+// ========================================
+const VALID_USERS = {
+    // এখানে আপনার ব্যবহারকারীর নাম এবং পাসওয়ার্ড রাখুন
+    // ইউজারনেম: "পাসওয়ার্ড"
+    "mubarok": "pass@123", 
+    "user1": "pass123",
+    "user2": "pass@123"
+};
+
+let isLoggedIn = false;
+let loggedInUser = '';
+
 // Firebase configuration
 const firebaseConfig = {
     // *** আপনার Firebase কনফিগারেশন কীগুলি এখানে রয়েছে ***
@@ -256,6 +329,7 @@ let currentShift = 'day';
 let isFirebaseConnected = false;
 let currentSearchMode = 'current';
 
+// DOM Elements
 const datePicker = document.getElementById('date-picker');
 const dayRadio = document.querySelector('input[name="shift"][value="day"]');
 const nightRadio = document.querySelector('input[name="shift"][value="night"]');
@@ -268,8 +342,116 @@ const searchCurrentRadio = document.getElementById('search-current');
 const searchAllRadio = document.getElementById('search-all');
 const listTitle = document.getElementById('list-title');
 
+// সেটিংস মডেলের উপাদান
+const settingsModal = document.getElementById('settings-modal');
+const usernameInput = document.getElementById('username-input');
+const passwordInput = document.getElementById('password-input');
+const loginFormContainer = document.getElementById('login-form-container');
+const logoutContainer = document.getElementById('logout-container');
+const modalStatusMessage = document.getElementById('modal-status-message');
+const loggedInUserSpan = document.getElementById('logged-in-user');
+const addSection = document.getElementById('add-section');
+const authMessage = document.getElementById('auth-message');
+
+
+// ========================================
+// ২. সেটিংস মডেলের কার্যকারিতা
+// ========================================
+
+function openModal() {
+    settingsModal.classList.add('active');
+    updateModalUI();
+}
+
+function closeModal() {
+    settingsModal.classList.remove('active');
+    modalStatusMessage.classList.add('hidden'); // মেসেজ লুকিয়ে দিন
+}
+
+function updateModalUI() {
+    if (isLoggedIn) {
+        loginFormContainer.classList.add('hidden');
+        logoutContainer.classList.remove('hidden');
+        loggedInUserSpan.textContent = `ব্যবহারকারী: ${loggedInUser}`;
+    } else {
+        loginFormContainer.classList.remove('hidden');
+        logoutContainer.classList.add('hidden');
+        usernameInput.value = '';
+        passwordInput.value = '';
+        modalStatusMessage.classList.add('hidden');
+    }
+}
+
+function updateAccessControlUI() {
+    if (isLoggedIn) {
+        // লগইন সফল হলে যোগ করার অপশন চালু করুন
+        addSection.classList.remove('opacity-50', 'pointer-events-none');
+        addBtn.disabled = false;
+        authMessage.classList.add('hidden');
+    } else {
+        // লগইন না থাকলে যোগ করার অপশন বন্ধ করুন
+        addSection.classList.add('opacity-50', 'pointer-events-none');
+        addBtn.disabled = true;
+        authMessage.classList.remove('hidden');
+    }
+    // তালিকার সম্পাদনা/মুছে ফেলার বোতামগুলো পুনরায় রেন্ডার করতে
+    loadDataForCurrentSelection(); 
+}
+
+function handleLogin() {
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+    
+    modalStatusMessage.classList.add('hidden');
+    
+    if (VALID_USERS[user] && VALID_USERS[user] === pass) {
+        isLoggedIn = true;
+        loggedInUser = user;
+        // লোকাল স্টোরেজে লগইন স্টেট সেভ করতে পারেন
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('loggedInUser', user);
+
+        updateModalUI();
+        updateAccessControlUI();
+        
+        // লগইন মেসেজ
+        modalStatusMessage.textContent = 'লগইন সফল হয়েছে!';
+        modalStatusMessage.className = 'text-sm text-green-600 mb-3 font-bold';
+        modalStatusMessage.classList.remove('hidden');
+        
+        setTimeout(closeModal, 1500); // 1.5 সেকেন্ড পর পপআপ বন্ধ
+
+    } else {
+        isLoggedIn = false;
+        loggedInUser = '';
+        modalStatusMessage.textContent = 'ইউজারনেম বা পাসওয়ার্ড ভুল।';
+        modalStatusMessage.className = 'text-sm text-red-500 mb-3 font-bold';
+        modalStatusMessage.classList.remove('hidden');
+    }
+}
+
+function handleLogout() {
+    isLoggedIn = false;
+    loggedInUser = '';
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('loggedInUser');
+    
+    updateModalUI();
+    updateAccessControlUI();
+}
+
+// ========================================
+// ৩. মূল অ্যাপ্লিকেশন লজিক
+// ========================================
+
 function initApp() {
-    // আজকের তারিখ ডিফল্ট হিসাবে সেট করুন
+    // পূর্ববর্তী লগইন স্টেট পরীক্ষা করুন
+    const storedLogin = localStorage.getItem('isLoggedIn');
+    if (storedLogin === 'true') {
+        isLoggedIn = true;
+        loggedInUser = localStorage.getItem('loggedInUser') || 'Admin';
+    }
+
     const today = new Date().toISOString().split('T')[0];
     datePicker.value = today;
     currentDate = today;
@@ -277,23 +459,19 @@ function initApp() {
     updateConnectionStatus('connecting');
     setupEventListeners();
     loadDataFromFirebase();
+    updateAccessControlUI(); // অ্যাক্সেস কন্ট্রোল চালু করুন
 }
 
-// *** নেভিগেশন ফাংশন ***
 function handleNavigation(target) {
-    // সক্রিয় ক্লাস রিসেট করুন
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
     });
-    
-    // ক্লিক করা লিঙ্কটি সক্রিয় করুন
     const clickedLink = document.querySelector(`[onclick="handleNavigation('${target}')"]`);
     if (clickedLink) {
         clickedLink.classList.add('active');
     }
 
     if (target === 'list') {
-        // তালিকার শুরুতে স্ক্রল করুন এবং বর্তমান তালিকা দেখান
         window.scrollTo({ top: 0, behavior: 'smooth' });
         searchCurrentRadio.checked = true;
         currentSearchMode = 'current';
@@ -301,21 +479,19 @@ function handleNavigation(target) {
         filterNumbers();
         
     } else if (target === 'add') {
-        // নতুন নম্বর যোগ করার ইনপুট ফিল্ডে ফোকাস করুন
         window.scrollTo({ top: 0, behavior: 'smooth' });
         numberInput.focus();
         
     } else if (target === 'search') {
-        // অনুসন্ধান ইনপুট ফিল্ডে ফোকাস করুন
         window.scrollTo({ top: 0, behavior: 'smooth' });
         searchInput.focus();
         
     } else if (target === 'settings') {
-        alert('সেটিংস অপশনটি এখনো তৈরি করা হয়নি।'); 
+        openModal(); // সেটিংস ক্লিক করলে মডেল ওপেন হবে
     }
 }
 
-
+// ... (updateConnectionStatus, setupEventListeners, setSearchMode, sanitizeInput ফাংশনগুলো অপরিবর্তিত) ...
 function updateConnectionStatus(status = 'connecting') {
     if (status === 'connected') {
         connectionStatus.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>সংযোগ সফল</span>';
@@ -363,6 +539,14 @@ function setupEventListeners() {
     
     searchCurrentRadio.addEventListener('change', setSearchMode);
     searchAllRadio.addEventListener('change', setSearchMode);
+
+    // মডেলের ইনপুটগুলিতে এন্টার চাপলে লগইন হবে
+    usernameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') passwordInput.focus();
+    });
+    passwordInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') handleLogin();
+    });
 }
 
 function setSearchMode(e) {
@@ -379,6 +563,11 @@ function sanitizeInput(input) {
 }
 
 function addNumber() {
+    if (!isLoggedIn) {
+        alert('যোগ, সম্পাদনা বা মুছে ফেলার জন্য আপনাকে অবশ্যই সেটিংসে লগইন করতে হবে।');
+        return;
+    }
+    
     if (!currentDate) {
         alert('অনুগ্রহ করে প্রথমে একটি তারিখ নির্বাচন করুন।');
         return;
@@ -445,7 +634,6 @@ function renderNumbersList(items, mode = 'current') {
     
     items.forEach((item, index) => {
         const li = document.createElement('li');
-        // উন্নত লিস্ট আইটেম ক্লাস
         li.className = 'flex justify-between items-center p-4 bg-gray-50 border-none rounded-xl shadow-md'; 
         
         const numberDiv = document.createElement('div');
@@ -455,7 +643,7 @@ function renderNumbersList(items, mode = 'current') {
         mainInfoDiv.className = 'flex items-center gap-2';
         
         const serialSpan = document.createElement('span');
-        serialSpan.className = 'font-mono font-bold text-indigo-500 w-8 text-right text-lg'; // ফন্ট সাইজ এবং রঙ পরিবর্তন
+        serialSpan.className = 'font-mono font-bold text-indigo-500 w-8 text-right text-lg'; 
         serialSpan.textContent = `${String(index + 1).padStart(2, '0')}:`;
         mainInfoDiv.appendChild(serialSpan);
 
@@ -465,7 +653,7 @@ function renderNumbersList(items, mode = 'current') {
         mainInfoDiv.appendChild(iconSpan);
 
         const numberSpan = document.createElement('span');
-        numberSpan.className = 'font-extrabold text-gray-800 truncate text-lg'; // ফন্ট ওয়েট বাড়ানো হলো
+        numberSpan.className = 'font-extrabold text-gray-800 truncate text-lg'; 
         mainInfoDiv.appendChild(numberSpan);
         numberDiv.appendChild(mainInfoDiv);
         
@@ -476,20 +664,23 @@ function renderNumbersList(items, mode = 'current') {
             const number = item;
             numberSpan.textContent = number;
             
-            const editBtn = document.createElement('button');
-            editBtn.className = 'text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-all duration-150 active:scale-90';
-            editBtn.innerHTML = '<i class="bi bi-pencil-fill"></i>';
-            editBtn.title = 'সম্পাদনা';
-            editBtn.onclick = () => startEditing(li, number); 
-            
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'text-red-600 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
-            deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
-            deleteBtn.title = 'মুছে ফেলুন';
-            deleteBtn.onclick = () => deleteNumber(number); 
-            
-            actionsDiv.appendChild(editBtn);
-            actionsDiv.appendChild(deleteBtn);
+            // শুধুমাত্র লগইন করা থাকলে সম্পাদনা/মুছে ফেলার বোতাম দেখান
+            if (isLoggedIn) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'text-blue-600 hover:bg-blue-100 p-2 rounded-full transition-all duration-150 active:scale-90';
+                editBtn.innerHTML = '<i class="bi bi-pencil-fill"></i>';
+                editBtn.title = 'সম্পাদনা';
+                editBtn.onclick = () => startEditing(li, number); 
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'text-red-600 hover:bg-red-100 p-2 rounded-full transition-all duration-150 active:scale-90';
+                deleteBtn.innerHTML = '<i class="bi bi-trash-fill"></i>';
+                deleteBtn.title = 'মুছে ফেলুন';
+                deleteBtn.onclick = () => deleteNumber(number); 
+                
+                actionsDiv.appendChild(editBtn);
+                actionsDiv.appendChild(deleteBtn);
+            }
             
             li.appendChild(numberDiv);
             li.appendChild(actionsDiv);
@@ -512,6 +703,11 @@ function renderNumbersList(items, mode = 'current') {
 }
 
 function startEditing(li, originalNumber) {
+    if (!isLoggedIn) {
+        alert('সম্পাদনা করতে আপনাকে অবশ্যই সেটিংসে লগইন করতে হবে।');
+        return;
+    }
+    //... (সম্পাদনার বাকি লজিক) ...
     if (!li) return;
     
     const numberDiv = li.querySelector('div:first-child');
@@ -519,7 +715,6 @@ function startEditing(li, originalNumber) {
     
     const input = document.createElement('input');
     input.type = 'text';
-    // সম্পাদনা ইনপুট ফিল্ডের জন্য উন্নত ক্লাস
     input.className = 'border-2 border-indigo-400 rounded-lg px-3 py-1 flex-1 w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 font-semibold';
     input.value = originalNumber;
     
@@ -549,6 +744,11 @@ function startEditing(li, originalNumber) {
 }
 
 function saveEdit(originalNumber, newValue) {
+    if (!isLoggedIn) {
+        alert('সংরক্ষণের জন্য আপনাকে অবশ্যই সেটিংসে লগইন করতে হবে।');
+        return;
+    }
+    //... (সংরক্ষণের বাকি লজিক) ...
     if (!newValue) {
         alert('নম্বর খালি রাখা যাবে না');
         return;
@@ -583,6 +783,11 @@ function cancelEdit(originalNumber) {
 }
 
 function deleteNumber(numberToDelete) {
+    if (!isLoggedIn) {
+        alert('মুছে ফেলার জন্য আপনাকে অবশ্যই সেটিংসে লগইন করতে হবে।');
+        return;
+    }
+    
     if (confirm(`আপনি কি "${numberToDelete}" নম্বরটি মুছে ফেলতে চান?`)) {
         const dateRef = database.ref(`numberListData/${currentDate}/${currentShift}`);
         
