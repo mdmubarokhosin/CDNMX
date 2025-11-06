@@ -42,12 +42,6 @@
     "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/atnws-sg.stream/playlist.m3u8"
   },
   {
-    "name": "BANGLA VISION HD",
-    "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1hPBiCRZEwKM3BMdFnj83x-ltSSDsY3kYpfV6Vzv5fUhC1M_Z10BsovA&s=10",
-    "group": "বিনোদন",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTAgdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/banglav000.stream/playlist.m3u8"
-  },
-  {
     "name": "BTV WORLD",
     "logo": "https://feji.us/edda3w",
     "group": "বিনোদন",
@@ -57,7 +51,7 @@
     "name": "CHANNEL I",
     "logo": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSCxCzI8gIAq2VY13LOY_ZUKTY3UBH2kcYk0OdDMv5pf8pyaNf6ssHuKWo&s=10",
     "group": "বিনোদন",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/channeli-8-org.stream/playlist.m3u8"
+    "streamUrl": "https://owrcovcrpy.gpcdn.net/bpk-tv/1723/output/1723-audio_113532_eng=113200-video=2202800.m3u8"
   },
   {
     "name": "DBC NEWS",
@@ -123,7 +117,7 @@
     "name": "JAMUNA TV",
     "logo": "https://i.ibb.co.com/hR57wkL/Jamuna-Tv1664825738.jpg",
     "group": "খবর",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/jamuna-test-sample-ok.stream/playlist.m3u8"
+    "streamUrl": "https://owrcovcrpy.gpcdn.net/bpk-tv/1701/output/1701-audio_113312_eng=113200-video=2202800.m3u8"
   },
   {
     "name": "MASSRANGA TV",
@@ -225,7 +219,7 @@
     "name": "BANGLA VISION",
     "logo": "https://i.ibb.co.com/LP5800z/images-1-1.jpg",
     "group": "বিনোদন",
-    "streamUrl": "https://app.ncare.live/c3VydmVyX8RpbEU9Mi8xNy8yMDE0GIDU6RgzQ6NTA gdEoaeFzbF92YWxIZTO0U0ezN1IzMyfvcGVMZEJCTEFWeVN3PTOmdFsaWRtaW51aiPhnPTI2/banglav000.stream/playlist.m3u8"
+    "streamUrl": "https://owrcovcrpy.gpcdn.net/bpk-tv/1715/output/1715-audio_113452_eng=113200-video=2202800.m3u8"
   },
   {
     "name": "BIJOY TV",
