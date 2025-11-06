@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live TV Channels</title>
+    <title>Live TV Channels By Md Mubarok</title>
     <link rel="stylesheet" href="css/tailwind.min.css">
     <link rel="stylesheet" href="css/mubarok-icons.css">
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.2/plyr.css" />
+    <!-- HLS.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         :root {
             --bottom-nav-height: 55px;
@@ -18,9 +19,8 @@
             --ui-fg-muted: #718096;
             --ui-fg-interactive: #2d3748;
         }
-
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Noto Serif Bengali', serif;
             background-color: var(--ui-bg-base);
             color: var(--ui-fg-base);
             min-height: 100vh;
@@ -29,42 +29,27 @@
             -moz-osx-font-smoothing: grayscale;
             padding-bottom: calc(var(--bottom-nav-height) + 20px);
         }
-        
-        .channel-list-item {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .channel-list-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 14px rgba(0,0,0,0.07);
-        }
-
-        .favorite-btn.active i {
-            color: #ef4444; /* red-500 */
-        }
-
+        .channel-list-item { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .channel-list-item:hover { transform: translateY(-3px); box-shadow: 0 7px 14px rgba(0,0,0,0.07); }
+        .favorite-btn.active i { color: #ef4444; }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
         .animate-item {
             animation: 0.5s ease-out forwards fadeInUp;
             opacity: 0;
             animation-delay: var(--animation-delay, 0s);
         }
-        
         #nav-container {
             display: flex; height: 100%; justify-content: space-around; align-items: center;
             width: 100%; background-color: var(--ui-bg-component);
             border-top: 1px solid var(--ui-border-base); box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         }
-
         #floating-nav {
             position: fixed; bottom: 0; left: 0; width: 100%;
             height: var(--bottom-nav-height); z-index: 1000;
         }
-        
         .nav-link {
             display: flex; height: 100%; flex-direction: column; align-items: center;
             justify-content: center; flex-grow: 1; color: var(--ui-fg-muted);
@@ -74,10 +59,9 @@
         .nav-link.active { color: var(--ui-fg-interactive); font-weight: 700; }
         .nav-link i { font-size: 1.3rem; margin-bottom: 2px; }
         .nav-link span { font-size: .6rem; }
-        
         #category-modal { display: none; z-index: 9999; }
         body.overflow-hidden { overflow: hidden; }
-
+        #video-player { width: 100%; height: auto; background-color: #000; }
         @media (min-width:1024px) {
             body { padding-bottom: 0; }
             #floating-nav {
@@ -99,7 +83,7 @@
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://cdnmx.pages.dev/assets/fonts/noto_serif_bengali/font.css" rel="stylesheet">
 </head>
 
 <body>
@@ -107,186 +91,114 @@
     <div class="container mx-auto max-w-4xl p-0 md:p-4">
         <!-- Sticky Player -->
         <div class="sticky-player sticky top-0 z-50 bg-white p-2 md:p-4 rounded-b-lg md:rounded-lg shadow-lg mb-4" style="display: none;">
-            <div id="stickyPlayerElement"></div>
+            <div id="stickyPlayerElement">
+                <!-- Video player will be created here -->
+            </div>
         </div>
 
         <!-- Search Option Section -->
         <div class="container-search relative mb-4 p-4">
             <input type="text" id="liveSearch"
                 class="w-full p-3 bg-white border border-gray-300 rounded-full text-base text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
-                placeholder="Search for Television Channels..." />
+                placeholder="টেলিভিশন চ্যানেলগুলি অনুসন্ধান করুন..." />
         </div>
 
         <!-- Channels List Container -->
         <div class="channel-list-container space-y-3 px-2 md:px-0">
-             <div class="text-center p-8" id="loading-indicator"><p>Loading Channels...</p></div>
+             <div class="text-center p-8" id="loading-indicator"><p>চ্যানেলগুলি লোড হচ্ছে...</p></div>
         </div>
-        
+
         <!-- Footer -->
         <footer class="mt-8 mb-20 md:mb-8 text-center text-sm text-gray-500">
              <p>
-                © <span id="current-year"></span> | 
+                © <span id="current-year"></span> |
                 Powered by <a style='color: #0066FF' class='extL font-semibold' href="https://mdmubarokhosin.pages.dev/" target="_blank">MD MUBAROK</a>
              </p>
         </footer>
     </div>
-    
+
     <!-- Category Modal -->
     <div id="category-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[80vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b">
-                <h2 class="text-lg font-bold">Select Category</h2>
+                <h2 class="text-lg font-bold">ক্যাটাগরী নির্বাচন করুন</h2>
                 <button id="close-category-modal" class="text-2xl">&times;</button>
             </div>
             <div id="category-list" class="overflow-y-auto"></div>
         </div>
     </div>
-    
+
     <!-- Floating Navigation -->
     <nav id="floating-nav">
         <div id="nav-container">
-            <a href="#" id="home-btn" class="nav-link active"><i class="bi bi-house-door-fill"></i><span>Home</span></a>
-            <a href="#" id="category-btn" class="nav-link"><i class="bi bi-grid-fill"></i><span>Category</span></a>
-            <a href="#" id="search-btn" class="nav-link"><i class="bi bi-search"></i><span>Search</span></a>
-            <a href="#" id="favorite-nav-btn" class="nav-link"><i class="bi bi-heart-fill"></i><span>Favorites</span></a>
+            <a href="#" id="home-btn" class="nav-link active"><i class="bi bi-house-door-fill"></i><span>হোম</span></a>
+            <a href="#" id="category-btn" class="nav-link"><i class="bi bi-grid-fill"></i><span>ক্যাটাগরী</span></a>
+            <a href="#" id="search-btn" class="nav-link"><i class="bi bi-search"></i><span>অনুসন্ধান</span></a>
+            <a href="#" id="favorite-nav-btn" class="nav-link"><i class="bi bi-heart-fill"></i><span>প্রিয়</span></a>
         </div>
     </nav>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
     <script>
         let allChannels = [];
-        const CHANNELS_JSON_URL = "channels.json"; // <-- এখন ফাইলটি লোকালভাবে লোড হচ্ছে
+        let hlsPlayer = null;
+        const CHANNELS_JSON_URL = "channels.json";
 
-        // --- Favorite Functions ---
-        const getFavorites = () => JSON.parse(localStorage.getItem('favoriteChannels')) || [];
-        const saveFavorites = (favs) => localStorage.setItem('favoriteChannels', JSON.stringify(favs));
-
-        function toggleFavorite(element, channelName) {
-            event.stopPropagation();
-            let favorites = getFavorites();
-            const heartIcon = $(element).find('i');
-            const isActive = favorites.includes(channelName);
-
-            if (isActive) {
-                favorites = favorites.filter(name => name !== channelName);
-            } else {
-                favorites.push(channelName);
-            }
-            saveFavorites(favorites);
-            
-            $(element).toggleClass('active');
-            heartIcon.toggleClass('bi-heart bi-heart-fill');
-
-            if ($('#favorite-nav-btn').hasClass('active')) {
-                showFavoritesOnly();
-            }
-        }
-        
-        // --- Channel Rendering ---
-        function renderChannels(channelsToRender) {
-            const container = $('.channel-list-container');
-            container.empty();
-            $("#liveSearch").val("");
-
-            if (channelsToRender.length === 0) {
-                 container.html('<p class="text-center text-gray-500 p-8">No channels to display.</p>');
-                 return;
-            }
-            const favorites = getFavorites();
-            channelsToRender.forEach((channel, index) => {
-                const isFavorite = favorites.includes(channel.name);
-                const favoriteClass = isFavorite ? 'active' : '';
-                const heartIconClass = isFavorite ? 'bi-heart-fill' : 'bi-heart';
-                const animationDelay = (index * 0.05).toFixed(2);
-                const channelHtml = `
-                    <div class="channel-list-item flex items-center p-3 bg-white rounded-lg shadow cursor-pointer animate-item" 
-                         style="--animation-delay: ${animationDelay}s;"
-                         data-channel-name="${channel.name}" data-channel-group="${channel.group}"
-                         onclick="playChannel('${channel.name.replace(/'/g, "\\'")}', '${channel.streamUrl}')">
-                        <div class="flex-shrink-0"><img class="w-14 h-14 rounded-full object-contain p-1 bg-gray-100" src="${channel.logo}" alt="${channel.name} Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/f7fafc/718096?text=Logo';"/></div>
-                        <div class="flex-grow ml-4"><p class="font-bold text-gray-800">${channel.name}</p><p class="text-sm text-gray-500">${channel.group}</p></div>
-                        <div class="flex-shrink-0 ml-4">
-                            <div class="favorite-btn w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition ${favoriteClass}" 
-                                 onclick="event.stopPropagation(); toggleFavorite(this, '${channel.name.replace(/'/g, "\\'")}');"><i class="bi ${heartIconClass} text-gray-600"></i>
-                            </div>
-                        </div>
-                    </div>`;
-                container.append(channelHtml);
-            });
-        }
-        
-        function loadCategories() {
-            const categories = [...new Set(allChannels.map(c => c.group))];
-            $('#category-list').empty().append(categories.sort().map(category => 
-                `<div class="p-4 border-b text-center cursor-pointer hover:bg-gray-100 font-semibold" 
-                     onclick="filterByCategory('${category}')">${category}</div>`
-            ));
-        }
-
-        function filterByCategory(category) {
-            renderChannels(allChannels.filter(c => c.group === category));
-            $('#category-modal').fadeOut();
-            $('body').removeClass('overflow-hidden');
-            $('.nav-link').removeClass('active');
-            $('#category-btn').addClass('active');
-        }
-        
-        function showFavoritesOnly() {
-            const favorites = getFavorites();
-            const favoriteChannels = allChannels.filter(c => favorites.includes(c.name));
-            renderChannels(favoriteChannels);
-             if (favoriteChannels.length === 0) {
-                $('.channel-list-container').html('<p class="text-center text-gray-500 p-8">You have no favorite channels yet. Click the heart icon to add one!</p>');
-            }
-        }
+        // --- Other functions (unchanged) ---
+        const getFavorites=()=>JSON.parse(localStorage.getItem("favoriteChannels"))||[];const saveFavorites=e=>localStorage.setItem("favoriteChannels",JSON.stringify(e));function toggleFavorite(e,t){event.stopPropagation();let a=getFavorites();const n=$(e).find("i");a.includes(t)?a=a.filter(e=>e!==t):a.push(t),saveFavorites(a),$(e).toggleClass("active"),n.toggleClass("bi-heart bi-heart-fill"),$("#favorite-nav-btn").hasClass("active")&&showFavoritesOnly()}function renderChannels(e){const t=$(".channel-list-container");t.empty(),$("#liveSearch").val(""),0===e.length?(t.html('<p class="text-center text-gray-500 p-8">No channels to display.</p>'),void 0):void e.forEach((e,a)=>{const n=getFavorites().includes(e.name),i=n?"active":"",s=n?"bi-heart-fill":"bi-heart",o=(.05*a).toFixed(2),l=`<div class="channel-list-item flex items-center p-3 bg-white rounded-lg shadow cursor-pointer animate-item" style="--animation-delay: ${o}s;" data-channel-name="${e.name}" data-channel-group="${e.group}" onclick="playChannel('${e.name.replace(/'/g,"\\'")}', '${e.streamUrl}')"><div class="flex-shrink-0"><img class="w-14 h-14 rounded-full object-contain p-1 bg-gray-100" src="${e.logo}" alt="${e.name} Logo" onerror="this.onerror=null; this.src='https://via.placeholder.com/150/f7fafc/718096?text=Logo';"/></div><div class="flex-grow ml-4"><p class="font-bold text-gray-800">${e.name}</p><p class="text-sm text-gray-500">${e.group}</p></div><div class="flex-shrink-0 ml-4"><div class="favorite-btn w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition ${i}" onclick="event.stopPropagation(); toggleFavorite(this, '${e.name.replace(/'/g,"\\'")}');"><i class="bi ${s} text-gray-600"></i></div></div></div>`;t.append(l)})}function loadCategories(){const e=[...new Set(allChannels.map(e=>e.group))];$("#category-list").empty().append(e.sort().map(e=>`<div class="p-4 border-b text-center cursor-pointer hover:bg-gray-100 font-semibold" onclick="filterByCategory('${e}')">${e}</div>`))}function filterByCategory(e){renderChannels(allChannels.filter(t=>t.group===e)),$("#category-modal").fadeOut(),$("body").removeClass("overflow-hidden"),$(".nav-link").removeClass("active"),$("#category-btn").addClass("active")}function showFavoritesOnly(){const e=getFavorites(),t=allChannels.filter(t=>e.includes(t.name));renderChannels(t),0===t.length&&$(".channel-list-container").html('<p class="text-center text-gray-500 p-8">আপনার এখনও কোনও পছন্দের চ্যানেল নেই। একটি যোগ করতে হার্ট আইকনে ক্লিক করুন!</p>')}
 
         $(document).ready(function() {
-            fetch(CHANNELS_JSON_URL)
-                .then(response => {
-                    if (!response.ok) { throw new Error('Network response was not ok'); }
-                    return response.json();
-                })
-                .then(data => {
-                    allChannels = data;
-                    renderChannels(allChannels);
-                    loadCategories();
-                })
-                .catch(error => {
-                    console.error("Error fetching channel data:", error);
-                    $('.channel-list-container').html('<p class="text-center text-red-500 p-8">Failed to load channel list. Please check the file path and JSON format.</p>');
-                });
+            // Fetch Channel Data
+            fetch(CHANNELS_JSON_URL).then(r => r.json()).then(data => { allChannels = data; renderChannels(allChannels); loadCategories(); }).catch(error => { console.error("Error fetching data:", error); });
 
+            // Set Current Year in Footer
             document.getElementById('current-year').textContent = new Date().getFullYear();
 
-            $("#liveSearch").on("keyup", function() {
-                var value = $(this).val().toLowerCase();
-                $(".channel-list-item").filter(function() {
-                    $(this).toggle($(this).data("channel-name").toLowerCase().indexOf(value) > -1)
-                });
-            });
-            
-            $('#home-btn').on('click', function(e) { e.preventDefault(); $('.nav-link').removeClass('active'); $(this).addClass('active'); renderChannels(allChannels); });
-            $('#category-btn').on('click', e => { e.preventDefault(); $('body').addClass('overflow-hidden'); $('#category-modal').fadeIn(); });
-            $('#search-btn').on('click', function(e) { e.preventDefault(); $('.nav-link').removeClass('active'); $(this).addClass('active'); $('html, body').animate({ scrollTop: 0 }, 'slow'); $('#liveSearch').focus(); });
-            $('#favorite-nav-btn').on('click', function(e) { e.preventDefault(); $('.nav-link').removeClass('active'); $(this).addClass('active'); showFavoritesOnly(); });
-            $('#close-category-modal').on('click', () => { $('#category-modal').fadeOut(); $('body').removeClass('overflow-hidden'); });
+            // Event Listeners
+            $("#liveSearch").on("keyup",function(){var e=$(this).val().toLowerCase();$(".channel-list-item").filter(function(){$(this).toggle($(this).data("channel-name").toLowerCase().indexOf(e)>-1)})});$('#home-btn').on('click',function(e){e.preventDefault(),$(".nav-link").removeClass("active"),$(this).addClass("active"),renderChannels(allChannels)});$('#category-btn').on('click',e=>{e.preventDefault(),$("body").addClass("overflow-hidden"),$("#category-modal").fadeIn()});$('#search-btn').on('click',function(e){e.preventDefault(),$(".nav-link").removeClass("active"),$(this).addClass("active"),$("html, body").animate({scrollTop:0},"slow"),$("#liveSearch").focus()});$('#favorite-nav-btn').on('click',function(e){e.preventDefault(),$(".nav-link").removeClass("active"),$(this).addClass("active"),showFavoritesOnly()});$('#close-category-modal').on('click',()=>{
+            $("#category-modal").fadeOut(),$("body").removeClass("overflow-hidden")});
         });
 
+        // --- Reliable playChannel Function using HLS.js ---
         function playChannel(channelName, m3u8Link) {
+            // Destroy the previous HLS instance if it exists
+            if (hlsPlayer) {
+                hlsPlayer.destroy();
+                hlsPlayer = null;
+            }
+
             $(".sticky-player").show();
             $('html, body').animate({ scrollTop: 0 }, 'slow');
-            $("#stickyPlayerElement").empty();
-            const videoElement = document.createElement('video');
-            videoElement.id = 'video-id';
-            videoElement.className = 'fluid-player-css';
-            document.getElementById('stickyPlayerElement').appendChild(videoElement);
-            fluidPlayer(videoElement.id, {
-                layoutControls: {
-                    controlBar: { autoHide: true, autoHideTimeout: 1, animated: true },
-                    autoPlay: true, fillToContainer: true,
-                }
-            }).setVastMedia([{ src: m3u8Link, type: 'application/x-mpegURL' }]);
+            $("#stickyPlayerElement").html('<video id="video-player" controls autoplay></video>');
+
+            const video = document.getElementById('video-player');
+
+            if (Hls.isSupported()) {
+                hlsPlayer = new Hls();
+                hlsPlayer.loadSource(m3u8Link);
+                hlsPlayer.attachMedia(video);
+                hlsPlayer.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+                hlsPlayer.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        switch(data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                hlsPlayer.startLoad(); break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                hlsPlayer.recoverMediaError(); break;
+                            default: hlsPlayer.destroy(); break;
+                        }
+                    }
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = m3u8Link;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+            } else {
+                console.error("Sorry, your browser does not support HLS streaming.");
+            }
         }
     </script>
 </body>
