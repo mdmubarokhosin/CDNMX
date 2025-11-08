@@ -1,7 +1,11 @@
 # 📦 CDNMX Repository
 
-[![Repo Status](https://img.shields.io/badge/status-active-brightgreen)](https://github.com/mdmubarokhosin/CDNMX)
+[![Repo Status](https://img.shields.io/badge/status-active-brightgreen)](...)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/mdmubarokhosin/CDNMX)](https://github.com/mdmubarokhosin/CDNMX/commits)
+[![Repo Size](https://img.shields.io/github/repo-size/mdmubarokhosin/CDNMX)](...)
+
+![import.svg](https://cdnmx.pages.dev/assets/images/svg/import.svg)
 
 `CDNMX` রিপোজিটরিতে স্বাগতম। এই রিপোজিটরিতে সকল প্রকার **স্ট্যাটিক অ্যাসেট (CSS, JS, JSON, Images, Fonts, Audio, Video ইত্যাদি)** সংরক্ষিত থাকবে, যা GitHub Pages / Cloudflare Pages CDN এর মাধ্যমে যেকোনো প্রজেক্টে দ্রুত লোড করা যাবে।
 
