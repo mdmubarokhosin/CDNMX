@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ffffff">
+    <title>আল-কোরআন অডিও প্লেয়ার</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href='data:application/manifest+json,{"name":"Al-Quran Player","short_name":"Al-Quran","start_url":".","display":"standalone","theme_color":"#ffffff","background_color":"#ffffff","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/3024/3024482.png","sizes":"192x192","type":"image/png"}]}'>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #ffffff; --bg-secondary: #f8fafc;
+            --text-main: #0f172a; --text-secondary: #64748b;
+            --border-color: #e2e8f0; --accent-color: #059669;
+            --modal-bg: #ffffff;
+        }
+        body.dark-mode {
+            --bg-main: #0f172a; --bg-secondary: #1e293b;
+            --text-main: #f1f5f9; --text-secondary: #94a3b8;
+            --border-color: #334155; --accent-color: #34d399;
+            --modal-bg: #1e293b;
+        }
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg-main); color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+        /* Overrides */
+        .bg-white { background-color: var(--bg-main) !important; }
+        .bg-slate-50 { background-color: var(--bg-secondary) !important; }
+        .text-slate-900, .text-slate-800 { color: var(--text-main) !important; }
+        .text-slate-500, .text-slate-400, .text-slate-700 { color: var(--text-secondary) !important; }
+        .border-slate-100, .border-slate-200 { border-color: var(--border-color) !important; }
+        
+        body.dark-mode input[type="text"], body.dark-mode select {
+            background-color: #1e293b !important; color: white; border-color: #334155 !important;
+        }
+        body.dark-mode .modal-content { background-color: var(--modal-bg) !important; border: 1px solid var(--border-color); }
+
+        .brand-font { font-family: 'Noto Serif Bengali', serif; }
+        .mono-font { font-family: 'Fira Mono', monospace; }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .spin-slow { animation: spin 15s linear infinite; }
+        .paused { animation-play-state: paused; }
+        
+        @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+        .audio-wave { width: 3px; background-color: var(--accent-color); border-radius: 99px; animation: wave 1s ease-in-out infinite; }
+
+        input[type=range] { -webkit-appearance: none; background: transparent; }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 12px; width: 12px;
+            border-radius: 50%; background: #1e293b; margin-top: -5px; cursor: pointer;
+        }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: var(--border-color); }
+
+        #mobile-full-player { transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
+        .translate-y-full { transform: translateY(100%); }
+        .translate-y-0 { transform: translateY(0); }
+
+        #settingsModal, #infoModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .hidden-modal { opacity: 0; visibility: hidden; pointer-events: none; }
+        .visible-modal { opacity: 1; visibility: visible; pointer-events: auto; }
+        .modal-content { transform: scale(0.95); transition: transform 0.3s ease; }
+        .visible-modal .modal-content { transform: scale(1); }
+
+        .toggle-checkbox:checked { right: 0; border-color: #10b981; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #10b981; }
+        .bi-heart-fill { color: #ef4444; animation: heartPop 0.3s ease-out; }
+        @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
+
+        /* --- SEARCH BAR ANIMATION --- */
+        #searchBarContainer {
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease;
+            overflow: hidden;
+        }
+        .search-hidden {
+            max-height: 0;
+            opacity: 0;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            border-bottom: none !important;
+        }
+        .search-visible {
+            max-height: 80px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="h-screen overflow-hidden flex flex-col">
+
+    <!-- HEADER -->
+    <header class="h-16 w-full bg-white border-b border-slate-100 flex items-center justify-between px-4 md:px-6 z-50 sticky top-0">
+        <div class="flex items-center">
+            <a href="#" onclick="location.reload()" class="brand-font text-2xl md:text-3xl font-bold text-slate-900 tracking-wide flex items-center gap-1 hover:text-emerald-600 transition-colors">
+                আল-কোরআন
+            </a>
+        </div>
+        <div class="flex items-center gap-3">
+            <!-- Favorites Toggle -->
+            <button onclick="toggleShowFavorites()" id="favFilterBtn" class="text-slate-400 hover:text-red-500 transition" title="পছন্দের তালিকা">
+                <i class="bi bi-heart-fill text-lg" id="favFilterIcon"></i>
+            </button>
+            <!-- Login -->
+            <button onclick="openInfoModal('প্রবেশ করুন', 'লগিন সিস্টেম শীঘ্রই যুক্ত করা হবে।')" class="hidden md:block px-5 py-1.5 border border-emerald-600 text-emerald-600 hover:bg-emerald-50 rounded-full text-sm font-bold transition">
+                প্রবেশ কর
+            </button>
+            <!-- Settings -->
+            <button onclick="openSettings()" class="text-slate-700 hover:bg-slate-100 w-10 h-10 rounded-full flex items-center justify-center transition" title="সেটিংস">
+                <i class="bi bi-gear text-lg"></i>
+            </button>
+            <!-- Search (UPDATED) -->
+            <button onclick="toggleSearchBar()" class="text-slate-700 hover:bg-slate-100 w-10 h-10 rounded-full flex items-center justify-center transition" title="অনুসন্ধান">
+                <i class="bi bi-search text-lg font-bold"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="flex flex-1 flex-col md:flex-row overflow-hidden relative">
+        <!-- SIDEBAR -->
+        <aside class="w-full md:w-[400px] lg:w-[450px] h-full flex flex-col bg-white border-r border-slate-100 z-10 relative">
+            
+            <!-- HIDDEN SEARCH INPUT CONTAINER -->
+            <div id="searchBarContainer" class="p-4 border-b border-slate-50 bg-slate-50 search-hidden">
+                <div class="relative">
+                    <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                    <input type="text" id="searchInput" placeholder="সূরা খুঁজুন..." class="w-full bg-white border border-slate-200 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400">
+                </div>
+            </div>
+
+            <div id="playlist" class="flex-1 overflow-y-auto pb-24 md:pb-0 scroll-smooth"></div>
+        </aside>
+
+        <!-- DESKTOP PLAYER -->
+        <main class="hidden md:flex flex-1 flex-col items-center justify-center bg-slate-50 relative p-8">
+            <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                <span class="text-[15vw] font-bold brand-font">Al-Quran</span>
+            </div>
+            <div class="w-full max-w-lg bg-white rounded-[2rem] p-8 shadow-xl border border-white/50 backdrop-blur-sm relative z-10">
+                <div class="flex flex-col items-center">
+                    <div class="relative w-64 h-64 lg:w-72 lg:h-72 mb-8 group">
+                        <div class="absolute inset-0 rounded-full bg-emerald-500/20 blur-2xl transform scale-90 group-hover:scale-105 transition-transform duration-700"></div>
+                        <img id="desktopCover" src="" onerror="this.src='https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F'" class="relative w-full h-full object-cover rounded-full border-8 border-slate-100 shadow-2xl paused spin-slow bg-slate-200">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner z-20">
+                            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                        </div>
+                    </div>
+                    <div class="text-center mb-8 w-full">
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <h2 id="desktopTitle" class="text-3xl font-bold text-slate-800 tracking-tight brand-font">সূরা নির্বাচন করুন</h2>
+                            <button onclick="toggleCurrentFavorite()" class="text-slate-400 hover:text-red-500 transition"><i id="desktopHeart" class="bi bi-heart"></i></button>
+                        </div>
+                        <p class="text-sm font-medium text-slate-500">মিশারি রশিদ আল-আফাসি</p>
+                    </div>
+                    <div class="w-full mb-6">
+                        <input type="range" id="desktopProgressBar" value="0" class="w-full cursor-pointer">
+                        <div class="flex justify-between text-xs font-bold text-slate-400 mono-font mt-2">
+                            <span id="desktopCurrentTime">00:00</span><span id="desktopDuration">00:00</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center gap-10">
+                        <button onclick="prevTrack()" class="text-slate-400 hover:text-slate-900 transition hover:scale-110"><i class="bi bi-skip-start-fill text-3xl"></i></button>
+                        <button onclick="togglePlay()" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 transition shadow-lg hover:shadow-emerald-500/30 active:scale-95"><i id="desktopPlayIcon" class="bi bi-play-fill text-4xl ml-1"></i></button>
+                        <button onclick="nextTrack()" class="text-slate-400 hover:text-slate-900 transition hover:scale-110"><i class="bi bi-skip-end-fill text-3xl"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MOBILE MINI PLAYER -->
+    <div id="mobile-mini-player" class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden z-40 translate-y-full transition-transform duration-300" onclick="openMobilePlayer()">
+        <div class="flex items-center gap-3">
+            <div class="absolute top-0 left-0 h-[2px] bg-emerald-500 z-50 transition-all duration-300" id="miniProgressLine" style="width: 0%"></div>
+            <img id="miniCover" src="" onerror="this.src='https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F'" class="w-10 h-10 rounded-lg object-cover bg-slate-200">
+            <div class="flex-1 min-w-0">
+                <h4 id="miniTitle" class="font-bold text-sm text-slate-800 truncate">সূরা লোড হচ্ছে...</h4>
+                <p class="text-[10px] text-emerald-600 font-medium">ক্লিক করে বড় করুন</p>
+            </div>
+            <button onclick="event.stopPropagation(); togglePlay()" class="w-9 h-9 flex items-center justify-center bg-slate-50 rounded-full border border-slate-200 hover:bg-slate-100"><i id="miniPlayIcon" class="bi bi-play-fill text-xl text-slate-800"></i></button>
+        </div>
+    </div>
+
+    <!-- MOBILE FULL PLAYER -->
+    <div id="mobile-full-player" class="fixed inset-0 bg-white z-50 flex flex-col translate-y-full md:hidden">
+        <div class="flex items-center justify-between p-6">
+            <button onclick="closeMobilePlayer()" class="text-slate-500 hover:text-slate-900 p-2 bg-white rounded-full shadow-sm"><i class="bi bi-chevron-down text-xl"></i></button>
+            <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Now Playing</span>
+            <button onclick="toggleCurrentFavorite()" class="text-slate-400 hover:text-red-500 p-2"><i id="mobileHeart" class="bi bi-heart text-xl"></i></button>
+        </div>
+        <div class="flex-1 flex flex-col items-center justify-center p-6 -mt-10">
+            <div class="relative w-64 h-64 mb-8 shadow-2xl rounded-2xl overflow-hidden border-4 border-white">
+                 <img id="mobileCover" src="" onerror="this.src='https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F'" class="w-full h-full object-cover">
+            </div>
+            <div class="w-full text-center mb-8">
+                <h2 id="mobileTitle" class="text-2xl font-bold text-slate-900 mb-1 brand-font">সূরা ফাতিহা</h2>
+                <p class="text-slate-500 text-sm">মিশারি রশিদ আল-আফাসি</p>
+            </div>
+            <div class="w-full mb-6 px-4">
+                <input type="range" id="mobileProgressBar" value="0" class="w-full">
+                <div class="flex justify-between text-[10px] font-bold text-slate-400 mono-font mt-2">
+                    <span id="mobileCurrentTime">00:00</span><span id="mobileDuration">00:00</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between w-full max-w-[260px]">
+                <button onclick="prevTrack()" class="text-slate-400 active:text-slate-900 transition transform active:scale-90"><i class="bi bi-skip-start-fill text-3xl"></i></button>
+                <button onclick="togglePlay()" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-xl active:scale-90 transition"><i id="mobilePlayIcon" class="bi bi-play-fill text-3xl ml-1"></i></button>
+                <button onclick="nextTrack()" class="text-slate-400 active:text-slate-900 transition transform active:scale-90"><i class="bi bi-skip-end-fill text-3xl"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-modal">
+        <div class="modal-content bg-white rounded-2xl w-11/12 max-w-sm shadow-2xl relative overflow-hidden">
+            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="bi bi-sliders"></i> সেটিংস</h3>
+                <button onclick="closeSettings()" class="text-slate-400 hover:text-slate-800 transition"><i class="bi bi-x-lg"></i></button>
+            </div>
+            <div class="p-6 space-y-6">
+                <div class="flex items-center justify-between">
+                    <div><p class="text-slate-800 font-medium text-sm">অটো প্লে</p><p class="text-xs text-slate-500">পরের সূরা স্বয়ংক্রিয়ভাবে চলবে</p></div>
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" id="autoPlayToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 transition-all duration-300" checked onclick="toggleAutoPlay()"/>
+                        <label for="autoPlayToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div><p class="text-slate-800 font-medium text-sm">ডার্ক মোড</p><p class="text-xs text-slate-500">থিম পরিবর্তন করুন</p></div>
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" id="darkModeToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 transition-all duration-300" onclick="toggleDarkMode()"/>
+                        <label for="darkModeToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div><p class="text-slate-800 font-medium text-sm">স্লিপ টাইমার</p><p class="text-xs text-slate-500">স্বয়ংক্রিয়ভাবে বন্ধ হবে</p></div>
+                    <select id="sleepTimerSelect" onchange="setSleepTimer()" class="bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-lg p-2 focus:outline-none">
+                        <option value="0">বন্ধ</option><option value="15">১৫ মিনিট</option><option value="30">৩০ মিনিট</option><option value="60">১ ঘণ্টা</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- INFO MODAL -->
+    <div id="infoModal" class="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-modal">
+        <div class="modal-content bg-white rounded-2xl p-6 w-11/12 max-w-sm shadow-2xl relative">
+            <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition"><i class="bi bi-x-lg"></i></button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600"><i class="bi bi-info-circle-fill text-2xl"></i></div>
+                <h3 id="infoModalTitle" class="text-xl font-bold text-slate-900 mb-2">Title</h3>
+                <p id="infoModalMessage" class="text-slate-500 text-sm leading-relaxed">Msg</p>
+                <button onclick="closeInfoModal()" class="mt-6 w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition">ঠিক আছে</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio"></audio>
+
+    <script>
+        // --- STATE & SETTINGS ---
+        let isAutoPlay = localStorage.getItem('autoPlay') === 'false' ? false : true;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true' ? true : false;
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        let showFavoritesOnly = false;
+        let sleepTimer = null;
+
+        const genericCover = "https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F"; 
+        const fatihahCover = "https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F";
+
+        const surahNames = [
+            {en: "Al-Fatihah", bn: "আল ফাতিহা"}, {en: "Al-Baqarah", bn: "আল বাকারা"}, {en: "Al-Imran", bn: "আল ইমরান"}, {en: "An-Nisa", bn: "আন নিসা"}, {en: "Al-Ma'idah", bn: "আল মায়িদাহ"},
+            {en: "Al-An'am", bn: "আল আনআম"}, {en: "Al-A'raf", bn: "আল আ'রাফ"}, {en: "Al-Anfal", bn: "আল আনফাল"}, {en: "At-Tawbah", bn: "আত তাওবাহ"}, {en: "Yunus", bn: "ইউনুস"},
+            {en: "Hud", bn: "হুদ"}, {en: "Yusuf", bn: "ইউসুফ"}, {en: "Ar-Ra'd", bn: "আর-রাদ"}, {en: "Ibrahim", bn: "ইব্রাহিম"}, {en: "Al-Hijr", bn: "আল হিজর"},
+            {en: "An-Nahl", bn: "আন নahl"}, {en: "Al-Isra", bn: "বনী ইসরাঈল"}, {en: "Al-Kahf", bn: "আল কাহফ"}, {en: "Maryam", bn: "মারইয়াম"}, {en: "Ta-Ha", bn: "ত্বা-হা"},
+            {en: "Al-Anbiya", bn: "আল আম্বিয়া"}, {en: "Al-Hajj", bn: "আল হজ্জ"}, {en: "Al-Mu'minun", bn: "আল মু'মিনূন"}, {en: "An-Nur", bn: "আন নূর"}, {en: "Al-Furqan", bn: "আল ফুরকান"},
+            {en: "Ash-Shu'ara", bn: "আশ-শূআরা"}, {en: "An-Naml", bn: "আন নামল"}, {en: "Al-Qasas", bn: "আল কাসাস"}, {en: "Al-Ankabut", bn: "আল আনকাবুত"}, {en: "Ar-Rum", bn: "আর রূম"},
+            {en: "Luqman", bn: "লোকমান"}, {en: "As-Sajdah", bn: "আস-সেজদাহ"}, {en: "Al-Ahzab", bn: "আল আহযাব"}, {en: "Saba", bn: "সাবা"}, {en: "Fatir", bn: "ফাতির"},
+            {en: "Ya-Sin", bn: "ইয়া-সীন"}, {en: "As-Saffat", bn: "আস-সাফফাত"}, {en: "Sad", bn: "ছাদ"}, {en: "Az-Zumar", bn: "আয-যুমার"}, {en: "Ghafir", bn: "গাফির"},
+            {en: "Fussilat", bn: "ফুসসিলাত"}, {en: "Ash-Shura", bn: "আশ-শূরা"}, {en: "Az-Zukhruf", bn: "আয-যুখরুফ"}, {en: "Ad-Dukhan", bn: "আদ-দুখান"}, {en: "Al-Jathiyah", bn: "আল জাসিয়াহ"},
+            {en: "Al-Ahqaf", bn: "আল আহকাফ"}, {en: "Muhammad", bn: "মুহাম্মদ"}, {en: "Al-Fath", bn: "আল ফাতহ"}, {en: "Al-Hujurat", bn: "আল হুজুরাত"}, {en: "Qaf", bn: "ক্বাফ"},
+            {en: "Adh-Dhariyat", bn: "আয-যারিয়াত"}, {en: "At-Tur", bn: "আত তূর"}, {en: "An-Najm", bn: "আন-নাজম"}, {en: "Al-Qamar", bn: "আল কামার"}, {en: "Ar-Rahman", bn: "আর রহমান"},
+            {en: "Al-Waqi'ah", bn: "আল ওয়াকিয়াহ"}, {en: "Al-Hadid", bn: "আল হাদীদ"}, {en: "Al-Mujadila", bn: "আল মুজাদালাহ"}, {en: "Al-Hashr", bn: "আল হাশর"}, {en: "Al-Mumtahanah", bn: "আল মুমতাহিনাহ"},
+            {en: "As-Saff", bn: "আস-সাফ"}, {en: "Al-Jumu'ah", bn: "আল জুমুআ"}, {en: "Al-Munafiqun", bn: "আল মুনাফিকুন"}, {en: "At-Taghabun", bn: "আত-তাগাবুন"}, {en: "At-Talaq", bn: "আত-তালাক"},
+            {en: "At-Tahrim", bn: "আত-তাহরীম"}, {en: "Al-Mulk", bn: "আল মুলক"}, {en: "Al-Qalam", bn: "আল কলাম"}, {en: "Al-Haqqah", bn: "আল হাক্কাহ"}, {en: "Al-Ma'arij", bn: "আল মাআরিজ"},
+            {en: "Nuh", bn: "নূহ"}, {en: "Al-Jinn", bn: "আল জ্বিন"}, {en: "Al-Muzzammil", bn: "আল মুযযামমিল"}, {en: "Al-Muddaththir", bn: "আল মুদ্দাসসির"}, {en: "Al-Qiyamah", bn: "আল কিয়ামা"},
+            {en: "Al-Insan", bn: "আল ইনসান"}, {en: "Al-Mursalat", bn: "আল মুরসালাত"}, {en: "An-Naba", bn: "আন-নাবা"}, {en: "An-Nazi'at", bn: "আন-নাযিয়াত"}, {en: "Abasa", bn: "আবাসা"},
+            {en: "At-Takwir", bn: "আত-তাকভীর"}, {en: "Al-Infitar", bn: "আল ইনফিতার"}, {en: "Al-Mutaffifin", bn: "আল মুতাফফিফীন"}, {en: "Al-Inshiqaq", bn: "আল ইনশিকাক"}, {en: "Al-Buruj", bn: "আল বুরুজ"},
+            {en: "At-Tariq", bn: "আত-তারিক"}, {en: "Al-A'la", bn: "আল আ'লা"}, {en: "Al-Ghashiyah", bn: "আল গাশিয়াহ"}, {en: "Al-Fajr", bn: "আল ফজর"}, {en: "Al-Balad", bn: "আল বালাদ"},
+            {en: "Ash-Shams", bn: "আশ-শামস"}, {en: "Al-Lail", bn: "আল লাইল"}, {en: "Ad-Duha", bn: "আদ-দুহা"}, {en: "Ash-Sharh", bn: "আশ-শারহ"}, {en: "At-Tin", bn: "আত-তীন"},
+            {en: "Al-Alaq", bn: "আল আলাক"}, {en: "Al-Qadr", bn: "আল কদর"}, {en: "Al-Bayyinah", bn: "আল বাইয়িনাহ"}, {en: "Az-Zalzalah", bn: "আল যিলযাল"}, {en: "Al-Adiyat", bn: "আল আদিয়াত"},
+            {en: "Al-Qari'ah", bn: "আল কারিয়াহ"}, {en: "At-Takathur", bn: "আত-তাকাসুর"}, {en: "Al-Asr", bn: "আল আসর"}, {en: "Al-Humazah", bn: "আল হুমাযাহ"}, {en: "Al-Fil", bn: "আল ফীল"},
+            {en: "Quraysh", bn: "কুরাইশ"}, {en: "Al-Ma'un", bn: "আল মাউন"}, {en: "Al-Kawthar", bn: "আল কাউসার"}, {en: "Al-Kafirun", bn: "আল কাফিরুন"}, {en: "An-Nasr", bn: "আন-নাসর"},
+            {en: "Al-Masad", bn: "আল লাহাব"}, {en: "Al-Ikhlas", bn: "আল ইখলাস"}, {en: "Al-Falaq", bn: "আল ফালাক"}, {en: "An-Nas", bn: "আন-নাস"}
+        ];
+
+        const surahs = surahNames.map((item, index) => {
+            const id = index + 1;
+            const idStr = String(id).padStart(3, '0');
+            let slug = item.en.toLowerCase().replace(/'/g, '').replace(/\s+/g, '-');
+            return {
+                id: id,
+                name: item.bn,
+                enName: item.en,
+                cover: id === 1 ? fatihahCover : genericCover,
+                source: `https://freequranmp3.com/alafasy/${idStr}-${slug}.mp3`
+            };
+        });
+
+        // --- DOM ---
+        const audio = document.getElementById('audio');
+        const playlistContainer = document.getElementById('playlist');
+        const searchInput = document.getElementById('searchInput');
+        const searchBarContainer = document.getElementById('searchBarContainer');
+        const favFilterIcon = document.getElementById('favFilterIcon');
+        
+        const desktopCover = document.getElementById('desktopCover');
+        const desktopTitle = document.getElementById('desktopTitle');
+        const desktopPlayIcon = document.getElementById('desktopPlayIcon');
+        const desktopHeart = document.getElementById('desktopHeart');
+        const desktopProgressBar = document.getElementById('desktopProgressBar');
+        const desktopCurrentTime = document.getElementById('desktopCurrentTime');
+        const desktopDuration = document.getElementById('desktopDuration');
+
+        const mobileMiniPlayer = document.getElementById('mobile-mini-player');
+        const mobileFullPlayer = document.getElementById('mobile-full-player');
+        const miniCover = document.getElementById('miniCover');
+        const miniTitle = document.getElementById('miniTitle');
+        const miniPlayIcon = document.getElementById('miniPlayIcon');
+        const miniProgressLine = document.getElementById('miniProgressLine');
+        const mobileCover = document.getElementById('mobileCover');
+        const mobileTitle = document.getElementById('mobileTitle');
+        const mobilePlayIcon = document.getElementById('mobilePlayIcon');
+        const mobileHeart = document.getElementById('mobileHeart');
+        const mobileProgressBar = document.getElementById('mobileProgressBar');
+        const mobileCurrentTime = document.getElementById('mobileCurrentTime');
+        const mobileDuration = document.getElementById('mobileDuration');
+
+        let currentIndex = 0;
+        let isPlaying = false;
+        let hasStarted = false;
+
+        const toBanglaNum = (str) => str.toString().replace(/\d/g, d => "০১২৩৪৫৬৭৮৯"[d]);
+
+        // --- INIT ---
+        function init() {
+            document.getElementById('autoPlayToggle').checked = isAutoPlay;
+            document.getElementById('darkModeToggle').checked = isDarkMode;
+            if (isDarkMode) document.body.classList.add('dark-mode');
+            
+            const savedIdx = localStorage.getItem('lastIndex');
+            const savedTime = localStorage.getItem('lastTime');
+            if(savedIdx) { 
+                currentIndex = parseInt(savedIdx); 
+                loadTrack(currentIndex);
+                if(savedTime) audio.currentTime = parseFloat(savedTime);
+                hasStarted = true; 
+                mobileMiniPlayer.classList.remove('translate-y-full');
+            } else {
+                loadTrack(0);
+            }
+            renderPlaylist();
+        }
+
+        // --- SEARCH TOGGLE ---
+        function toggleSearchBar() {
+            if (searchBarContainer.classList.contains('search-hidden')) {
+                searchBarContainer.classList.remove('search-hidden');
+                searchBarContainer.classList.add('search-visible');
+                setTimeout(() => searchInput.focus(), 100);
+            } else {
+                searchBarContainer.classList.add('search-hidden');
+                searchBarContainer.classList.remove('search-visible');
+            }
+        }
+
+        // --- FAVORITES ---
+        function toggleFavorite(id, event) {
+            if(event) event.stopPropagation();
+            if (favorites.includes(id)) favorites = favorites.filter(fid => fid !== id);
+            else favorites.push(id);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderPlaylist(searchInput.value);
+            updateHeartUI();
+        }
+        function toggleCurrentFavorite() { toggleFavorite(surahs[currentIndex].id); }
+        function toggleShowFavorites() {
+            showFavoritesOnly = !showFavoritesOnly;
+            favFilterIcon.className = showFavoritesOnly ? "bi bi-heart-fill text-red-500 text-lg" : "bi bi-heart text-lg";
+            renderPlaylist(searchInput.value);
+        }
+        function updateHeartUI() {
+            const currentId = surahs[currentIndex].id;
+            const isFav = favorites.includes(currentId);
+            const iconClass = isFav ? "bi bi-heart-fill text-red-500" : "bi bi-heart";
+            desktopHeart.className = iconClass;
+            mobileHeart.className = `${iconClass} text-xl`;
+        }
+
+        // --- SETTINGS ---
+        function toggleAutoPlay() {
+            isAutoPlay = document.getElementById('autoPlayToggle').checked;
+            localStorage.setItem('autoPlay', isAutoPlay);
+        }
+        function toggleDarkMode() {
+            isDarkMode = document.getElementById('darkModeToggle').checked;
+            if(isDarkMode) document.body.classList.add('dark-mode');
+            else document.body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+        function setSleepTimer() {
+            const mins = parseInt(document.getElementById('sleepTimerSelect').value);
+            if(sleepTimer) clearTimeout(sleepTimer);
+            if(mins > 0) {
+                sleepTimer = setTimeout(() => {
+                    audio.pause(); isPlaying = false; updateUIState();
+                    openInfoModal("স্লিপ টাইমার", "আপনার নির্ধারিত সময় শেষ হয়েছে। অডিও বন্ধ করা হলো।");
+                }, mins * 60 * 1000);
+            }
+        }
+
+        // --- RENDER ---
+        function renderPlaylist(filter = "") {
+            playlistContainer.innerHTML = "";
+            surahs.forEach((surah, index) => {
+                if (showFavoritesOnly && !favorites.includes(surah.id)) return;
+                if (filter && !surah.name.includes(filter) && !surah.enName.toLowerCase().includes(filter.toLowerCase())) return;
+
+                const isActive = index === currentIndex;
+                const isFav = favorites.includes(surah.id);
+                const div = document.createElement('div');
+                div.className = `flex items-center justify-between px-4 py-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors ${isActive && hasStarted ? 'bg-emerald-50' : ''}`;
+                
+                div.innerHTML = `
+                    <div class="flex items-center gap-4 flex-1" onclick="playTrack(${index})">
+                        <div class="relative w-10 h-10 flex-shrink-0">
+                            <div class="w-full h-full rounded-lg flex items-center justify-center font-bold text-xs ${isActive && hasStarted ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'}">
+                                ${toBanglaNum(surah.id)}
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-sm text-slate-800 truncate ${isActive && hasStarted ? 'text-emerald-700' : ''}">${surah.name}</h3>
+                            <p class="text-[10px] text-slate-500 font-medium truncate uppercase">${surah.enName}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        ${isActive && isPlaying ? `<div class="flex gap-1 h-3 items-end mr-2"><div class="audio-wave"></div><div class="audio-wave" style="animation-delay:0.2s"></div><div class="audio-wave" style="animation-delay:0.4s"></div></div>` : ``}
+                        <button onclick="toggleFavorite(${surah.id}, event)" class="text-slate-300 hover:text-red-500 transition p-2">
+                            <i class="bi ${isFav ? 'bi-heart-fill text-red-500' : 'bi-heart'}"></i>
+                        </button>
+                    </div>
+                `;
+                playlistContainer.appendChild(div);
+            });
+        }
+
+        // --- PLAYER ---
+        function loadTrack(index) {
+            const track = surahs[index];
+            if(audio.src !== track.source) audio.src = track.source;
+            [desktopTitle, miniTitle, mobileTitle].forEach(el => el.innerText = track.name);
+            [desktopCover, miniCover, mobileCover].forEach(el => el.src = track.cover);
+            
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: track.name, artist: "Mishary Rashid", album: "Al-Quran",
+                    artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
+                });
+                navigator.mediaSession.setActionHandler('play', togglePlay);
+                navigator.mediaSession.setActionHandler('pause', togglePlay);
+                navigator.mediaSession.setActionHandler('previoustrack', prevTrack);
+                navigator.mediaSession.setActionHandler('nexttrack', nextTrack);
+            }
+            updateHeartUI();
+        }
+
+        function playTrack(index) {
+            if (index !== currentIndex || !hasStarted) { currentIndex = index; loadTrack(index); audio.load(); }
+            audio.play().then(() => {
+                isPlaying = true; hasStarted = true; mobileMiniPlayer.classList.remove('translate-y-full'); updateUIState();
+            }).catch(e => console.error(e));
+        }
+
+        function togglePlay() {
+            if (!hasStarted) return playTrack(currentIndex);
+            if (audio.paused) { audio.play(); isPlaying = true; } else { audio.pause(); isPlaying = false; }
+            updateUIState();
+        }
+
+        function prevTrack() { let prevIndex = (currentIndex - 1 + surahs.length) % surahs.length; playTrack(prevIndex); }
+        function nextTrack() { let nextIndex = (currentIndex + 1) % surahs.length; playTrack(nextIndex); }
+
+        function updateUIState() {
+            const playIconClass = isPlaying ? 'bi-pause-fill' : 'bi-play-fill';
+            [desktopPlayIcon, miniPlayIcon, mobilePlayIcon].forEach(icon => {
+                icon.className = '';
+                if (icon.id === 'desktopPlayIcon' || icon.id === 'mobilePlayIcon') icon.className = `bi ${playIconClass} text-3xl ml-1`;
+                else icon.className = `bi ${playIconClass} text-xl`;
+            });
+            if (isPlaying) desktopCover.classList.remove('paused'); else desktopCover.classList.add('paused');
+            renderPlaylist(searchInput.value);
+        }
+
+        // --- MODALS ---
+        const settingsModal = document.getElementById('settingsModal');
+        const infoModal = document.getElementById('infoModal');
+        function openSettings() { settingsModal.classList.remove('hidden-modal'); settingsModal.classList.add('visible-modal'); }
+        function closeSettings() { settingsModal.classList.remove('visible-modal'); settingsModal.classList.add('hidden-modal'); }
+        function openInfoModal(title, msg) {
+            document.getElementById('infoModalTitle').innerText = title;
+            document.getElementById('infoModalMessage').innerText = msg;
+            infoModal.classList.remove('hidden-modal'); infoModal.classList.add('visible-modal');
+        }
+        function closeInfoModal() { infoModal.classList.remove('visible-modal'); infoModal.classList.add('hidden-modal'); }
+        settingsModal.addEventListener('click', (e) => { if(e.target === settingsModal) closeSettings(); });
+        infoModal.addEventListener('click', (e) => { if(e.target === infoModal) closeInfoModal(); });
+
+        function openMobilePlayer() { mobileFullPlayer.classList.remove('translate-y-full'); mobileFullPlayer.classList.add('translate-y-0'); }
+        function closeMobilePlayer() { mobileFullPlayer.classList.remove('translate-y-0'); mobileFullPlayer.classList.add('translate-y-full'); }
+        function focusSearch() { searchInput.focus(); }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.target.tagName === 'INPUT') return;
+            if(e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            if(e.code === 'ArrowRight') audio.currentTime += 5;
+            if(e.code === 'ArrowLeft') audio.currentTime -= 5;
+        });
+
+        audio.onended = () => { if(isAutoPlay) nextTrack(); else { isPlaying=false; updateUIState(); } };
+        audio.ontimeupdate = () => {
+            if (!audio.duration) return;
+            const pct = (audio.currentTime / audio.duration) * 100;
+            [desktopProgressBar, mobileProgressBar].forEach(bar => bar.value = pct);
+            miniProgressLine.style.width = `${pct}%`;
+            localStorage.setItem('lastIndex', currentIndex);
+            localStorage.setItem('lastTime', audio.currentTime);
+            const timeStr = toBanglaNum(formatTime(audio.currentTime));
+            const durStr = toBanglaNum(formatTime(audio.duration));
+            desktopCurrentTime.innerText = timeStr; desktopDuration.innerText = durStr;
+            mobileCurrentTime.innerText = timeStr; mobileDuration.innerText = durStr;
+        };
+        function seek(e) { audio.currentTime = (e.target.value / 100) * audio.duration; }
+        desktopProgressBar.oninput = seek; mobileProgressBar.oninput = seek;
+        searchInput.oninput = (e) => renderPlaylist(e.target.value);
+        function formatTime(s) {
+            const min = Math.floor(s / 60); const sec = Math.floor(s % 60);
+            return `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+        }
+
+        init();
+    </script>
+</body>
+</html>
