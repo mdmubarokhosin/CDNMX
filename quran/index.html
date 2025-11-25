@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -9,8 +9,25 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href='data:application/manifest+json,{"name":"Al-Quran Player","short_name":"Al-Quran","start_url":".","display":"standalone","theme_color":"#ffffff","background_color":"#ffffff","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/3024/3024482.png","sizes":"192x192","type":"image/png"}]}'>
 
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS & Config -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class', // Official Dark Mode Strategy
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Hind Siliguri', 'sans-serif'],
+                        serif: ['Noto Serif Bengali', 'serif'],
+                        mono: ['Fira Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: { 500: '#10b981', 600: '#059669', 900: '#064e3b' } // Emerald
+                    }
+                }
+            }
+        }
+    </script>
     
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -19,114 +36,74 @@
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500&family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Serif+Bengali:wght@700&display=swap" rel="stylesheet">
 
     <style>
-        :root {
-            --bg-main: #ffffff; --bg-secondary: #f8fafc;
-            --text-main: #0f172a; --text-secondary: #64748b;
-            --border-color: #e2e8f0; --accent-color: #059669;
-            --modal-bg: #ffffff;
-        }
-        body.dark-mode {
-            --bg-main: #0f172a; --bg-secondary: #1e293b;
-            --text-main: #f1f5f9; --text-secondary: #94a3b8;
-            --border-color: #334155; --accent-color: #34d399;
-            --modal-bg: #1e293b;
-        }
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            background-color: var(--bg-main); color: var(--text-main);
-            transition: background-color 0.3s, color 0.3s;
-            -webkit-tap-highlight-color: transparent;
-        }
-        /* Overrides */
-        .bg-white { background-color: var(--bg-main) !important; }
-        .bg-slate-50 { background-color: var(--bg-secondary) !important; }
-        .text-slate-900, .text-slate-800 { color: var(--text-main) !important; }
-        .text-slate-500, .text-slate-400, .text-slate-700 { color: var(--text-secondary) !important; }
-        .border-slate-100, .border-slate-200 { border-color: var(--border-color) !important; }
-        
-        body.dark-mode input[type="text"], body.dark-mode select {
-            background-color: #1e293b !important; color: white; border-color: #334155 !important;
-        }
-        body.dark-mode .modal-content { background-color: var(--modal-bg) !important; border: 1px solid var(--border-color); }
-
-        .brand-font { font-family: 'Noto Serif Bengali', serif; }
-        .mono-font { font-family: 'Fira Mono', monospace; }
-        
-        ::-webkit-scrollbar { width: 4px; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+        /* Animations */
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .spin-slow { animation: spin 15s linear infinite; }
         .paused { animation-play-state: paused; }
-        
-        @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 16px; } }
-        .audio-wave { width: 3px; background-color: var(--accent-color); border-radius: 99px; animation: wave 1s ease-in-out infinite; }
 
+        @keyframes wave { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+        .audio-wave { width: 3px; background-color: #10b981; border-radius: 99px; animation: wave 1s ease-in-out infinite; }
+
+        /* Range Slider */
         input[type=range] { -webkit-appearance: none; background: transparent; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 12px; width: 12px;
-            border-radius: 50%; background: #1e293b; margin-top: -5px; cursor: pointer;
+            border-radius: 50%; background: #0f172a; margin-top: -5px; cursor: pointer;
         }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: var(--border-color); }
+        .dark input[type=range]::-webkit-slider-thumb { background: #f8fafc; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: #e2e8f0; }
+        .dark input[type=range]::-webkit-slider-runnable-track { background: #334155; }
 
+        /* Transitions */
         #mobile-full-player { transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1); }
         .translate-y-full { transform: translateY(100%); }
         .translate-y-0 { transform: translateY(0); }
 
-        #settingsModal, #infoModal { transition: opacity 0.3s ease, visibility 0.3s ease; }
+        /* Search Toggle Animation */
+        #searchBarContainer { transition: max-height 0.3s ease-in-out, opacity 0.3s ease, padding 0.3s ease; overflow: hidden; }
+        .search-hidden { max-height: 0; opacity: 0; padding-top: 0 !important; padding-bottom: 0 !important; border-bottom: none !important; }
+        .search-visible { max-height: 80px; opacity: 1; }
+
+        /* Modal Transition */
+        .modal-overlay { transition: opacity 0.3s ease, visibility 0.3s ease; }
         .hidden-modal { opacity: 0; visibility: hidden; pointer-events: none; }
         .visible-modal { opacity: 1; visibility: visible; pointer-events: auto; }
         .modal-content { transform: scale(0.95); transition: transform 0.3s ease; }
         .visible-modal .modal-content { transform: scale(1); }
 
+        /* Toggle Switch */
         .toggle-checkbox:checked { right: 0; border-color: #10b981; }
         .toggle-checkbox:checked + .toggle-label { background-color: #10b981; }
         .bi-heart-fill { color: #ef4444; animation: heartPop 0.3s ease-out; }
         @keyframes heartPop { 0% { transform: scale(1); } 50% { transform: scale(1.3); } 100% { transform: scale(1); } }
-
-        /* --- SEARCH BAR ANIMATION --- */
-        #searchBarContainer {
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, padding 0.3s ease;
-            overflow: hidden;
-        }
-        .search-hidden {
-            max-height: 0;
-            opacity: 0;
-            padding-top: 0 !important;
-            padding-bottom: 0 !important;
-            border-bottom: none !important;
-        }
-        .search-visible {
-            max-height: 80px;
-            opacity: 1;
-        }
     </style>
 </head>
-<body class="h-screen overflow-hidden flex flex-col">
+<body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 h-screen overflow-hidden flex flex-col transition-colors duration-300">
 
     <!-- HEADER -->
-    <header class="h-16 w-full bg-white border-b border-slate-100 flex items-center justify-between px-4 md:px-6 z-50 sticky top-0">
+    <header class="h-16 w-full bg-white dark:bg-slate-950 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between px-4 md:px-6 z-50 sticky top-0 transition-colors duration-300">
         <div class="flex items-center">
-            <a href="#" onclick="location.reload()" class="brand-font text-2xl md:text-3xl font-bold text-slate-900 tracking-wide flex items-center gap-1 hover:text-emerald-600 transition-colors">
+            <a href="#" onclick="location.reload()" class="font-serif text-2xl md:text-3xl font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-1 hover:text-brand-600 transition-colors">
                 আল-কোরআন
             </a>
         </div>
         <div class="flex items-center gap-3">
-            <!-- Favorites Toggle -->
-            <button onclick="toggleShowFavorites()" id="favFilterBtn" class="text-slate-400 hover:text-red-500 transition" title="পছন্দের তালিকা">
+            <button onclick="toggleShowFavorites()" id="favFilterBtn" class="text-slate-400 dark:text-slate-500 hover:text-red-500 transition" title="পছন্দের তালিকা">
                 <i class="bi bi-heart-fill text-lg" id="favFilterIcon"></i>
             </button>
-            <!-- Login -->
-            <button onclick="openInfoModal('প্রবেশ করুন', 'লগিন সিস্টেম শীঘ্রই যুক্ত করা হবে।')" class="hidden md:block px-5 py-1.5 border border-emerald-600 text-emerald-600 hover:bg-emerald-50 rounded-full text-sm font-bold transition">
+            <button onclick="openInfoModal('প্রবেশ করুন', 'লগিন সিস্টেম শীঘ্রই যুক্ত করা হবে।')" class="hidden md:block px-5 py-1.5 border border-brand-600 text-brand-600 dark:text-brand-500 dark:border-brand-500 hover:bg-emerald-50 dark:hover:bg-slate-900 rounded-full text-sm font-bold transition">
                 প্রবেশ কর
             </button>
-            <!-- Settings -->
-            <button onclick="openSettings()" class="text-slate-700 hover:bg-slate-100 w-10 h-10 rounded-full flex items-center justify-center transition" title="সেটিংস">
+            <button onclick="openSettings()" class="text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-10 h-10 rounded-full flex items-center justify-center transition" title="সেটিংস">
                 <i class="bi bi-gear text-lg"></i>
             </button>
-            <!-- Search (UPDATED) -->
-            <button onclick="toggleSearchBar()" class="text-slate-700 hover:bg-slate-100 w-10 h-10 rounded-full flex items-center justify-center transition" title="অনুসন্ধান">
+            <button onclick="toggleSearchBar()" class="text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 w-10 h-10 rounded-full flex items-center justify-center transition" title="অনুসন্ধান">
                 <i class="bi bi-search text-lg font-bold"></i>
             </button>
         </div>
@@ -135,50 +112,49 @@
     <!-- MAIN CONTENT -->
     <div class="flex flex-1 flex-col md:flex-row overflow-hidden relative">
         <!-- SIDEBAR -->
-        <aside class="w-full md:w-[400px] lg:w-[450px] h-full flex flex-col bg-white border-r border-slate-100 z-10 relative">
-            
-            <!-- HIDDEN SEARCH INPUT CONTAINER -->
-            <div id="searchBarContainer" class="p-4 border-b border-slate-50 bg-slate-50 search-hidden">
+        <aside class="w-full md:w-[400px] lg:w-[450px] h-full flex flex-col bg-white dark:bg-slate-950 border-r border-slate-100 dark:border-slate-800 z-10 relative transition-colors duration-300">
+            <!-- Search Bar (Hidden by default) -->
+            <div id="searchBarContainer" class="p-4 border-b border-slate-50 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 search-hidden transition-all duration-300">
                 <div class="relative">
                     <i class="bi bi-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                    <input type="text" id="searchInput" placeholder="সূরা খুঁজুন..." class="w-full bg-white border border-slate-200 rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all placeholder:text-slate-400">
+                    <input type="text" id="searchInput" placeholder="সূরা খুঁজুন..." 
+                        class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white rounded-full py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all placeholder:text-slate-400">
                 </div>
             </div>
-
             <div id="playlist" class="flex-1 overflow-y-auto pb-24 md:pb-0 scroll-smooth"></div>
         </aside>
 
         <!-- DESKTOP PLAYER -->
-        <main class="hidden md:flex flex-1 flex-col items-center justify-center bg-slate-50 relative p-8">
-            <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
-                <span class="text-[15vw] font-bold brand-font">Al-Quran</span>
+        <main class="hidden md:flex flex-1 flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 relative p-8 transition-colors duration-300">
+            <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] dark:opacity-[0.05] pointer-events-none select-none">
+                <span class="text-[15vw] font-bold font-serif text-black dark:text-white">Al-Quran</span>
             </div>
-            <div class="w-full max-w-lg bg-white rounded-[2rem] p-8 shadow-xl border border-white/50 backdrop-blur-sm relative z-10">
+            <div class="w-full max-w-lg bg-white dark:bg-slate-950 rounded-[2rem] p-8 shadow-xl dark:shadow-black/50 border border-white/50 dark:border-slate-800 backdrop-blur-sm relative z-10 transition-colors duration-300">
                 <div class="flex flex-col items-center">
                     <div class="relative w-64 h-64 lg:w-72 lg:h-72 mb-8 group">
-                        <div class="absolute inset-0 rounded-full bg-emerald-500/20 blur-2xl transform scale-90 group-hover:scale-105 transition-transform duration-700"></div>
-                        <img id="desktopCover" src="" onerror="this.src='https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F'" class="relative w-full h-full object-cover rounded-full border-8 border-slate-100 shadow-2xl paused spin-slow bg-slate-200">
-                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner z-20">
-                            <div class="w-3 h-3 bg-emerald-500 rounded-full"></div>
+                        <div class="absolute inset-0 rounded-full bg-brand-500/20 blur-2xl transform scale-90 group-hover:scale-105 transition-transform duration-700"></div>
+                        <img id="desktopCover" src="" class="relative w-full h-full object-cover rounded-full border-8 border-slate-100 dark:border-slate-800 shadow-2xl paused spin-slow bg-slate-200 dark:bg-slate-800">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-white dark:bg-slate-950 rounded-full flex items-center justify-center shadow-inner z-20">
+                            <div class="w-3 h-3 bg-brand-500 rounded-full"></div>
                         </div>
                     </div>
                     <div class="text-center mb-8 w-full">
                         <div class="flex items-center justify-center gap-2 mb-1">
-                            <h2 id="desktopTitle" class="text-3xl font-bold text-slate-800 tracking-tight brand-font">সূরা নির্বাচন করুন</h2>
+                            <h2 id="desktopTitle" class="text-3xl font-bold text-slate-800 dark:text-slate-100 tracking-tight font-serif">সূরা নির্বাচন করুন</h2>
                             <button onclick="toggleCurrentFavorite()" class="text-slate-400 hover:text-red-500 transition"><i id="desktopHeart" class="bi bi-heart"></i></button>
                         </div>
-                        <p class="text-sm font-medium text-slate-500">মিশারি রশিদ আল-আফাসি</p>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">মিশারি রশিদ আল-আফাসি</p>
                     </div>
                     <div class="w-full mb-6">
                         <input type="range" id="desktopProgressBar" value="0" class="w-full cursor-pointer">
-                        <div class="flex justify-between text-xs font-bold text-slate-400 mono-font mt-2">
+                        <div class="flex justify-between text-xs font-bold text-slate-400 dark:text-slate-500 font-mono mt-2">
                             <span id="desktopCurrentTime">00:00</span><span id="desktopDuration">00:00</span>
                         </div>
                     </div>
                     <div class="flex items-center justify-center gap-10">
-                        <button onclick="prevTrack()" class="text-slate-400 hover:text-slate-900 transition hover:scale-110"><i class="bi bi-skip-start-fill text-3xl"></i></button>
-                        <button onclick="togglePlay()" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center hover:bg-emerald-600 transition shadow-lg hover:shadow-emerald-500/30 active:scale-95"><i id="desktopPlayIcon" class="bi bi-play-fill text-4xl ml-1"></i></button>
-                        <button onclick="nextTrack()" class="text-slate-400 hover:text-slate-900 transition hover:scale-110"><i class="bi bi-skip-end-fill text-3xl"></i></button>
+                        <button onclick="prevTrack()" class="text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition hover:scale-110"><i class="bi bi-skip-start-fill text-3xl"></i></button>
+                        <button onclick="togglePlay()" class="w-16 h-16 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 rounded-full flex items-center justify-center hover:bg-brand-600 dark:hover:bg-brand-400 dark:hover:text-white transition shadow-lg hover:shadow-brand-500/30 active:scale-95"><i id="desktopPlayIcon" class="bi bi-play-fill text-4xl ml-1"></i></button>
+                        <button onclick="nextTrack()" class="text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition hover:scale-110"><i class="bi bi-skip-end-fill text-3xl"></i></button>
                     </div>
                 </div>
             </div>
@@ -186,72 +162,80 @@
     </div>
 
     <!-- MOBILE MINI PLAYER -->
-    <div id="mobile-mini-player" class="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden z-40 translate-y-full transition-transform duration-300" onclick="openMobilePlayer()">
+    <div id="mobile-mini-player" class="fixed bottom-0 left-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 shadow-[0_-4px_20px_rgba(0,0,0,0.2)] md:hidden z-40 translate-y-full transition-transform duration-300 cursor-pointer" onclick="openMobilePlayer()">
         <div class="flex items-center gap-3">
-            <div class="absolute top-0 left-0 h-[2px] bg-emerald-500 z-50 transition-all duration-300" id="miniProgressLine" style="width: 0%"></div>
-            <img id="miniCover" src="" onerror="this.src='https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F'" class="w-10 h-10 rounded-lg object-cover bg-slate-200">
+            <div class="absolute top-0 left-0 h-[2px] bg-brand-500 z-50 transition-all duration-300" id="miniProgressLine" style="width: 0%"></div>
+            <img id="miniCover" src="" class="w-10 h-10 rounded-lg object-cover bg-slate-200 dark:bg-slate-700">
             <div class="flex-1 min-w-0">
-                <h4 id="miniTitle" class="font-bold text-sm text-slate-800 truncate">সূরা লোড হচ্ছে...</h4>
-                <p class="text-[10px] text-emerald-600 font-medium">ক্লিক করে বড় করুন</p>
+                <h4 id="miniTitle" class="font-bold text-sm text-slate-800 dark:text-white truncate">সূরা লোড হচ্ছে...</h4>
+                <p class="text-[10px] text-brand-600 dark:text-brand-400 font-medium">ক্লিক করে বড় করুন</p>
             </div>
-            <button onclick="event.stopPropagation(); togglePlay()" class="w-9 h-9 flex items-center justify-center bg-slate-50 rounded-full border border-slate-200 hover:bg-slate-100"><i id="miniPlayIcon" class="bi bi-play-fill text-xl text-slate-800"></i></button>
+            <button onclick="event.stopPropagation(); togglePlay()" class="w-9 h-9 flex items-center justify-center bg-slate-50 dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white">
+                <i id="miniPlayIcon" class="bi bi-play-fill text-xl"></i>
+            </button>
         </div>
     </div>
 
     <!-- MOBILE FULL PLAYER -->
-    <div id="mobile-full-player" class="fixed inset-0 bg-white z-50 flex flex-col translate-y-full md:hidden">
+    <div id="mobile-full-player" class="fixed inset-0 bg-white dark:bg-slate-950 z-50 flex flex-col translate-y-full md:hidden transition-colors duration-300">
         <div class="flex items-center justify-between p-6">
-            <button onclick="closeMobilePlayer()" class="text-slate-500 hover:text-slate-900 p-2 bg-white rounded-full shadow-sm"><i class="bi bi-chevron-down text-xl"></i></button>
-            <span class="text-[10px] font-bold tracking-widest text-slate-400 uppercase">Now Playing</span>
-            <button onclick="toggleCurrentFavorite()" class="text-slate-400 hover:text-red-500 p-2"><i id="mobileHeart" class="bi bi-heart text-xl"></i></button>
+            <button onclick="closeMobilePlayer()" class="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white p-2 bg-slate-50 dark:bg-slate-900 rounded-full shadow-sm"><i class="bi bi-chevron-down text-xl"></i></button>
+            <span class="text-[10px] font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase">Now Playing</span>
+            <button onclick="toggleCurrentFavorite()" class="text-slate-400 dark:text-slate-500 hover:text-red-500 p-2"><i id="mobileHeart" class="bi bi-heart text-xl"></i></button>
         </div>
         <div class="flex-1 flex flex-col items-center justify-center p-6 -mt-10">
-            <div class="relative w-64 h-64 mb-8 shadow-2xl rounded-2xl overflow-hidden border-4 border-white">
-                 <img id="mobileCover" src="" onerror="this.src='https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F'" class="w-full h-full object-cover">
+            <div class="relative w-64 h-64 mb-8 shadow-2xl rounded-2xl overflow-hidden border-4 border-white dark:border-slate-800">
+                 <img id="mobileCover" src="" class="w-full h-full object-cover">
             </div>
             <div class="w-full text-center mb-8">
-                <h2 id="mobileTitle" class="text-2xl font-bold text-slate-900 mb-1 brand-font">সূরা ফাতিহা</h2>
-                <p class="text-slate-500 text-sm">মিশারি রশিদ আল-আফাসি</p>
+                <h2 id="mobileTitle" class="text-2xl font-bold text-slate-900 dark:text-white mb-1 font-serif">সূরা ফাতিহা</h2>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">মিশারি রশিদ আল-আফাসি</p>
             </div>
             <div class="w-full mb-6 px-4">
                 <input type="range" id="mobileProgressBar" value="0" class="w-full">
-                <div class="flex justify-between text-[10px] font-bold text-slate-400 mono-font mt-2">
+                <div class="flex justify-between text-[10px] font-bold text-slate-400 dark:text-slate-500 font-mono mt-2">
                     <span id="mobileCurrentTime">00:00</span><span id="mobileDuration">00:00</span>
                 </div>
             </div>
             <div class="flex items-center justify-between w-full max-w-[260px]">
-                <button onclick="prevTrack()" class="text-slate-400 active:text-slate-900 transition transform active:scale-90"><i class="bi bi-skip-start-fill text-3xl"></i></button>
-                <button onclick="togglePlay()" class="w-16 h-16 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-xl active:scale-90 transition"><i id="mobilePlayIcon" class="bi bi-play-fill text-3xl ml-1"></i></button>
-                <button onclick="nextTrack()" class="text-slate-400 active:text-slate-900 transition transform active:scale-90"><i class="bi bi-skip-end-fill text-3xl"></i></button>
+                <button onclick="prevTrack()" class="text-slate-400 dark:text-slate-500 active:text-slate-900 dark:active:text-white transition transform active:scale-90"><i class="bi bi-skip-start-fill text-3xl"></i></button>
+                <button onclick="togglePlay()" class="w-16 h-16 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-full flex items-center justify-center shadow-xl active:scale-90 transition"><i id="mobilePlayIcon" class="bi bi-play-fill text-3xl ml-1"></i></button>
+                <button onclick="nextTrack()" class="text-slate-400 dark:text-slate-500 active:text-slate-900 dark:active:text-white transition transform active:scale-90"><i class="bi bi-skip-end-fill text-3xl"></i></button>
             </div>
         </div>
     </div>
 
     <!-- SETTINGS MODAL -->
-    <div id="settingsModal" class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-modal">
-        <div class="modal-content bg-white rounded-2xl w-11/12 max-w-sm shadow-2xl relative overflow-hidden">
-            <div class="p-5 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="bi bi-sliders"></i> সেটিংস</h3>
-                <button onclick="closeSettings()" class="text-slate-400 hover:text-slate-800 transition"><i class="bi bi-x-lg"></i></button>
+    <div id="settingsModal" class="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-modal modal-overlay">
+        <div class="modal-content bg-white dark:bg-slate-900 rounded-2xl w-11/12 max-w-sm shadow-2xl relative overflow-hidden border border-slate-100 dark:border-slate-800">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+                <h3 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2"><i class="bi bi-sliders"></i> সেটিংস</h3>
+                <button onclick="closeSettings()" class="text-slate-400 hover:text-slate-800 dark:hover:text-white transition"><i class="bi bi-x-lg"></i></button>
             </div>
             <div class="p-6 space-y-6">
                 <div class="flex items-center justify-between">
-                    <div><p class="text-slate-800 font-medium text-sm">অটো প্লে</p><p class="text-xs text-slate-500">পরের সূরা স্বয়ংক্রিয়ভাবে চলবে</p></div>
+                    <div><p class="text-slate-800 dark:text-slate-200 font-medium text-sm">অটো প্লে</p><p class="text-xs text-slate-500">পরের সূরা স্বয়ংক্রিয়ভাবে চলবে</p></div>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                         <input type="checkbox" id="autoPlayToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 transition-all duration-300" checked onclick="toggleAutoPlay()"/>
                         <label for="autoPlayToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
-                    <div><p class="text-slate-800 font-medium text-sm">ডার্ক মোড</p><p class="text-xs text-slate-500">থিম পরিবর্তন করুন</p></div>
+                    <div><p class="text-slate-800 dark:text-slate-200 font-medium text-sm">তেলাওয়াতের গতি</p><p class="text-xs text-slate-500">গতি নিয়ন্ত্রণ করুন</p></div>
+                    <select id="speedSelect" onchange="changeSpeed()" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-lg p-2 focus:outline-none">
+                        <option value="0.75">0.75x</option><option value="1.0" selected>স্বাভাবিক</option><option value="1.25">1.25x</option><option value="1.5">1.5x</option>
+                    </select>
+                </div>
+                <div class="flex items-center justify-between">
+                    <div><p class="text-slate-800 dark:text-slate-200 font-medium text-sm">ডার্ক মোড</p><p class="text-xs text-slate-500">থিম পরিবর্তন করুন</p></div>
                     <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
                         <input type="checkbox" id="darkModeToggle" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-white border-4 appearance-none cursor-pointer border-slate-300 transition-all duration-300" onclick="toggleDarkMode()"/>
                         <label for="darkModeToggle" class="toggle-label block overflow-hidden h-5 rounded-full bg-slate-300 cursor-pointer transition-colors duration-300"></label>
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
-                    <div><p class="text-slate-800 font-medium text-sm">স্লিপ টাইমার</p><p class="text-xs text-slate-500">স্বয়ংক্রিয়ভাবে বন্ধ হবে</p></div>
-                    <select id="sleepTimerSelect" onchange="setSleepTimer()" class="bg-slate-100 border border-slate-200 text-slate-700 text-xs rounded-lg p-2 focus:outline-none">
+                    <div><p class="text-slate-800 dark:text-slate-200 font-medium text-sm">স্লিপ টাইমার</p><p class="text-xs text-slate-500">স্বয়ংক্রিয়ভাবে বন্ধ হবে</p></div>
+                    <select id="sleepTimerSelect" onchange="setSleepTimer()" class="bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs rounded-lg p-2 focus:outline-none">
                         <option value="0">বন্ধ</option><option value="15">১৫ মিনিট</option><option value="30">৩০ মিনিট</option><option value="60">১ ঘণ্টা</option>
                     </select>
                 </div>
@@ -260,14 +244,14 @@
     </div>
 
     <!-- INFO MODAL -->
-    <div id="infoModal" class="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-modal">
-        <div class="modal-content bg-white rounded-2xl p-6 w-11/12 max-w-sm shadow-2xl relative">
-            <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition"><i class="bi bi-x-lg"></i></button>
+    <div id="infoModal" class="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-center justify-center hidden-modal modal-overlay">
+        <div class="modal-content bg-white dark:bg-slate-900 rounded-2xl p-6 w-11/12 max-w-sm shadow-2xl relative border border-slate-100 dark:border-slate-800">
+            <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white transition"><i class="bi bi-x-lg"></i></button>
             <div class="text-center">
-                <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4 text-emerald-600"><i class="bi bi-info-circle-fill text-2xl"></i></div>
-                <h3 id="infoModalTitle" class="text-xl font-bold text-slate-900 mb-2">Title</h3>
-                <p id="infoModalMessage" class="text-slate-500 text-sm leading-relaxed">Msg</p>
-                <button onclick="closeInfoModal()" class="mt-6 w-full bg-slate-900 text-white py-2.5 rounded-xl font-bold hover:bg-emerald-600 transition">ঠিক আছে</button>
+                <div class="w-12 h-12 bg-brand-100 dark:bg-brand-900 rounded-full flex items-center justify-center mx-auto mb-4 text-brand-600 dark:text-brand-500"><i class="bi bi-info-circle-fill text-2xl"></i></div>
+                <h3 id="infoModalTitle" class="text-xl font-bold text-slate-900 dark:text-white mb-2">Title</h3>
+                <p id="infoModalMessage" class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Msg</p>
+                <button onclick="closeInfoModal()" class="mt-6 w-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 py-2.5 rounded-xl font-bold hover:bg-brand-600 dark:hover:bg-brand-300 transition">ঠিক আছে</button>
             </div>
         </div>
     </div>
@@ -275,12 +259,13 @@
     <audio id="audio"></audio>
 
     <script>
-        // --- STATE & SETTINGS ---
+        // --- STATE ---
         let isAutoPlay = localStorage.getItem('autoPlay') === 'false' ? false : true;
         let isDarkMode = localStorage.getItem('darkMode') === 'true' ? true : false;
         let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
         let showFavoritesOnly = false;
         let sleepTimer = null;
+        let playbackSpeed = parseFloat(localStorage.getItem('speed')) || 1.0;
 
         const genericCover = "https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F"; 
         const fatihahCover = "https://blogger.googleusercontent.com/img/a/AVvXsEjku4peinmP9FjC-Kk9aleS56I-ufCrKSJM7PPnH5oDnuv-UuDYb5yh2kvQ0H0AAC0rdlX5TE5yVF41JXsquToF8WtcttiSN-qXe9fxnS9GohU3CybIoaimfKVygCuU3nUDia2xh0NXOQ7JPDlp6OY_jDKAg-qDzewllhLoHRit8P0w_F_qzJD3ZXixr69F";
@@ -324,7 +309,7 @@
             };
         });
 
-        // --- DOM ---
+        // --- DOM & UTILS ---
         const audio = document.getElementById('audio');
         const playlistContainer = document.getElementById('playlist');
         const searchInput = document.getElementById('searchInput');
@@ -361,10 +346,14 @@
 
         // --- INIT ---
         function init() {
+            // Setup Config
             document.getElementById('autoPlayToggle').checked = isAutoPlay;
             document.getElementById('darkModeToggle').checked = isDarkMode;
-            if (isDarkMode) document.body.classList.add('dark-mode');
-            
+            if(isDarkMode) document.documentElement.classList.add('dark');
+            document.getElementById('speedSelect').value = playbackSpeed;
+            audio.playbackRate = playbackSpeed;
+
+            // Restore State
             const savedIdx = localStorage.getItem('lastIndex');
             const savedTime = localStorage.getItem('lastTime');
             if(savedIdx) { 
@@ -379,51 +368,21 @@
             renderPlaylist();
         }
 
-        // --- SEARCH TOGGLE ---
-        function toggleSearchBar() {
-            if (searchBarContainer.classList.contains('search-hidden')) {
-                searchBarContainer.classList.remove('search-hidden');
-                searchBarContainer.classList.add('search-visible');
-                setTimeout(() => searchInput.focus(), 100);
-            } else {
-                searchBarContainer.classList.add('search-hidden');
-                searchBarContainer.classList.remove('search-visible');
-            }
-        }
-
-        // --- FAVORITES ---
-        function toggleFavorite(id, event) {
-            if(event) event.stopPropagation();
-            if (favorites.includes(id)) favorites = favorites.filter(fid => fid !== id);
-            else favorites.push(id);
-            localStorage.setItem('favorites', JSON.stringify(favorites));
-            renderPlaylist(searchInput.value);
-            updateHeartUI();
-        }
-        function toggleCurrentFavorite() { toggleFavorite(surahs[currentIndex].id); }
-        function toggleShowFavorites() {
-            showFavoritesOnly = !showFavoritesOnly;
-            favFilterIcon.className = showFavoritesOnly ? "bi bi-heart-fill text-red-500 text-lg" : "bi bi-heart text-lg";
-            renderPlaylist(searchInput.value);
-        }
-        function updateHeartUI() {
-            const currentId = surahs[currentIndex].id;
-            const isFav = favorites.includes(currentId);
-            const iconClass = isFav ? "bi bi-heart-fill text-red-500" : "bi bi-heart";
-            desktopHeart.className = iconClass;
-            mobileHeart.className = `${iconClass} text-xl`;
-        }
-
-        // --- SETTINGS ---
+        // --- SETTINGS FUNCTIONS ---
         function toggleAutoPlay() {
             isAutoPlay = document.getElementById('autoPlayToggle').checked;
             localStorage.setItem('autoPlay', isAutoPlay);
         }
         function toggleDarkMode() {
             isDarkMode = document.getElementById('darkModeToggle').checked;
-            if(isDarkMode) document.body.classList.add('dark-mode');
-            else document.body.classList.remove('dark-mode');
+            if(isDarkMode) document.documentElement.classList.add('dark');
+            else document.documentElement.classList.remove('dark');
             localStorage.setItem('darkMode', isDarkMode);
+        }
+        function changeSpeed() {
+            playbackSpeed = parseFloat(document.getElementById('speedSelect').value);
+            audio.playbackRate = playbackSpeed;
+            localStorage.setItem('speed', playbackSpeed);
         }
         function setSleepTimer() {
             const mins = parseInt(document.getElementById('sleepTimerSelect').value);
@@ -436,6 +395,40 @@
             }
         }
 
+        // --- UI ACTIONS ---
+        function toggleSearchBar() {
+            if (searchBarContainer.classList.contains('search-hidden')) {
+                searchBarContainer.classList.remove('search-hidden');
+                searchBarContainer.classList.add('search-visible');
+                setTimeout(() => searchInput.focus(), 100);
+            } else {
+                searchBarContainer.classList.add('search-hidden');
+                searchBarContainer.classList.remove('search-visible');
+            }
+        }
+
+        function toggleFavorite(id, event) {
+            if(event) event.stopPropagation();
+            if (favorites.includes(id)) favorites = favorites.filter(fid => fid !== id);
+            else favorites.push(id);
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderPlaylist(searchInput.value);
+            updateHeartUI();
+        }
+        function toggleCurrentFavorite() { toggleFavorite(surahs[currentIndex].id); }
+        function toggleShowFavorites() {
+            showFavoritesOnly = !showFavoritesOnly;
+            favFilterIcon.className = showFavoritesOnly ? "bi bi-heart-fill text-red-500 text-lg" : "bi bi-heart-fill text-slate-400 dark:text-slate-500 text-lg";
+            renderPlaylist(searchInput.value);
+        }
+        function updateHeartUI() {
+            const currentId = surahs[currentIndex].id;
+            const isFav = favorites.includes(currentId);
+            const iconClass = isFav ? "bi bi-heart-fill text-red-500" : "bi bi-heart";
+            desktopHeart.className = iconClass;
+            mobileHeart.className = `${iconClass} text-xl`;
+        }
+
         // --- RENDER ---
         function renderPlaylist(filter = "") {
             playlistContainer.innerHTML = "";
@@ -446,23 +439,24 @@
                 const isActive = index === currentIndex;
                 const isFav = favorites.includes(surah.id);
                 const div = document.createElement('div');
-                div.className = `flex items-center justify-between px-4 py-3 border-b border-slate-50 hover:bg-slate-50 cursor-pointer transition-colors ${isActive && hasStarted ? 'bg-emerald-50' : ''}`;
+                // Use Tailwind classes for dark mode colors
+                div.className = `flex items-center justify-between px-4 py-3 border-b border-slate-50 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900 cursor-pointer transition-colors ${isActive && hasStarted ? 'bg-brand-50 dark:bg-brand-900/20' : ''}`;
                 
                 div.innerHTML = `
                     <div class="flex items-center gap-4 flex-1" onclick="playTrack(${index})">
                         <div class="relative w-10 h-10 flex-shrink-0">
-                            <div class="w-full h-full rounded-lg flex items-center justify-center font-bold text-xs ${isActive && hasStarted ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400'}">
+                            <div class="w-full h-full rounded-lg flex items-center justify-center font-bold text-xs ${isActive && hasStarted ? 'bg-brand-500 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500'}">
                                 ${toBanglaNum(surah.id)}
                             </div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <h3 class="font-bold text-sm text-slate-800 truncate ${isActive && hasStarted ? 'text-emerald-700' : ''}">${surah.name}</h3>
-                            <p class="text-[10px] text-slate-500 font-medium truncate uppercase">${surah.enName}</p>
+                            <h3 class="font-bold text-sm text-slate-800 dark:text-slate-200 truncate ${isActive && hasStarted ? 'text-brand-700 dark:text-brand-400' : ''}">${surah.name}</h3>
+                            <p class="text-[10px] text-slate-500 dark:text-slate-500 font-medium truncate uppercase">${surah.enName}</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-4">
                         ${isActive && isPlaying ? `<div class="flex gap-1 h-3 items-end mr-2"><div class="audio-wave"></div><div class="audio-wave" style="animation-delay:0.2s"></div><div class="audio-wave" style="animation-delay:0.4s"></div></div>` : ``}
-                        <button onclick="toggleFavorite(${surah.id}, event)" class="text-slate-300 hover:text-red-500 transition p-2">
+                        <button onclick="toggleFavorite(${surah.id}, event)" class="text-slate-300 dark:text-slate-600 hover:text-red-500 dark:hover:text-red-500 transition p-2">
                             <i class="bi ${isFav ? 'bi-heart-fill text-red-500' : 'bi-heart'}"></i>
                         </button>
                     </div>
@@ -471,16 +465,21 @@
             });
         }
 
-        // --- PLAYER ---
+        // --- PLAYER CONTROL ---
         function loadTrack(index) {
             const track = surahs[index];
-            if(audio.src !== track.source) audio.src = track.source;
+            if(audio.src !== track.source) {
+                audio.src = track.source;
+                // Handle fallback image error automatically via the onerror inside img tag
+            }
+            audio.playbackRate = playbackSpeed;
+            
             [desktopTitle, miniTitle, mobileTitle].forEach(el => el.innerText = track.name);
             [desktopCover, miniCover, mobileCover].forEach(el => el.src = track.cover);
             
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: track.name, artist: "Mishary Rashid", album: "Al-Quran",
+                    title: track.name, artist: "Mishary Rashid Al-Afasy", album: "Al-Quran",
                     artwork: [{ src: track.cover, sizes: '512x512', type: 'image/jpeg' }]
                 });
                 navigator.mediaSession.setActionHandler('play', togglePlay);
@@ -492,20 +491,34 @@
         }
 
         function playTrack(index) {
-            if (index !== currentIndex || !hasStarted) { currentIndex = index; loadTrack(index); audio.load(); }
+            if (index !== currentIndex || !hasStarted) {
+                currentIndex = index;
+                loadTrack(index);
+                audio.load();
+            }
             audio.play().then(() => {
-                isPlaying = true; hasStarted = true; mobileMiniPlayer.classList.remove('translate-y-full'); updateUIState();
+                isPlaying = true;
+                hasStarted = true;
+                mobileMiniPlayer.classList.remove('translate-y-full');
+                updateUIState();
             }).catch(e => console.error(e));
         }
 
         function togglePlay() {
             if (!hasStarted) return playTrack(currentIndex);
-            if (audio.paused) { audio.play(); isPlaying = true; } else { audio.pause(); isPlaying = false; }
+            if (audio.paused) { audio.play(); isPlaying = true; }
+            else { audio.pause(); isPlaying = false; }
             updateUIState();
         }
 
-        function prevTrack() { let prevIndex = (currentIndex - 1 + surahs.length) % surahs.length; playTrack(prevIndex); }
-        function nextTrack() { let nextIndex = (currentIndex + 1) % surahs.length; playTrack(nextIndex); }
+        function prevTrack() {
+            let prevIndex = (currentIndex - 1 + surahs.length) % surahs.length;
+            playTrack(prevIndex);
+        }
+        function nextTrack() {
+            let nextIndex = (currentIndex + 1) % surahs.length;
+            playTrack(nextIndex);
+        }
 
         function updateUIState() {
             const playIconClass = isPlaying ? 'bi-pause-fill' : 'bi-play-fill';
@@ -514,7 +527,8 @@
                 if (icon.id === 'desktopPlayIcon' || icon.id === 'mobilePlayIcon') icon.className = `bi ${playIconClass} text-3xl ml-1`;
                 else icon.className = `bi ${playIconClass} text-xl`;
             });
-            if (isPlaying) desktopCover.classList.remove('paused'); else desktopCover.classList.add('paused');
+            if (isPlaying) desktopCover.classList.remove('paused');
+            else desktopCover.classList.add('paused');
             renderPlaylist(searchInput.value);
         }
 
