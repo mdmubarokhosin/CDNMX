@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জুলাই বাংলা ফন্টস - প্রিমিয়াম টাইপোগ্রাফি</title>
+    
+    <!-- ফন্ট সিডিএন -->
+    <link rel="stylesheet" href="https://cdnmx.pages.dev/assets/fonts/july/font.css">
+    
+    <!-- লুসাইড আইকন (Lucide Icons) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --background: 0 0% 100%;
+            --foreground: 240 10% 3.9%;
+            --card: 0 0% 100%;
+            --card-foreground: 240 10% 3.9%;
+            --popover: 0 0% 100%;
+            --popover-foreground: 240 10% 3.9%;
+            --primary: 240 5.9% 10%;
+            --primary-foreground: 0 0% 98%;
+            --secondary: 240 4.8% 95.9%;
+            --secondary-foreground: 240 5.9% 10%;
+            --muted: 240 4.8% 95.9%;
+            --muted-foreground: 240 3.8% 46.1%;
+            --accent: 240 4.8% 95.9%;
+            --accent-foreground: 240 5.9% 10%;
+            --border: 240 5.9% 90%;
+            --input: 240 5.9% 90%;
+            --ring: 240 5.9% 10%;
+            --radius: 0.75rem;
+        }
+
+        .dark {
+            --background: 240 10% 3.9%;
+            --foreground: 0 0% 98%;
+            --card: 240 10% 3.9%;
+            --card-foreground: 0 0% 98%;
+            --popover: 240 10% 3.9%;
+            --popover-foreground: 0 0% 98%;
+            --primary: 0 0% 98%;
+            --primary-foreground: 240 5.9% 10%;
+            --secondary: 240 3.7% 15.9%;
+            --secondary-foreground: 0 0% 98%;
+            --muted: 240 3.7% 15.9%;
+            --muted-foreground: 240 5% 64.9%;
+            --accent: 240 3.7% 15.9%;
+            --accent-foreground: 0 0% 98%;
+            --border: 240 3.7% 15.9%;
+            --input: 240 3.7% 15.9%;
+            --ring: 240 4.9% 83.9%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            border-color: hsl(var(--border));
+        }
+        
+        body {
+            font-family: 'July', sans-serif;
+            line-height: 1.6;
+            color: hsl(var(--foreground));
+            background-color: hsl(var(--background));
+            transition: background-color 0.3s, color 0.3s;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            width: 100%;
+            border-bottom: 1px solid hsl(var(--border));
+            background-color: hsla(var(--background), 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.75rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        
+        .hero { padding: 6rem 0 4rem; text-align: center; }
+        .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+        .hero p { font-size: 1.25rem; color: hsl(var(--muted-foreground)); max-width: 700px; margin: 0 auto 2rem; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            border: 1px solid transparent;
+            font-size: 0.9rem;
+        }
+        
+        .btn-primary { background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+        .btn-outline { border-color: hsl(var(--border)); background: transparent; color: hsl(var(--foreground)); }
+        .btn-outline:hover { background: hsl(var(--accent)); }
+
+        .card {
+            background-color: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: var(--radius);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* ফিচার কার্ডের জন্য নির্দিষ্ট সেন্টার অ্যালাইনমেন্ট */
+        .feature-card {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .test-input {
+            width: 100%;
+            padding: 1.25rem;
+            border-radius: var(--radius);
+            border: 2px solid hsl(var(--border));
+            background: transparent;
+            color: hsl(var(--foreground));
+            font-family: inherit;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .test-input:focus { border-color: hsl(var(--primary)); }
+
+        .char-group-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: hsl(var(--muted-foreground));
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .char-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 0.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .char-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid hsl(var(--border));
+            border-radius: 0.5rem;
+            font-size: 1.4rem;
+            background: hsl(var(--accent) / 0.2);
+            transition: all 0.2s;
+        }
+        .char-item:hover {
+            background: hsl(var(--primary));
+            color: hsl(var(--primary-foreground));
+            transform: scale(1.1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .code-area {
+            position: relative;
+            background: #18181b;
+            color: #e4e4e7;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            font-family: monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background: #3f3f46;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            border: none;
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        footer {
+            border-top: 1px solid hsl(var(--border));
+            padding: 4rem 0;
+            text-align: center;
+            color: hsl(var(--muted-foreground));
+        }
+
+        @media (max-width: 640px) {
+            .nav-actions span { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="nav-container">
+            <div style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.05em;">KOHINOOR</div>
+            <div class="nav-actions" style="display: flex; gap: 0.5rem;">
+                <a href="#preview" class="btn btn-outline">
+                    <i data-lucide="eye"></i> <span>প্রিভিউ দেখুন</span>
+                </a>
+                <button id="themeToggle" class="btn btn-outline" style="padding: 0.5rem;">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div style="background: hsl(var(--secondary)); display: inline-block; padding: 0.2rem 0.75rem; border-radius: 100px; font-size: 0.8rem; font-weight: 600; margin-bottom: 1.5rem;">
+                ✨ নোটো সেরিফ বাংলা ভিত্তিক
+            </div>
+            <h1>জুলাই বাংলা ফন্টস</h1>
+            <p>আধুনিক টাইপোগ্রাফি এবং ক্লাসিক শেরিফ ডিজাইনের এক অনন্য সমন্বয়। ওয়েব এবং প্রিন্ট উভয় মাধ্যমের জন্য অপ্টিমাইজড ৫টি ভিন্ন ওয়েইট।</p>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <a href="#usage" class="btn btn-primary"><i data-lucide="terminal"></i> ইন্সটল করুন</a>
+                <a href="#chars" class="btn btn-outline"><i data-lucide="layout-grid"></i> অক্ষর তালিকা</a>
+            </div>
+        </section>
+
+        <!-- Interactive Preview -->
+        <section id="preview" style="padding: 4rem 0;">
+            <h2 class="section-title"><i data-lucide="keyboard"></i> লাইভ প্রিভিউ এডিটর</h2>
+            <input type="text" id="liveInput" class="test-input" placeholder="এখানে আপনার টেক্সট লিখুন..." value="আমাদের এই মাতৃভাষা বাংলা বড়ই চমৎকার।">
+            
+            <div style="display: grid; gap: 1.5rem;">
+                <div class="card">
+                    <div style="color: hsl(var(--muted-foreground)); font-size: 0.75rem; margin-bottom: 1rem; font-weight: 700;">REGULAR 400</div>
+                    <p class="preview-text" style="font-weight: 400; font-size: 2.5rem; line-height: 1.2;">আমাদের এই মাতৃভাষা বাংলা বড়ই চমৎকার।</p>
+                </div>
+                <div class="card">
+                    <div style="color: hsl(var(--muted-foreground)); font-size: 0.75rem; margin-bottom: 1rem; font-weight: 700;">BOLD 700</div>
+                    <p class="preview-text" style="font-weight: 700; font-size: 2.5rem; line-height: 1.2;">আমাদের এই মাতৃভাষা বাংলা বড়ই চমৎকার।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Features Content (Centered) -->
+        <section style="padding: 2rem 0 4rem;">
+            <div class="features-grid">
+                <div class="card feature-card">
+                    <i data-lucide="check-circle" style="color: #10b981; margin-bottom: 1.25rem; width: 32px; height: 32px;"></i>
+                    <h3 style="margin-bottom: 0.75rem;">শেরিফ ডিজাইন</h3>
+                    <p style="font-size: 0.95rem; color: hsl(var(--muted-foreground));">দীর্ঘ প্রবন্ধ পড়ার জন্য আদর্শ। এর মার্জিত শেরিফ স্টাইল চোখের ক্লান্তি কমায় এবং রিড্যাবিলিটি বাড়ায়।</p>
+                </div>
+                <div class="card feature-card">
+                    <i data-lucide="zap" style="color: #f59e0b; margin-bottom: 1.25rem; width: 32px; height: 32px;"></i>
+                    <h3 style="margin-bottom: 0.75rem;">পারফেক্ট কার্নিং</h3>
+                    <p style="font-size: 0.95rem; color: hsl(var(--muted-foreground));">অক্ষরের মাঝখানের দূরত্ব নিখুঁতভাবে নির্ধারণ করা হয়েছে যাতে প্রতিটি শব্দ স্পষ্ঠ ও ভারসাম্যপূর্ণ দেখায়।</p>
+                </div>
+                <div class="card feature-card">
+                    <i data-lucide="smartphone" style="color: #3b82f6; margin-bottom: 1.25rem; width: 32px; height: 32px;"></i>
+                    <h3 style="margin-bottom: 0.75rem;">রেটিনা ডিসপ্লে রেডি</h3>
+                    <p style="font-size: 0.95rem; color: hsl(var(--muted-foreground));">হাই-রেজোলিউশন স্ক্রিনেও ফন্টটি ভেঙে যায় না বা ঝাপসা দেখায় না। আধুনিক ওয়েব ব্রাউজারের জন্য সম্পূর্ণ অপ্টিমাইজড।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detailed Character Set -->
+        <section id="chars" style="padding: 4rem 0;">
+            <h2 class="section-title"><i data-lucide="shapes"></i> বিস্তারিত অক্ষর ও যুক্তাক্ষর</h2>
+            <div class="card">
+                <div class="char-group-title">স্বরবর্ণ (Vowels)</div>
+                <div class="char-grid">
+                    <div class="char-item">অ</div><div class="char-item">আ</div><div class="char-item">ই</div><div class="char-item">ঈ</div>
+                    <div class="char-item">উ</div><div class="char-item">ঊ</div><div class="char-item">ঋ</div><div class="char-item">এ</div>
+                    <div class="char-item">ঐ</div><div class="char-item">ও</div><div class="char-item">ঔ</div>
+                </div>
+
+                <div class="char-group-title">ব্যঞ্জনবর্ণ (Consonants)</div>
+                <div class="char-grid">
+                    <div class="char-item">ক</div><div class="char-item">খ</div><div class="char-item">গ</div><div class="char-item">ঘ</div><div class="char-item">ঙ</div>
+                    <div class="char-item">চ</div><div class="char-item">ছ</div><div class="char-item">জ</div><div class="char-item">ঝ</div><div class="char-item">ঞ</div>
+                    <div class="char-item">ট</div><div class="char-item">ঠ</div><div class="char-item">ড</div><div class="char-item">ঢ</div><div class="char-item">ণ</div>
+                    <div class="char-item">ত</div><div class="char-item">থ</div><div class="char-item">দ</div><div class="char-item">ধ</div><div class="char-item">ন</div>
+                    <div class="char-item">প</div><div class="char-item">ফ</div><div class="char-item">ব</div><div class="char-item">ভ</div><div class="char-item">ম</div>
+                    <div class="char-item">য</div><div class="char-item">র</div><div class="char-item">ল</div><div class="char-item">শ</div><div class="char-item">ষ</div>
+                    <div class="char-item">স</div><div class="char-item">হ</div><div class="char-item">ড়</div><div class="char-item">ঢ়</div><div class="char-item">য়</div>
+                    <div class="char-item">ৎ</div><div class="char-item">ং</div><div class="char-item">ঃ</div><div class="char-item">ঁ</div>
+                </div>
+
+                <div class="char-group-title">সংখ্যা (Bengali Numbers)</div>
+                <div class="char-grid">
+                    <div class="char-item">০</div><div class="char-item">১</div><div class="char-item">২</div><div class="char-item">৩</div><div class="char-item">৪</div>
+                    <div class="char-item">৫</div><div class="char-item">৬</div><div class="char-item">৭</div><div class="char-item">৮</div><div class="char-item">৯</div>
+                </div>
+
+                <div class="char-group-title">জটিল যুক্তাক্ষর (Advanced Ligatures)</div>
+                <div class="char-grid" style="grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));">
+                    <div class="char-item">ক্ষ</div><div class="char-item">জ্ঞ</div><div class="char-item">ঞ্চ</div><div class="char-item">ঞ্জ</div>
+                    <div class="char-item">ত্ত্ব</div><div class="char-item">হ্ম</div><div class="char-item">ম্প</div><div class="char-item">স্ট্র</div>
+                    <div class="char-item">চ্ছ</div><div class="char-item">স্থ</div><div class="char-item">স্ফ</div><div class="char-item">ষ্ণ</div>
+                    <div class="char-item">ঙ্ক</div><div class="char-item">ঙ্গ</div><div class="char-item">দ্ধ</div><div class="char-item">ক্স</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation -->
+        <section id="usage" style="padding: 4rem 0;">
+            <h2 class="section-title"><i data-lucide="code-2"></i> প্রোজেক্টে ব্যবহার করুন</h2>
+            <div class="card">
+                <p style="margin-bottom: 1.5rem;">আপনার <code>&lt;head&gt;</code> সেকশনে নিচের লিংকটি কপি করে পেস্ট করুন।</p>
+                <div class="code-area">
+                    <button class="copy-btn" onclick="copyCode()">Copy Link</button>
+                    <code id="cdnCode">&lt;link rel="stylesheet" href="https://cdnmx.pages.dev/assets/fonts/july/font.css"&gt;</code>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p style="font-weight: 700; color: hsl(var(--foreground)); margin-bottom: 0.5rem;">জুলাই বাংলা ফন্টস ডিস্ট্রিবিউশন</p>
+            <p>প্রিমিয়াম টাইপোগ্রাফি ফর মডার্ন ওয়েব। সকল স্বত্ব সংরক্ষিত।</p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // থিম টগল
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            themeIcon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+            lucide.createIcons();
+        });
+
+        // লাইভ টেক্সট আপডেট
+        const liveInput = document.getElementById('liveInput');
+        const previews = document.querySelectorAll('.preview-text');
+        liveInput.addEventListener('input', (e) => {
+            const val = e.target.value || "আমাদের এই মাতৃভাষা বাংলা বড়ই চমৎকার।";
+            previews.forEach(p => p.textContent = val);
+        });
+
+        // কপি ফাংশন
+        function copyCode() {
+            const code = document.getElementById('cdnCode').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerText = "Copied!";
+                setTimeout(() => btn.innerText = "Copy Link", 2000);
+            });
+        }
+    </script>
+</body>
+</html>
