@@ -27,7 +27,7 @@
 আপনার HTML ফাইলের `<head>` ট্যাগের ভেতরে নিচের কোডটি পেস্ট করুন:
 
 ```html
-<link rel="stylesheet" href="https://cdnmx.pages.dev/assets/fonts/noto_serif_bengali/font.css">
+<link rel="stylesheet" href="https://cdnmx.pages.dev/assets/fonts/july/font.css">
 ```
 
 ### ২. সিএসএস-এ প্রয়োগ করুন
