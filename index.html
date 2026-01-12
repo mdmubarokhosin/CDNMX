@@ -71,7 +71,7 @@
     </script>
 
     <style>
-        /* CSS Variables for ShadCN Theme */
+        /* CSS Variables */
         :root {
             --background: 0 0% 100%;
             --foreground: 222.2 84% 4.9%;
@@ -116,33 +116,32 @@
             --ring: 212.7 26.8% 83.9%;
         }
 
+        /* View Transition Animation (Circular Reveal) */
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+            animation: none;
+            mix-blend-mode: normal;
+        }
+        
         /* Utilities */
         [x-cloak] { display: none !important; }
         
         body {
             font-family: 'Noto Serif Bengali', ui-serif, Georgia, serif !important;
             -webkit-tap-highlight-color: transparent;
+            /* Fallback transition */
+            transition: background-color 0.5s ease, color 0.5s ease;
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.5);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(156, 163, 175, 0.8);
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(156, 163, 175, 0.5); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(156, 163, 175, 0.8); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Checkerboard Pattern for Transparent Images */
+        /* Checkerboard Pattern */
         .checkerboard {
             background-color: hsl(var(--muted));
             background-image: 
@@ -153,12 +152,10 @@
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
-
-        /* PB-SAFE for iOS Home Indicator */
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
     </style>
 </head>
-<body class="bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground min-h-screen flex flex-col md:flex-row overflow-hidden transition-colors duration-300"
+<body class="bg-background text-foreground antialiased selection:bg-primary selection:text-primary-foreground min-h-screen flex flex-col md:flex-row overflow-hidden"
       :class="{ 'overflow-hidden': isModalOpen }">
 
     <!-- Desktop Sidebar -->
@@ -188,7 +185,8 @@
         </nav>
 
         <div class="p-4 border-t border-border">
-            <button @click="toggleTheme" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-border bg-background hover:bg-accent text-sm font-medium transition-colors">
+            <!-- Theme Toggle with Animation Event -->
+            <button @click="toggleTheme($event)" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-border bg-background hover:bg-accent text-sm font-medium transition-colors">
                 <span class="flex items-center gap-2"><i class="bi" :class="isDarkMode ? 'bi-moon-stars-fill' : 'bi-sun-fill'"></i> থিম পরিবর্তন</span>
             </button>
         </div>
@@ -211,7 +209,7 @@
                     <i class="bi bi-search text-muted-foreground group-focus-within:text-primary transition-colors"></i>
                 </div>
                 <input type="text" x-model="searchTerm" 
-                    class="h-10 w-full rounded-full border border-input bg-secondary/50 px-3 pl-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 transition-all"
+                    class="h-10 w-full rounded-full border border-input bg-secondary/50 px-3 pl-10 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-all"
                     placeholder="অ্যাসেট খুঁজুন... (নাম বা ধরণ)">
                 <button x-show="searchTerm" @click="searchTerm = ''" class="absolute inset-y-0 right-2 md:right-3 pr-2 flex items-center text-muted-foreground hover:text-destructive cursor-pointer transition-colors" x-cloak>
                     <i class="bi bi-x-circle-fill"></i>
@@ -330,7 +328,7 @@
                             <!-- Thumbnail -->
                             <div class="relative aspect-square rounded-lg overflow-hidden bg-muted checkerboard mb-3 border border-border/50">
                                 <template x-if="['images', 'svg'].includes(asset.category) || asset.type === 'image'">
-                                    <img :src="asset.fullPath || (BASE_URL + asset.path)" 
+                                    <img :src="asset.fullPath" 
                                          @error="$el.style.display='none'; $el.nextElementSibling.style.display='flex'"
                                          loading="lazy" 
                                          class="w-full h-full object-contain p-2 transition-transform duration-500 group-hover:scale-110">
@@ -367,7 +365,7 @@
                               @click="openModal(asset)">
                             <div class="h-12 w-12 rounded-lg bg-muted checkerboard flex items-center justify-center shrink-0 border border-border/50 overflow-hidden relative">
                                 <template x-if="['images', 'svg'].includes(asset.category) || asset.type === 'image'">
-                                    <img :src="asset.fullPath || (BASE_URL + asset.path)" loading="lazy" class="w-full h-full object-cover">
+                                    <img :src="asset.fullPath" loading="lazy" class="w-full h-full object-cover">
                                 </template>
                                 <template x-if="!(['images', 'svg'].includes(asset.category) || asset.type === 'image')">
                                     <i :class="getIconForType(asset.category)" class="text-xl text-muted-foreground"></i>
@@ -408,7 +406,7 @@
                 <i class="bi bi-search text-xl"></i>
                 <span class="text-[10px] font-medium">সার্চ</span>
             </button>
-            <button @click="toggleTheme" class="flex flex-col items-center gap-1 w-16 text-muted-foreground transition-all active:scale-95 active:text-primary">
+            <button @click="toggleTheme($event)" class="flex flex-col items-center gap-1 w-16 text-muted-foreground transition-all active:scale-95 active:text-primary">
                 <i class="bi" :class="isDarkMode ? 'bi-moon-stars-fill' : 'bi-sun'"></i>
                 <span class="text-[10px] font-medium">থিম</span>
             </button>
@@ -458,7 +456,23 @@
                         <audio controls class="w-full" :src="currentAsset.fullPath"></audio>
                     </div>
                 </template>
-                <template x-if="!['images', 'svg', 'audio', 'video'].includes(currentAsset.category) && currentAsset.type !== 'image'">
+                <!-- Font Preview Logic -->
+                <template x-if="['fonts', 'font'].includes(currentAsset.category) || currentAsset.type === 'font'">
+                    <div class="w-full h-full flex flex-col items-center justify-center p-4 overflow-y-auto">
+                        <style x-text="`@font-face { font-family: 'PreviewFont-${currentAsset.id}'; src: url('${currentAsset.fullPath}'); }`"></style>
+                        <div class="text-center space-y-6">
+                            <div :style="`font-family: 'PreviewFont-${currentAsset.id}';`">
+                                <p class="text-4xl md:text-6xl leading-tight text-foreground">আমার সোনার বাংলা</p>
+                                <p class="text-2xl md:text-4xl mt-2 text-foreground/80">The quick brown fox jumps over the lazy dog</p>
+                                <p class="text-xl mt-2 text-foreground/70">1234567890</p>
+                            </div>
+                            <div class="text-xs text-muted-foreground border-t border-border pt-4">
+                                <p>Font Preview: <span x-text="currentAsset.name"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <template x-if="!['images', 'svg', 'audio', 'video', 'fonts', 'font'].includes(currentAsset.category) && currentAsset.type !== 'image' && currentAsset.type !== 'font'">
                     <div class="text-center text-muted-foreground">
                         <i :class="getIconForType(currentAsset.category)" class="text-8xl opacity-50"></i>
                         <p class="mt-4 font-medium">প্রিভিউ নেই</p>
@@ -544,27 +558,15 @@
     <script>
         function appState() {
             // Configuration
-            const ASSETS_JSON_URL = 'https://cdnmx.pages.dev/assets/json/assets.json';
-            const BASE_URL = 'https://cdnmx.pages.dev/';
+            const ASSETS_JSON_URL = '/assets/json/assets.json';
+            const BASE_URL = 'https://cdnmx.pages.dev/'; // Changed to Absolute URL for Copy Functionality
             
-            // Mock Data for fallback if fetch fails
-            const MOCK_DATA = [
-                { id: 1, name: 'Sample Image 1', path: 'assets/img/sample1.jpg', size: '1.2 MB', date: '2023-10-15', category: 'images', type: 'image', extension: 'jpg' },
-                { id: 2, name: 'Project Logo', path: 'assets/logos/logo.png', size: '45 KB', date: '2023-11-01', category: 'images', type: 'image', extension: 'png' },
-                { id: 3, name: 'Intro Video', path: 'assets/video/intro.mp4', size: '15.5 MB', date: '2023-09-20', category: 'video', type: 'video', extension: 'mp4' },
-                { id: 4, name: 'Theme Song', path: 'assets/audio/theme.mp3', size: '3.2 MB', date: '2023-08-10', category: 'audio', type: 'audio', extension: 'mp3' },
-                { id: 5, name: 'User Manual', path: 'assets/docs/manual.pdf', size: '2.1 MB', date: '2023-12-05', category: 'docs', type: 'pdf', extension: 'pdf' },
-                { id: 6, name: 'Config JSON', path: 'assets/config/data.json', size: '2 KB', date: '2024-01-10', category: 'docs', type: 'json', extension: 'json' },
-                { id: 7, name: 'Noto Sans Font', path: 'assets/fonts/noto.woff2', size: '120 KB', date: '2023-05-15', category: 'fonts', type: 'font', extension: 'woff2' },
-                { id: 8, name: 'Vector Icon', path: 'assets/icons/home.svg', size: '1 KB', date: '2023-11-20', category: 'images', type: 'svg', extension: 'svg' },
-            ];
-
             return {
                 // State Variables
                 isLoading: true,
                 isDarkMode: false,
-                viewMode: 'grid', // 'grid' or 'list'
-                sortBy: 'date', // 'name', 'date', 'size'
+                viewMode: 'grid',
+                sortBy: 'date',
                 searchTerm: '',
                 activeCategory: 'all',
                 isModalOpen: false,
@@ -590,7 +592,6 @@
                 BASE_URL: BASE_URL,
 
                 init() {
-                    // Check local storage immediately
                     const savedTheme = localStorage.getItem('isDarkMode');
                     if (savedTheme === 'true' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                         this.isDarkMode = true;
@@ -599,20 +600,17 @@
                         document.documentElement.classList.remove('dark');
                     }
 
-                    // Watch theme for changes
                     this.$watch('isDarkMode', val => {
                         localStorage.setItem('isDarkMode', val);
                         if (val) document.documentElement.classList.add('dark');
                         else document.documentElement.classList.remove('dark');
                     });
                     
-                    // Body scroll lock effect
                     this.$watch('isModalOpen', val => {
                         if (val) document.body.style.overflow = 'hidden';
                         else document.body.style.overflow = '';
                     });
 
-                    // Fetch Data
                     fetch(ASSETS_JSON_URL)
                         .then(res => {
                             if (!res.ok) throw new Error('Network error');
@@ -623,8 +621,9 @@
                             this.assets = data.map(a => this.processAsset(a));
                         })
                         .catch(err => {
-                            console.warn('Using mock data due to fetch error:', err);
-                            this.assets = MOCK_DATA.map(a => this.processAsset(a));
+                            console.warn('Fetch error. No data loaded.', err);
+                            // MOCK DATA REMOVED AS REQUESTED
+                            this.assets = [];
                         })
                         .finally(() => {
                             setTimeout(() => this.isLoading = false, 500); 
@@ -632,7 +631,10 @@
                 },
 
                 processAsset(asset) {
-                    const fullPath = asset.path.startsWith('http') ? asset.path : this.BASE_URL + asset.path;
+                    // Ensures correct concatenation for full URL
+                    let cleanPath = asset.path.startsWith('/') ? asset.path.substring(1) : asset.path;
+                    const fullPath = asset.path.startsWith('http') ? asset.path : this.BASE_URL + cleanPath;
+                    
                     const extension = asset.extension || asset.path.split('.').pop().toLowerCase();
                     return {
                         ...asset,
@@ -643,8 +645,42 @@
                     };
                 },
 
-                toggleTheme() {
-                    this.isDarkMode = !this.isDarkMode;
+                // Circular Reveal Theme Toggle
+                toggleTheme(event) {
+                    // 1. Browser support check
+                    if (!document.startViewTransition) {
+                        this.isDarkMode = !this.isDarkMode;
+                        return;
+                    }
+
+                    // 2. Get click coordinates
+                    const x = event ? event.clientX : window.innerWidth / 2;
+                    const y = event ? event.clientY : window.innerHeight / 2;
+                    const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+                    // 3. Start the transition
+                    const transition = document.startViewTransition(() => {
+                        this.isDarkMode = !this.isDarkMode;
+                    });
+
+                    // 4. Animate the circle
+                    transition.ready.then(() => {
+                        const clipPath = [
+                            `circle(0px at ${x}px ${y}px)`,
+                            `circle(${endRadius}px at ${x}px ${y}px)`,
+                        ];
+                        
+                        document.documentElement.animate(
+                            {
+                                clipPath: this.isDarkMode ? [...clipPath].reverse() : clipPath,
+                            },
+                            {
+                                duration: 500,
+                                easing: 'ease-in-out',
+                                pseudoElement: this.isDarkMode ? '::view-transition-old(root)' : '::view-transition-new(root)',
+                            }
+                        );
+                    });
                 },
 
                 get sortedAndFilteredAssets() {
@@ -673,7 +709,6 @@
                 parseSize(sizeStr) {
                     if (!sizeStr) return 0;
                     const units = { 'B': 1, 'KB': 1024, 'MB': 1048576, 'GB': 1073741824, 'TB': 1099511627776 };
-                    // Regex handles optional space (e.g., "1.5MB" or "1.5 MB")
                     const regex = /(\d+(?:\.\d+)?)\s*(B|KB|MB|GB|TB)/i;
                     const match = sizeStr.match(regex);
                     return match ? parseFloat(match[1]) * (units[match[2].toUpperCase()] || 1) : 0;
@@ -764,7 +799,7 @@
 
                 openModal(asset) {
                     this.currentAsset = asset;
-                    const url = asset.fullPath;
+                    const url = asset.fullPath; // Use the absolute URL
                     let tabs = [];
                     
                     tabs.push({ id: 'url', name: 'URL', code: url });
@@ -777,6 +812,17 @@
                         tabs.push({ id: 'html', name: 'Link Tag', code: `<link rel="stylesheet" href="${url}">` });
                     } else if (asset.extension === 'js') {
                         tabs.push({ id: 'html', name: 'Script Tag', code: `<script src="${url}"><\/script>` });
+                    } else if (['fonts', 'font'].includes(asset.category) || asset.type === 'font') {
+                        const fontFamily = asset.name.split('.')[0]; 
+                        tabs.push({ 
+                            id: 'css', 
+                            name: '@font-face', 
+                            code: `@font-face {\n  font-family: '${fontFamily}';\n  src: url('${url}');\n}\n\n/* Usage */\nbody {\n  font-family: '${fontFamily}', sans-serif;\n}` 
+                        });
+                    } else if (asset.category === 'video') {
+                        tabs.push({ id: 'html', name: 'HTML', code: `<video controls src="${url}" width="100%"></video>` });
+                    } else if (asset.category === 'audio') {
+                        tabs.push({ id: 'html', name: 'HTML', code: `<audio controls src="${url}"></audio>` });
                     }
                     
                     this.currentAssetCode.tabs = tabs;
