@@ -338,5 +338,25 @@
     "path": "assets/css/theme/styles.css",
     "uploader": "Mubarok",
     "date": "26-Sep-2025"
+  },
+  {
+    "id": 35,
+    "name": "July Font",
+    "category": "fonts",
+    "type": "font",
+    "size": "174 KB",
+    "path": "assets/fonts/july/july-regular.ttf",
+    "uploader": "Mubarok",
+    "date": "12-Jan-2026"
+  },
+  {
+    "id": 36,
+    "name": "Noto Serif Bengali Font",
+    "category": "fonts",
+    "type": "font",
+    "size": "264 KB",
+    "path": "assets/fonts/noto_serif_bengali/noto-serif-bengali-light.ttf",
+    "uploader": "Mubarok",
+    "date": "12-Jan-2026"
   }
 ]
