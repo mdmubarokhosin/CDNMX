@@ -1,5 +1,15 @@
 [
   {
+    "id": 1770695304499.056,
+    "name": "nagad.png",
+    "category": "images",
+    "type": "image",
+    "size": "23.9 KB",
+    "path": "assets/images/icons/nagad.png",
+    "uploader": "Admin",
+    "date": "10/02/2026"
+  },
+  {
     "id": 1,
     "name": "account.svg",
     "category": "images",
