@@ -331,6 +331,36 @@
   },
   {
     "id": 34,
+    "name": "BKash.png",
+    "category": "images",
+    "type": "png",
+    "size": "27.6 KB",
+    "path": "assets/images/logos/BKash.png",
+    "uploader": "Mubarok",
+    "date": "06-MAY-2026"
+  },
+  {
+    "id": 35,
+    "name": "Nagad.png",
+    "category": "images",
+    "type": "png",
+    "size": "51 KB",
+    "path": "assets/images/logos/Nagad.png",
+    "uploader": "Mubarok",
+    "date": "06-MAY-2026"
+  },
+  {
+    "id": 36,
+    "name": "rocket.pmg",
+    "category": "images",
+    "type": "svg",
+    "size": "95.3 KB",
+    "path": "assets/images/logos/rocket.png",
+    "uploader": "Mubarok",
+    "date": "06-MAY-2026"
+  },
+  {
+    "id": 37,
     "name": "styles.css",
     "category": "docs",
     "type": "css",
@@ -340,7 +370,7 @@
     "date": "26-Sep-2025"
   },
   {
-    "id": 35,
+    "id": 38,
     "name": "July Font",
     "category": "fonts",
     "type": "font",
@@ -350,7 +380,7 @@
     "date": "12-Jan-2026"
   },
   {
-    "id": 36,
+    "id": 39,
     "name": "Noto Serif Bengali Font",
     "category": "fonts",
     "type": "font",
